@@ -1,0 +1,261 @@
+#, fuzzy
+msgid ""
+msgstr ""
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"Project-Id-Version: Auto Login New User After Registration\n"
+"POT-Creation-Date: 2020-04-15 11:10+0200\n"
+"PO-Revision-Date: 2020-04-15 11:08+0200\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.8.4\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-WPHeader: auto-login-new-user-after-registration.php\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;"
+"_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: *.js\n"
+
+#: auto-login-new-user-after-registration.php:22
+msgid "DONATE"
+msgstr ""
+
+#: auto-login-new-user-after-registration.php:28
+#: auto-login-new-user-after-registration.php:54
+msgid "Settings"
+msgstr ""
+
+#: auto-login-new-user-after-registration.php:54
+msgid "Leave a REVIEW"
+msgstr ""
+
+#: auto-login-new-user-after-registration.php:54
+msgid "Thanks for supporting me!"
+msgstr ""
+
+#: auto-login-new-user-after-registration.php:68
+msgid "Auto Login New User After Registration by Jeff Sherk"
+msgstr ""
+
+#. Plugin Name of the plugin/theme
+#: auto-login-new-user-after-registration.php:68
+msgid "Auto Login New User After Registration"
+msgstr ""
+
+#: auto-login-new-user-after-registration.php:129
+msgid "First Name:"
+msgstr ""
+
+#: auto-login-new-user-after-registration.php:137
+msgid "Last Name:"
+msgstr ""
+
+#: auto-login-new-user-after-registration.php:153
+msgid "Password:"
+msgstr ""
+
+#: auto-login-new-user-after-registration.php:155
+msgid "Confirm Password:"
+msgstr ""
+
+#: auto-login-new-user-after-registration.php:169
+msgid "<strong>ERROR</strong>: First Name field is required."
+msgstr ""
+
+#: auto-login-new-user-after-registration.php:175
+msgid "<strong>ERROR</strong>: Last Name field is required."
+msgstr ""
+
+#: auto-login-new-user-after-registration.php:181
+msgid "<strong>ERROR</strong>: Password field is required."
+msgstr ""
+
+#: auto-login-new-user-after-registration.php:184
+msgid "<strong>ERROR</strong>: Confirm Password field is required."
+msgstr ""
+
+#: auto-login-new-user-after-registration.php:187
+msgid ""
+"<strong>ERROR</strong>: Password field and Confirm Password field do not "
+"match."
+msgstr ""
+
+#: auto-login-new-user-after-registration.php:204
+#, php-format
+msgid "[%s] New User Registration"
+msgstr ""
+
+#: auto-login-new-user-after-registration.php:217
+#, php-format
+msgid "[%s] Password Lost/Changed"
+msgstr ""
+
+#: auto-login-new-user-after-registration.php:217
+#, php-format
+msgid "[%s] Password Changed"
+msgstr ""
+
+#: auto-login-new-user-after-registration.php:325
+msgid "Changes saved"
+msgstr ""
+
+#: auto-login-new-user-after-registration.php:331
+msgid "AUTO LOGIN NEW USER AFTER REGISTRATION"
+msgstr ""
+
+#: auto-login-new-user-after-registration.php:340
+msgid "Check to ENABLE auto-login for new user after registration"
+msgstr ""
+
+#: auto-login-new-user-after-registration.php:341
+msgid ""
+"When enabled, a new user will automatically be logged in when they register."
+"<br>They will also receive an email telling them how to set/change their "
+"password."
+msgstr ""
+
+#: auto-login-new-user-after-registration.php:348
+msgid ""
+"Enter web page to redirect after registration, or leave blank for default "
+"behavior:"
+msgstr ""
+
+#: auto-login-new-user-after-registration.php:350
+msgid ""
+"User will be redirected to the specified web page when they are auto-logged "
+"in.<br>Redirect is only enabled when auto-login option above is also enabled."
+"<br>If left blank, default behavior is to redirect to:"
+msgstr ""
+
+#: auto-login-new-user-after-registration.php:350
+msgid ""
+"You can also set redirect from the url itself by adding the redirect_to like "
+"this:"
+msgstr ""
+
+#: auto-login-new-user-after-registration.php:354
+msgid "ADD FIELDS TO NEW USER REGISTRATION FORM"
+msgstr ""
+
+#: auto-login-new-user-after-registration.php:355
+msgid ""
+"NOTE: These fields only work if you are using the default WordPress "
+"Registration form at"
+msgstr ""
+
+#: auto-login-new-user-after-registration.php:355
+msgid ""
+"If you are using a custom Registration form different from the default "
+"WordPress Registration form then it is recommended you leave these options "
+"unchecked/disabled."
+msgstr ""
+
+#: auto-login-new-user-after-registration.php:364
+msgid "Check to ENABLE First Name required field on new user registration form"
+msgstr ""
+
+#: auto-login-new-user-after-registration.php:365
+#: auto-login-new-user-after-registration.php:376
+msgid ""
+"This option is independent of the auto-login option, and will work "
+"regardless of the auto-login setting."
+msgstr ""
+
+#: auto-login-new-user-after-registration.php:375
+msgid "Check to ENABLE Last Name required field on new user registration form"
+msgstr ""
+
+#: auto-login-new-user-after-registration.php:386
+msgid "Check to ENABLE Password required fields on new user registration form"
+msgstr ""
+
+#: auto-login-new-user-after-registration.php:387
+msgid ""
+"Uncheck for WordPress default behavior, which is to send new user an email "
+"with a Reset Password link they must click in order to set their password."
+"<br>Currently this option does NOT check for strong passwords.<br>This "
+"option is independent of the auto-login option, and will work regardless of "
+"the auto-login setting."
+msgstr ""
+
+#: auto-login-new-user-after-registration.php:391
+msgid "OTHER INDEPENDENT OPTIONS"
+msgstr ""
+
+#: auto-login-new-user-after-registration.php:400
+msgid ""
+"Check to change the text in new users welcome email from \"set your password"
+"\" to \"change your password\" "
+msgstr ""
+
+#: auto-login-new-user-after-registration.php:401
+msgid ""
+"This option only works for English language.<br>For greater customization of "
+"message (for any language) I recommend you use a plugin that allows you to "
+"customize the new user welcome email."
+msgstr ""
+
+#: auto-login-new-user-after-registration.php:411
+msgid "Check to ENABLE admin notification email of new user registrations"
+msgstr ""
+
+#: auto-login-new-user-after-registration.php:412
+msgid ""
+"Uncheck to disable admin emails about new user registrations.<br>This option "
+"is independent of the auto-login option, and will work regardless of the "
+"auto-login setting."
+msgstr ""
+
+#: auto-login-new-user-after-registration.php:423
+msgid ""
+"Check to ENABLE admin notification email of users lost/changed passwords"
+msgstr ""
+
+#: auto-login-new-user-after-registration.php:424
+msgid ""
+"Uncheck to disable admin emails about users that have lost/changed their "
+"password.<br>This option is independent of the auto-login option, and will "
+"work regardless of the auto-login setting."
+msgstr ""
+
+#: auto-login-new-user-after-registration.php:428
+msgid ""
+"How much is this plugin worth to you? A suggested <a href=\"https://www."
+"paypal.me/jsherk/10usd\">donation of $10 or more</a> will help me feed my "
+"kids, pay my bills and keep this plugin updated!"
+msgstr ""
+
+#: auto-login-new-user-after-registration.php:432
+msgid "Options saved."
+msgstr ""
+
+#: auto-login-new-user-after-registration.php:437
+msgid "Save Changes"
+msgstr ""
+
+#. Plugin URI of the plugin/theme
+msgid ""
+"http://www.iwebss.com/wordpress/1300-auto-login-new-user-registration-"
+"wordpress-plugin"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid ""
+"Automatically login new user right after they have registered. Add Password "
+"field to registration form. Disable admin notification emails of new user "
+"registrations and user password resets. Allow redirect of new user to any "
+"page right after they have registered. Add Firstname and Lastname field to "
+"registration form."
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "Jeff Sherk"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "http://www.iwebss.com/contact"
+msgstr ""

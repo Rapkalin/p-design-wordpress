@@ -1,0 +1,43 @@
+/*--------------------------------------------------------------
+# Buttons
+--------------------------------------------------------------*/
+
+.button {
+	background: $secondary-color;
+	border-top-right-radius: 10rem;
+	border-bottom-right-radius: 10rem;
+	color: #FFF;
+	cursor: pointer;
+	display: inline-block;
+	font-size: 1.7rem;
+	font-weight: $regular;
+	outline: none;
+	text-transform: uppercase;
+	transition: background 0.3s;
+	padding: 0.7rem 1.5rem;
+
+	&:hover {
+		background: darken($secondary-color, 10%);
+	}
+
+	&.button-white {
+		background: none;
+		border: 1px solid #646464;
+
+		&:hover {
+			background: $primary-color;
+			color: #FFF;
+			svg path { fill: #FFF; }
+		}
+	}
+
+	&.button-image {
+		font-size: 0;
+		padding: 1.2rem 2.5rem 1rem 2rem;
+
+		img, svg {
+			height: 1.5rem;
+		}
+		svg path { transition: fill 0.3s; }
+	}
+}

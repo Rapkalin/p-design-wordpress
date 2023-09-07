@@ -1,0 +1,269 @@
+/*--------------------------------------------------------------
+# Product
+--------------------------------------------------------------*/
+
+.single-products {
+	color: #646464;
+}
+
+.single-products .page-banner {
+	margin-bottom: 2rem;
+
+	.content {
+		background-position: center center;
+		background-repeat: no-repeat;
+		background-size: cover;
+		height: 39rem;
+	}
+}
+
+.single-products .product-breadcrumbs {
+	color: #646464;
+	padding-left: 5rem;
+
+	.breadcrumbs {
+		font-size: 1.3rem;
+		margin-bottom: 2rem;
+		text-transform: uppercase;
+
+		span { margin: 0 .5rem; }
+
+		.current { text-decoration: underline; }
+	}
+}
+
+.single-products .single-product-content .large-container {
+	display: flex;
+	flex-wrap: wrap;
+
+	.product-main {
+		flex: 1;
+	}
+
+	.history {
+		width: 27rem;
+	}
+
+}
+
+
+.single-products .single-product-content .product-primary,
+.single-products .single-product-content .product-secondary {
+	max-width: 170rem;
+}
+
+.single-products .single-product-content .product-primary {
+	display: flex;
+	flex-wrap: wrap;
+
+
+	.image {
+		width: 60%;
+		padding: 0 8rem;
+		text-align: center;
+
+		img {
+			width: 100%;
+			max-width: 48rem;
+		}
+	}
+
+	.infos {
+		width: 40%;
+		font-size: 1.3rem;
+		text-align: justify;
+		line-height: 1.8;
+	}
+
+	h1 {
+		font-size: 3.7rem;
+		font-weight: $regular;
+
+		&:after {
+			@include separator;
+			width: 6rem;
+			margin: 1.5rem 0;
+			background: $tertiary-color;
+		}
+	}
+
+	.reference {
+		margin-top: 2rem;
+	}
+
+	.price {
+		font-size: 3.2rem;
+		font-weight: $regular;
+	}
+
+	.colors {
+		text-transform: uppercase;
+		margin: 2rem 0 3rem;
+
+		span {
+			background: $tertiary-color;
+			border-radius: 50%;
+			cursor: pointer;
+			display: inline-block;
+			height: 3rem;
+			width: 3rem;
+			margin-right: .5rem;
+			vertical-align: middle;
+			&.red { background: red; }
+			&.grey { background: grey; }
+			&.black { background: black; }
+		}
+	}
+
+	.images {
+		margin-bottom: 2rem;
+		img {
+			cursor: pointer;
+			margin-right: 1rem;
+			width: calc(20% - 1rem);
+			transition: opacity 0.3s;
+
+			&:not(:first-child) { opacity: 0.4; }
+			&:hover { opacity: 1; }
+		}
+	}
+
+	.actions {
+		text-transform: uppercase;
+		margin-top: 3rem;
+		font-size: 1rem;
+		font-weight: $medium;
+
+		a {
+			margin-right: 2rem;
+		}
+
+		img {
+			display: inline-block;
+			height: 3rem;
+			vertical-align: middle;
+			margin-right: .5rem;
+		}
+	}
+}
+
+
+.single-products .single-product-content .product-secondary {
+	display: flex;
+	flex-wrap: wrap;
+	margin: 5rem 0;
+
+	h2 {
+		font-size: 2rem;
+		font-weight: $medium;
+
+		&:after {
+			@include separator;
+			background: #646464;
+			width: 6rem;
+			margin: 1.5rem 0;
+		}
+	}
+
+	.notice {
+		width: 60%;
+		padding: 0 8rem;
+
+		table {
+			width: 100%;
+			border-spacing: 0;
+
+
+			td {
+				border-bottom: 1px solid rgba(#646464, .3);
+				padding: .5rem 0;
+			}
+		}
+	}
+
+	.more {
+		width: 40%;
+	}
+}
+
+.single-products .single-product-content .history {
+	padding: 0 0 0 7rem;
+
+	.title {
+		position: relative;
+
+		img { height: 15rem; }
+
+		span {
+			font-size: 1.4rem;
+			position: absolute;
+			bottom: 1.5rem; left: 4.5rem;
+			text-transform: uppercase;
+		}
+	}
+
+	.history-content {
+		height: 60rem;
+		overflow-y: scroll;
+		text-align: center;
+		position: relative;
+
+		.item { margin-top: 2rem; }
+
+		.item img { max-width: 14rem; max-height: 14rem; }
+
+		.history-arrow {
+			background: #fff;
+			font-size: 0;
+			display: none;
+			position: sticky;
+			padding-top: 1rem;
+			bottom: 0; left: 0; right: 0;
+
+			img { height: 4rem; cursor: pointer; margin-top: .5rem; }
+		}
+
+		&.with-arrows .history-arrow { display: block; }
+	}
+}
+
+.single-products .products-more {
+	margin: 3rem 0 8rem;
+
+	.content {
+		display: flex;
+	}
+
+	.text {
+		background: rgba(#f1f1f1, .9);
+		padding: 5rem 15rem 5rem 8rem;
+
+		h2 {
+			font-size: 3rem;
+			font-weight: $regular;
+			margin-bottom: 1rem;
+		}
+
+		p {
+			text-transform: uppercase;
+			font-size: 1.2rem;
+		}
+	}
+
+	.products {
+		display: flex;
+		flex: 1;
+
+		.product {
+			width: 25%;
+			text-align: center;
+
+			img {
+				width: 100%;
+				max-width: 18rem;
+			}
+
+			span { font-size: 1.7rem; }
+		}
+	}
+}

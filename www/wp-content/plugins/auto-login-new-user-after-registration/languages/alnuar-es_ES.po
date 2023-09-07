@@ -1,0 +1,327 @@
+msgid ""
+msgstr ""
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Project-Id-Version: Auto Login New User After Registration\n"
+"POT-Creation-Date: 2020-04-15 11:49+0200\n"
+"PO-Revision-Date: 2020-04-15 11:59+0200\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.8.4\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-WPHeader: auto-login-new-user-after-registration.php\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;"
+"_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"Last-Translator: \n"
+"Language: es\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: *.js\n"
+
+#: auto-login-new-user-after-registration.php:22
+msgid "DONATE"
+msgstr "DONAR"
+
+#: auto-login-new-user-after-registration.php:28
+#: auto-login-new-user-after-registration.php:54
+msgid "Settings"
+msgstr "Ajustes"
+
+#: auto-login-new-user-after-registration.php:54
+msgid "Leave a REVIEW"
+msgstr "Deje un comentario"
+
+#: auto-login-new-user-after-registration.php:54
+msgid "Thanks for supporting me!"
+msgstr "¡Gracias por apoyarme!"
+
+#: auto-login-new-user-after-registration.php:68
+msgid "Auto Login New User After Registration by Jeff Sherk"
+msgstr ""
+"Auto Inicio de Sesión de Nuevo Usuario Después del Registro por Jeff Sherk"
+
+#. Plugin Name of the plugin/theme
+#: auto-login-new-user-after-registration.php:68
+msgid "Auto Login New User After Registration"
+msgstr "Auto Inicio de Sesión de Nuevo Usuario Después del Registro "
+
+#: auto-login-new-user-after-registration.php:129
+msgid "First Name:"
+msgstr "Nombre:"
+
+#: auto-login-new-user-after-registration.php:137
+msgid "Last Name:"
+msgstr "Apellidos:"
+
+#: auto-login-new-user-after-registration.php:153
+msgid "Password:"
+msgstr "Contraseña:"
+
+#: auto-login-new-user-after-registration.php:155
+msgid "Confirm Password:"
+msgstr "Confirmar contraseña:"
+
+#: auto-login-new-user-after-registration.php:169
+msgid "<strong>ERROR</strong>: First Name field is required."
+msgstr "<strong>ERROR</strong> : se requiere el campo Nombre."
+
+#: auto-login-new-user-after-registration.php:175
+msgid "<strong>ERROR</strong>: Last Name field is required."
+msgstr "<strong>ERROR</strong> : se requiere el campo Apellidos."
+
+#: auto-login-new-user-after-registration.php:181
+msgid "<strong>ERROR</strong>: Password field is required."
+msgstr "<strong>ERROR</strong> : se requiere el campo de Contraseña."
+
+#: auto-login-new-user-after-registration.php:184
+msgid "<strong>ERROR</strong>: Confirm Password field is required."
+msgstr "<strong>ERROR</strong> : se requiere el campo de Confirmar Contraseña."
+
+#: auto-login-new-user-after-registration.php:187
+msgid ""
+"<strong>ERROR</strong>: Password field and Confirm Password field do not "
+"match."
+msgstr ""
+"<strong>ERROR</strong> : el campo Contraseña y el campo Confirmar Contraseña "
+"no coinciden."
+
+#: auto-login-new-user-after-registration.php:204
+#, php-format
+msgid "[%s] New User Registration"
+msgstr "[%s] Registro de Nuevo Usuario"
+
+#: auto-login-new-user-after-registration.php:217
+#, php-format
+msgid "[%s] Password Lost/Changed"
+msgstr "[%s] Contraseña Perdida/Cambiada"
+
+#: auto-login-new-user-after-registration.php:217
+#, php-format
+msgid "[%s] Password Changed"
+msgstr "[%s] Contraseña Cambiada"
+
+#: auto-login-new-user-after-registration.php:325
+msgid "Changes saved"
+msgstr "Cambios guardados"
+
+#: auto-login-new-user-after-registration.php:331
+msgid "AUTO LOGIN NEW USER AFTER REGISTRATION"
+msgstr "AUTO INICIO DE SESIÓN DE NUEVO USUARIO DESPUÉS DEL REGISTRO"
+
+#: auto-login-new-user-after-registration.php:340
+msgid "Check to ENABLE auto-login for new user after registration"
+msgstr ""
+"Marque para ACTIVAR el inicio de sesión automático para el nuevo usuario "
+"después del registro"
+
+#: auto-login-new-user-after-registration.php:341
+msgid ""
+"When enabled, a new user will automatically be logged in when they register."
+"<br>They will also receive an email telling them how to set/change their "
+"password."
+msgstr ""
+"Cuando está habilitado, un nuevo usuario iniciará sesión automáticamente "
+"cuando se registre. <br> También recibirán un correo electrónico que les "
+"indicará cómo configurar / cambiar su contraseña."
+
+#: auto-login-new-user-after-registration.php:348
+msgid ""
+"Enter web page to redirect after registration, or leave blank for default "
+"behavior:"
+msgstr ""
+"Ingrese a la página web para redirigir después del registro, o déjelo en "
+"blanco para el comportamiento predeterminado:"
+
+#: auto-login-new-user-after-registration.php:350
+msgid ""
+"User will be redirected to the specified web page when they are auto-logged "
+"in.<br>Redirect is only enabled when auto-login option above is also enabled."
+"<br>If left blank, default behavior is to redirect to:"
+msgstr ""
+"El usuario será redirigido a la página web especificada cuando inicie sesión "
+"automáticamente. <br> El redireccionamiento solo está habilitado cuando la "
+"opción de inicio de sesión automático anterior también está habilitada. <br> "
+"Si se deja en blanco, el comportamiento predeterminado es redirigir a:"
+
+#: auto-login-new-user-after-registration.php:350
+msgid ""
+"You can also set redirect from the url itself by adding the redirect_to like "
+"this:"
+msgstr ""
+"También puede establecer la redirección desde la propia URL agregando "
+"redirect_to de esta manera:"
+
+#: auto-login-new-user-after-registration.php:354
+msgid "ADD FIELDS TO NEW USER REGISTRATION FORM"
+msgstr "AGREGAR CAMPOS AL NUEVO FORMULARIO DE REGISTRO DE USUARIO"
+
+#: auto-login-new-user-after-registration.php:355
+msgid ""
+"NOTE: These fields only work if you are using the default WordPress "
+"Registration form at"
+msgstr ""
+"NOTA: Estos campos solo funcionan si está utilizando el formulario de "
+"registro de WordPress predeterminado en"
+
+#: auto-login-new-user-after-registration.php:355
+msgid ""
+"If you are using a custom Registration form different from the default "
+"WordPress Registration form then it is recommended you leave these options "
+"unchecked/disabled."
+msgstr ""
+"Si está utilizando un formulario de registro personalizado diferente del "
+"formulario de registro predeterminado de WordPress, se recomienda que deje "
+"estas opciones sin marcar / deshabilitadas."
+
+#: auto-login-new-user-after-registration.php:364
+msgid "Check to ENABLE First Name required field on new user registration form"
+msgstr ""
+"Marque para HABILITAR el campo de Nombre requerido en el formulario de "
+"registro de nuevo usuario"
+
+#: auto-login-new-user-after-registration.php:365
+#: auto-login-new-user-after-registration.php:376
+msgid ""
+"This option is independent of the auto-login option, and will work "
+"regardless of the auto-login setting."
+msgstr ""
+"Esta opción es independiente de la opción de inicio de sesión automático y "
+"funcionará independientemente de la configuración de inicio de sesión "
+"automático."
+
+#: auto-login-new-user-after-registration.php:375
+msgid "Check to ENABLE Last Name required field on new user registration form"
+msgstr ""
+"Marque para HABILITAR el campo de Apellido requerido en el formulario de "
+"registro de nuevo usuario"
+
+#: auto-login-new-user-after-registration.php:386
+msgid "Check to ENABLE Password required fields on new user registration form"
+msgstr ""
+"Marque para HABILITAR los campos obligatorios de contraseña en el nuevo "
+"formulario de registro de usuario"
+
+#: auto-login-new-user-after-registration.php:387
+msgid ""
+"Uncheck for WordPress default behavior, which is to send new user an email "
+"with a Reset Password link they must click in order to set their password."
+"<br>Currently this option does NOT check for strong passwords.<br>This "
+"option is independent of the auto-login option, and will work regardless of "
+"the auto-login setting."
+msgstr ""
+"Desmarque el comportamiento predeterminado de WordPress, que es enviar un "
+"nuevo usuario a un correo electrónico con un enlace Restablecer contraseña "
+"en el que deben hacer clic para establecer su contraseña. <br> Actualmente "
+"esta opción NO busca contraseñas seguras. <br> Esta opción es independiente "
+"de la opción de inicio de sesión automático y funcionará independientemente "
+"de la configuración de inicio de sesión automático."
+
+#: auto-login-new-user-after-registration.php:391
+msgid "OTHER INDEPENDENT OPTIONS"
+msgstr "OTRAS OPCIONES INDEPENDIENTES"
+
+#: auto-login-new-user-after-registration.php:400
+msgid ""
+"Check to change the text in new users welcome email from \"set your password"
+"\" to \"change your password\" "
+msgstr ""
+"Marque para cambiar el texto en el correo electrónico de bienvenida de "
+"nuevos usuarios de \"configure su contraseña\" a \"cambie su contraseña\""
+
+#: auto-login-new-user-after-registration.php:401
+msgid ""
+"This option only works for English language.<br>For greater customization of "
+"message (for any language) I recommend you use a plugin that allows you to "
+"customize the new user welcome email."
+msgstr ""
+"Esta opción solo funciona para el idioma inglés. <br> Para una mayor "
+"personalización del mensaje (para cualquier idioma), le recomiendo que use "
+"un complemento que le permita personalizar el nuevo correo electrónico de "
+"bienvenida del usuario."
+
+#: auto-login-new-user-after-registration.php:411
+msgid "Check to ENABLE admin notification email of new user registrations"
+msgstr ""
+"Marque para HABILITAR el correo electrónico de notificación de administrador "
+"de nuevos registros de usuarios"
+
+#: auto-login-new-user-after-registration.php:412
+msgid ""
+"Uncheck to disable admin emails about new user registrations.<br>This option "
+"is independent of the auto-login option, and will work regardless of the "
+"auto-login setting."
+msgstr ""
+"Desmarque para deshabilitar los correos electrónicos de administración sobre "
+"nuevos registros de usuarios. <br> Esta opción es independiente de la opción "
+"de inicio de sesión automático y funcionará independientemente de la "
+"configuración de inicio de sesión automático."
+
+#: auto-login-new-user-after-registration.php:423
+msgid ""
+"Check to ENABLE admin notification email of users lost/changed passwords"
+msgstr ""
+"Marque para HABILITAR el correo electrónico de notificación de administrador "
+"de los usuarios perdieron / cambiaron contraseñas"
+
+#: auto-login-new-user-after-registration.php:424
+msgid ""
+"Uncheck to disable admin emails about users that have lost/changed their "
+"password.<br>This option is independent of the auto-login option, and will "
+"work regardless of the auto-login setting."
+msgstr ""
+"Desmarque para deshabilitar los correos electrónicos de administración sobre "
+"usuarios que han perdido / cambiado su contraseña. <br> Esta opción es "
+"independiente de la opción de inicio de sesión automático y funcionará "
+"independientemente de la configuración de inicio de sesión automático."
+
+#: auto-login-new-user-after-registration.php:428
+msgid ""
+"How much is this plugin worth to you? A suggested <a href=\"https://www."
+"paypal.me/jsherk/10usd\">donation of $10 or more</a> will help me feed my "
+"kids, pay my bills and keep this plugin updated!"
+msgstr ""
+"¿Cuánto vale este plugin para ti? ¡Una donación sugerida <a href=\"https://"
+"www.paypal.me/jsherk/10usd\">de $ 10 o más</a> me ayudará a alimentar a mis "
+"hijos, pagar mis facturas y mantener este complemento actualizado!"
+
+#: auto-login-new-user-after-registration.php:432
+msgid "Options saved."
+msgstr "Opciones guardadas."
+
+#: auto-login-new-user-after-registration.php:437
+msgid "Save Changes"
+msgstr "Guardar Cambios"
+
+#. Plugin URI of the plugin/theme
+msgid ""
+"http://www.iwebss.com/wordpress/1300-auto-login-new-user-registration-"
+"wordpress-plugin"
+msgstr ""
+"http://www.iwebss.com/wordpress/1300-auto-login-new-user-registration-"
+"wordpress-plugin"
+
+#. Description of the plugin/theme
+msgid ""
+"Automatically login new user right after they have registered. Add Password "
+"field to registration form. Disable admin notification emails of new user "
+"registrations and user password resets. Allow redirect of new user to any "
+"page right after they have registered. Add Firstname and Lastname field to "
+"registration form."
+msgstr ""
+"Inicie sesión automáticamente de un nuevo usuario justo después de haberse "
+"registrado. Agregar campo de contraseña al formulario de registro. "
+"Deshabilite los correos electrónicos de notificación de administrador de "
+"nuevos registros de usuarios y restablecimientos de contraseña de usuario. "
+"Permita la redirección de un nuevo usuario a cualquier página justo después "
+"de haberse registrado. Agregue el campo Nombre y Apellido al formulario de "
+"registro."
+
+#. Author of the plugin/theme
+msgid "Jeff Sherk"
+msgstr "Jeff Sherk"
+
+#. Author URI of the plugin/theme
+msgid "http://www.iwebss.com/contact"
+msgstr "http://www.iwebss.com/contact"

@@ -1,0 +1,27 @@
+/*--------------------------------------------------------------
+# Structure
+--------------------------------------------------------------*/
+
+.small-container {
+	margin: 0 auto;
+	max-width: 120rem;
+	padding: 0 2.5rem;
+}
+
+.container {
+	margin: 0 auto;
+	max-width: 135rem;
+	padding: 0 2.5rem;
+}
+
+.large-container {
+	margin: 0 auto;
+	// max-width: 190rem;
+	padding: 0 3.5rem;
+}
+
+.large-container-left {
+	margin: 0 auto;
+	// max-width: 190rem;
+	padding-left: 3.5rem;
+}

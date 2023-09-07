@@ -1,0 +1,15 @@
+/*--------------------------------------------------------------
+# Buttons
+--------------------------------------------------------------*/
+
+
+@mixin separator {
+	border-top-right-radius: 1rem;
+	border-bottom-right-radius: 1rem;
+	background: #FFF;
+	content: '';
+	display: block;
+	opacity: 1;
+	height: .4rem;
+	width: 1.8rem;
+}

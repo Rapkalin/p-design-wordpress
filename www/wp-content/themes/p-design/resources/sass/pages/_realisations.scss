@@ -1,0 +1,118 @@
+/*--------------------------------------------------------------
+# Realisations
+--------------------------------------------------------------*/
+
+.realisations-categories {
+	color: #646464;
+}
+
+.realisations-categories .category {
+	display: flex;
+	margin-bottom: 8rem;
+}
+
+
+.realisations-categories .category-title {
+	font-size: 1.4rem;
+	padding-right: 10rem;
+	width: 25%;
+
+	h2 {
+		font-size: 3rem;
+		font-weight: $regular;
+
+		&:after {
+			@include separator;
+			background: #646464;
+			height: 0.8rem;
+			width: 4rem;
+			margin: .5rem 0 2rem;
+		}
+	}
+}
+
+.realisations-categories .category-realisations {
+	align-items: center;
+	display: flex;
+	flex: 1;
+	justify-content: space-between;
+	flex-wrap: wrap;
+
+	.realisation {
+		width: calc(25% - 4rem);
+		margin-bottom: 3.5rem;
+	}
+
+	.realisation .image-container {
+		height: 0;
+		padding-bottom: 100%;
+		position: relative;
+		overflow: hidden;
+	}
+
+	.realisation .image {
+		background-position: center center;
+		background-repeat: no-repeat;
+		background-size: cover;
+		position: absolute;
+		top: 0; left: 0; right: 0; bottom: 0;
+		transition: transform 1s;
+	}
+
+	.realisation .hover {
+		border: 1px solid #646464;
+		border-top-right-radius: 15rem;
+		border-bottom-right-radius: 15rem;
+		background: rgba(#FFF, .8);
+		line-height: 1;
+		position: absolute;
+		opacity: 0;
+		top: 50%; left: 50%;
+		transform: translate(-50%, -50%);
+		padding: 1.7rem 4rem 1.7rem 3.5rem;
+		transition: opacity 0.5s;
+
+		img { height: 2rem; }
+	}
+
+	.realisation a:hover {
+		.image { transform: scale(1.1); }
+		.hover { opacity: 1; }
+	}
+
+
+	.realisation .name {
+		font-size: 1.7rem;
+		margin-top: 2rem;
+	}
+
+	.realisation .more {
+		text-align: center;
+		.button-image { padding: 1.7rem 3.5rem 1.5rem 3rem; }
+		.button-image img, .button-image svg { height: 2rem; }
+	}
+}
+
+
+.page-template-page-realisations .realisations-conclusion,
+.archive-products .archive-products-conclusion,
+.single-realisations .realisations-conclusion {
+	color: #646464;
+	padding-bottom: 10rem;
+
+	.conclusion {
+		padding-left: 25%;
+		max-width: calc(25% + 80rem);
+		text-align: justify;
+	}
+
+	h2 {
+		font-size: 3rem;
+		font-weight: $regular;
+		margin-bottom: 2rem;
+	}
+
+	.button {
+		margin-top: 3rem;
+	}
+}

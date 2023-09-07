@@ -1,0 +1,59 @@
+/*
+Theme Name: P-Design
+Theme URI: https://www.p-design.fr
+Author: Quentin Lauriot Prévost
+Author URI: https://www.agencebrigit.com
+Description: Thème du site internet P-Design
+Version: 1.0.0
+License: GNU General Public License v2 or later
+License URI: LICENSE
+Text Domain: p-design
+*/
+
+@import
+	url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;300;400;500;700&amp;display=swap');
+
+
+/*--------------------------------------------------------------
+# Generals
+--------------------------------------------------------------*/
+@import
+	'generals/variables',
+	'generals/mixins',
+	'generals/reset';
+
+/*--------------------------------------------------------------
+# Partials
+--------------------------------------------------------------*/
+@import
+	'partials/structure',
+	'partials/header',
+	'partials/footer';
+
+/*--------------------------------------------------------------
+# Modules
+--------------------------------------------------------------*/
+@import
+	'modules/buttons',
+	'modules/popup',
+	'modules/form',
+	'modules/slick';
+
+/*--------------------------------------------------------------
+# Pages
+--------------------------------------------------------------*/
+@import
+	'pages/generals',
+	'pages/home',
+	'pages/product',
+	'pages/products',
+	'pages/realisations',
+	'pages/realisation',
+	'pages/showroom',
+	'pages/contact';
+
+/*--------------------------------------------------------------
+# Responsive
+--------------------------------------------------------------*/
+@import
+	'responsive';

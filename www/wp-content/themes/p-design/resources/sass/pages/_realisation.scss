@@ -1,0 +1,168 @@
+/*--------------------------------------------------------------
+# Realisation
+--------------------------------------------------------------*/
+
+.single-realisations .page-overlay-intro .content-with-menus .row {
+	padding: 3rem 0;
+
+	.all-projects {
+		font-size: 1.3rem;
+		text-transform: uppercase;
+	}
+}
+
+.single-realisations .page-overlay-intro .right-block {
+	font-size: 2rem;
+	font-weight: $light;
+
+	p {
+		margin-bottom: .5rem;
+	}
+
+	img {
+		width: 2rem;
+		vertical-align: middle;
+		margin-right: 1rem;
+	}
+
+	a {
+		text-transform: uppercase;
+		font-weight: $light;
+	}
+}
+
+.single-realisations .page-overlay-intro .realisations-navigation {
+	align-items: center;
+	display: flex;
+	text-align: center;
+
+	.number-ratio {
+		font-size: 2rem;
+		padding: 0 2rem;
+	}
+
+	.prev, .next {
+		border: 1px solid #646464;
+		cursor: pointer;
+		font-size: 0;
+		transition: background 0.3s;
+
+		img, svg {
+			height: 1.4rem;
+
+			path, g, polygon { transition: fill 0.1s; }
+		}
+
+		&:hover {
+			background: #646464;
+			svg path, svg g, svg polygon { fill: #ffffff; }
+		}
+	}
+
+	.prev {
+		border-top-left-radius: 15rem;
+		border-bottom-left-radius: 15rem;
+		padding: .8rem 1.3rem .8rem 1.5rem;
+	}
+
+	.next {
+		border-top-right-radius: 15rem;
+		border-bottom-right-radius: 15rem;
+		padding: .8rem 1.5rem .8rem 1.3rem;
+	}
+}
+
+.single-realisations .intro {
+	color: #646464;
+	padding: 3rem 0 10rem 25%;
+
+	.content {
+		max-width: 70rem;
+		text-align: justify;
+	}
+
+	h2 {
+		font-size: 2.3rem;
+		font-weight: $regular;
+		margin-bottom: 3rem;
+	}
+}
+
+.single-realisations .main-image .image {
+	background-position: center center;
+	background-repeat: no-repeat;
+	background-size: cover;
+	height: 80rem;
+	width: 100%;
+}
+
+.single-realisations .gallery {
+	padding: 10rem 0 3rem;
+
+	.content {
+		display: flex;
+		justify-content: space-between;
+		flex-wrap: wrap;
+	}
+
+	.image {
+		background-position: center center;
+		height: 60rem;
+		margin-bottom: 7rem;
+		overflow: hidden;
+		position: relative;
+		width: calc(50% - 3.5rem);
+		text-align: center;
+	}
+
+	.image:nth-child(3n + 1) {
+		width: 100%;
+	}
+}
+
+.single-realisations .more-realisations .content {
+	align-items: center;
+	background: rgba(#f1f1f1, .9);
+	color: #646464;
+	display: flex;
+	justify-content: space-between;
+	padding: 3rem 5rem;
+	margin-bottom: 10rem;
+
+	.left {
+		font-size: 1.2rem;
+		width: calc(25% - 5rem);
+
+		strong {
+			display: block;
+			font-size: 3rem;
+			font-weight: $regular;
+			line-height: 1.2;
+			margin-bottom: .5rem;
+		}
+
+		a {
+			text-transform: uppercase;
+		}
+	}
+
+	.images {
+		display: flex;
+	}
+
+	.images div {
+		background-position: center center;
+		background-size: cover;
+		width: 15rem;
+		height: 15rem;
+		margin-right: 5rem;
+	}
+
+	.right {
+		font-size: 11rem;
+		line-height: 1;
+		font-weight: $thin;
+		padding-left: 5rem;
+		width: 25%;
+	}
+}

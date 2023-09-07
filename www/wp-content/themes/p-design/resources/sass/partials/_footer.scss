@@ -1,0 +1,76 @@
+/*--------------------------------------------------------------
+# Footer
+--------------------------------------------------------------*/
+
+.footer .footer-content {
+	background: $primary-color;
+	color: #FFF;
+	display: flex;
+	padding: 2.5rem 10rem 2.5rem 2.5rem;
+	font-size: 1.3rem;
+
+	a { transition: color 0.3s; }
+	a:hover { color: $tertiary-color; }
+}
+
+.footer .footer-content .logo {
+	width: 5rem;
+	margin-right: 2.5rem;
+
+	img {
+		height: auto;
+		width: 5rem;
+	}
+}
+
+.footer .footer-content .main {
+	flex: 1;
+	padding-top: 1rem;
+}
+
+.footer .footer-content .main .content {
+	display: flex;
+	justify-content: space-between;
+}
+
+.footer .footer-content nav ul li {
+	text-transform: uppercase;
+	list-style: none;
+	margin-bottom: .3rem;
+
+	ul li {
+		text-transform: none;
+	}
+
+	a {
+		transition: color 0.3s;
+	}
+
+	a:hover {
+		color: $tertiary-color;
+	}
+}
+
+.footer .footer-content .main-nav ul li a:before {
+	@include separator;
+	display: inline-block;
+	width: 1.2rem;
+	height: .4rem;
+	margin-right: .5rem;
+}
+
+.footer .footer-content .secondary-nav ul li a:after {
+	@include separator;
+	background: $tertiary-color;
+	margin-bottom: .6rem;
+}
+
+.footer .footer-content .secondary-nav ul li ul li a:after {
+	display: none;
+}
+
+.footer .footer-content .legal {
+	margin-top: 1.5rem;
+	text-transform: uppercase;
+	font-size: 1.1rem;
+}

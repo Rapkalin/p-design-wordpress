@@ -1,0 +1,139 @@
+/*--------------------------------------------------------------
+# Popup
+--------------------------------------------------------------*/
+
+.popup {
+	background: rgba(#000, .9);
+	color: #ffffff;
+	display: none;
+	position: fixed;
+	top: 0; left: 0; right: 0; bottom: 0;
+	z-index: 100;
+
+	h2 {
+		font-size: 3rem;
+		font-weight: $regular;
+		text-transform: uppercase;
+
+		&:after {
+			@include separator;
+			margin: 3rem 0;
+		}
+	}
+
+	input[type="text"],
+	input[type="email"],
+	input[type="password"] {
+		border-color: #FFF;
+		color: #FFF;
+	}
+
+	::placeholder {
+		color: rgba(#FFF, .5);
+	}
+
+	input[type="submit"] {
+		border-color: #FFF;
+		color: #FFF;
+	}
+}
+
+.popup .popup-main {
+	align-items: center;
+	display: flex;
+	justify-content: center;
+	position: absolute;
+	top: 0; left: 0; right: 0; bottom: 0;
+	z-index: 1;
+}
+
+.popup .popup-close {
+	cursor: pointer;
+	position: absolute;
+	top: 5rem; right: 5rem;
+	z-index: 2;
+
+	img {
+		height: 3.5rem;
+	}
+}
+
+.popup .search-group {
+	position: relative;
+
+	input[type="text"] {
+		height: 6.5rem;
+		width: 50rem;
+		padding-right: 7rem;
+	}
+
+	button {
+		background: none;
+		border: none;
+		font-size: 0;
+		line-height: 0;
+		position: absolute;
+		cursor: pointer;
+		outline: none;
+		top: 50%; right: 2rem;
+		transform: translateY(-50%);
+
+		img {
+			height: 3rem;
+		}
+	}
+}
+
+.popup-auth {
+
+	input[type="text"],
+	input[type="password"],
+	input[type="email"],
+	input[type="submit"] {
+		display: block;
+		margin-bottom: 2rem;
+		width: 50rem;
+	}
+
+	.checkbox-btn label:after {
+		border-color: #FFF;
+	}
+
+	.checkbox-btn label:before {
+		border-color: $primary-color;
+	}
+
+	.checkbox-btn input[type=checkbox]:checked + label:after {
+		background: #FFF;
+	}
+
+	.lwa-links-remember, .lwa-links-register {
+		color: rgba(#FFF, .6);
+	}
+	.lwa-links-register { margin-left: 1.5rem; }
+
+	strong {
+		display: block;
+		font-weight: $regular;
+		margin-bottom: 1rem;
+		text-transform: uppercase;
+	}
+}
+
+.popup-register {
+	background: rgba(#000, 1);
+}
+
+.popup-register .lwa-modal h4,
+.popup-register .lwa-modal p {
+	margin-bottom: 0;
+}
+.popup-register .lwa-modal br {
+	display: none;
+}
+
+.popup-register .lwa-modal label {
+	display: block;
+	line-height: 0;
+	font-size: 0;
+}

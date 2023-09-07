@@ -1,0 +1,140 @@
+/*--------------------------------------------------------------
+# Products
+--------------------------------------------------------------*/
+
+.archive-products .page-banner {
+	margin-bottom: 5rem;
+
+	.content {
+		background-position: center center;
+		background-repeat: no-repeat;
+		background-size: cover;
+		height: 39rem;
+	}
+}
+
+.archive-products .page-title {
+	color: #646464;
+	padding-left: 5rem;
+
+	h1 {
+		font-size: 8rem;
+		font-weight: $thin;
+	}
+
+	.breadcrumbs {
+		font-size: 1.3rem;
+		margin-bottom: 5rem;
+		text-transform: uppercase;
+
+		span { margin: 0 .5rem; }
+	}
+}
+
+.archive-products .archive-products-content {
+	padding: 3rem 0 10rem;
+	color: #646464;
+
+	.large-container {
+		display: flex;
+	}
+
+	.archive-filters {
+		font-size: 1.3rem;
+		font-weight: $medium;
+		padding-left: 5rem;
+		text-transform: uppercase;
+		min-width: 25rem;
+
+		strong { color: $tertiary-color; display: block; margin-bottom: 0.5rem; }
+		a { display: block; margin-bottom: .5rem; }
+	}
+}
+
+.archive-products .archive-products-list .products {
+	align-items: center;
+	color: #646464;
+	display: flex;
+	flex-wrap: wrap;
+	font-size: 1.7rem;
+	padding: 0 5rem;
+	text-align: center;
+
+	a {
+		display: inline-block;
+
+		&:hover { font-weight: $bold;}
+	}
+
+	.product {
+		width: 25%;
+		margin-bottom: 4rem;
+	}
+
+	.product img {
+		max-width: 15rem;
+	}
+
+	.product .title:before {
+		@include separator;
+		background: $tertiary-color;
+		margin: 1rem auto;
+	}
+}
+
+.archive-products .archive-products-list .products-pagination {
+	margin: 5rem auto;
+
+	.products-navigation {
+		align-items: center;
+		display: flex;
+		text-align: center;
+		justify-content: center;
+
+		.number-ratio {
+			font-size: 2rem;
+			padding: 0 3rem;
+		}
+
+		.prev, .next {
+			border: 1px solid #646464;
+			cursor: pointer;
+			font-size: 0;
+			transition: background 0.3s;
+
+			img, svg {
+				height: 1.4rem;
+
+				path, g, polygon { transition: fill 0.1s; }
+			}
+
+			&:hover {
+				background: #646464;
+				svg path, svg g, svg polygon { fill: #ffffff; }
+			}
+		}
+
+		.prev {
+			border-top-left-radius: 15rem;
+			border-bottom-left-radius: 15rem;
+			padding: .8rem 1.3rem .8rem 1.5rem;
+		}
+
+		.next {
+			border-top-right-radius: 15rem;
+			border-bottom-right-radius: 15rem;
+			padding: .8rem 1.5rem .8rem 1.3rem;
+		}
+	}
+}
+
+.archive-products .archive-products-list .posts-per-page {
+	font-size: 2rem;
+	margin-top: 3rem;
+	text-align: center;
+	font-weight: $light;
+	text-transform: uppercase;
+
+	span { margin: 0 1rem; }
+	.active { font-weight: $bold; }
+}
