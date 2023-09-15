@@ -1,0 +1,71 @@
+{
+  "name": "rapkalin/p-design",
+  "description": "Paris Design's website",
+  "authors": [
+    {
+      "name": "Rapkalin",
+      "email": "raphael@myminicom.com"
+    }
+  ],
+
+  "repositories":[
+    {
+      "type":"composer",
+      "url":"https://wpackagist.org",
+      "only": [
+        "wpackagist-plugin/*",
+        "wpackagist-theme/*"
+      ]
+    }
+  ],
+
+  "require": {
+    "php": ">=7.4",
+    "johnpbloch/wordpress": "^6.3",
+    "composer/installers": "~1.12",
+    "vlucas/phpdotenv": "^5.5",
+
+    "wpackagist-plugin/advanced-custom-fields":"^6.0",
+    "wpackagist-plugin/autoptimize":"^3.1",
+    "wpackagist-plugin/classic-editor":"^1.6",
+    "wpackagist-plugin/auto-login-new-user-after-registration":"^1.9",
+    "wpackagist-plugin/contact-form-7":"^5.7",
+    "wpackagist-plugin/duplicate-page":"^4.5",
+    "wpackagist-plugin/login-with-ajax":"^4.1",
+    "wpackagist-plugin/wordpress-seo":"^21.0",
+
+    "ext-dom": "*",
+    "ext-libxml": "*"
+  },
+
+  "require-dev": {
+    "roave/security-advisories": "dev-latest",
+    "symfony/var-dumper": "^5.4"
+  },
+
+  "autoload": {
+    "psr-4": {
+      "App\\": "website/app"
+    }
+  },
+
+  "config": {
+    "vendor-dir": "website/vendor",
+    "allow-plugins": {
+      "johnpbloch/wordpress-core-installer": true,
+      "composer/installers": true
+    }
+  },
+
+  "extra": {
+    "wordpress-install-dir": "website/wordpress-core",
+    "installer-paths": {
+      "website/app/themes/{$name}/": [
+        "type:wordpress-theme"
+      ],
+      "website/app/plugins/{$name}/": [
+        "type:wordpress-plugin"
+      ]
+    }
+  }
+}
