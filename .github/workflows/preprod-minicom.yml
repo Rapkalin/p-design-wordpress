@@ -1,4 +1,4 @@
-name: Deploy preprod on push feature
+name: Deploy preprod pdesign on push feature
 
 on:
   push:
@@ -14,7 +14,7 @@ jobs:
         php: [ 7.4 ]
 
     steps:
-      - name: checkout preprod
+      - name: checkout preprod pdesign
         uses: actions/checkout@v3
 
       - name: Restore the Composer cache directory
@@ -49,14 +49,14 @@ jobs:
       - name: create or replace backup release
         uses: appleboy/ssh-action@v0.1.10
         with:
-          host: ${{ secrets.DEPLOY_HOST }}
-          username: ${{ secrets.DEPLOY_USER }}
-          key: ${{ secrets.DEPLOY_KEY }}
+          host: ${{ secrets.DEPLOY_HOST_MINICOM }}
+          username: ${{ secrets.DEPLOY_USER_MINICOM }}
+          key: ${{ secrets.DEPLOY_KEY_MINICOM }}
           port: 22
-#          script: "[ ! -d ~/preprod/website ] || rm -rf ~/preprod/old_website ~/preprod/website/vendor ~/preprod/website/wordpress-core && mv -fu ~/preprod/website ~/preprod/old_website"
-          script: "[ ! -d ~/preprod/website ] || rm -rf ~/preprod/old_website ~/preprod/website/vendor ~/preprod/website/wordpress-core"
+#          script: "[ ! -d ~/preprod-pdesign/website ] || rm -rf ~/preprod-pdesign/old_website ~/preprod-pdesign/website/vendor ~/preprod-pdesign/website/wordpress-core && mv -fu ~/preprod/website ~/preprod/old_website"
+          script: "[ ! -d ~/preprod-pdesign/website ] || rm -rf ~/preprod-pdesign/old_website ~/preprod-pdesign/website/vendor ~/preprod-pdesign/website/wordpress-core"
 
-      - name: checkout preprod
+      - name: checkout preprod pdesign
         uses: actions/checkout@v3
 
       - name: Download artifact
@@ -73,23 +73,23 @@ jobs:
         with:
           switches: -avzr --delete
           path: ./website
-          remote_path: ~/preprod
-          remote_host: ${{ secrets.DEPLOY_HOST }}
-          remote_user: ${{ secrets.DEPLOY_USER }}
-          remote_key: ${{ secrets.DEPLOY_KEY }}
+          remote_path: ~/preprod-pdesign
+          remote_host: ${{ secrets.DEPLOY_HOST_MINICOM }}
+          remote_user: ${{ secrets.DEPLOY_USER_MINICOM }}
+          remote_key: ${{ secrets.DEPLOY_KEY_MINICOM }}
 
       - name: create new Symlink
         uses: appleboy/ssh-action@v0.1.10
         with:
-          host: ${{ secrets.DEPLOY_HOST }}
-          username: ${{ secrets.DEPLOY }}
-          key: ${{ secrets.DEPLOY_KEY }}
+          host: ${{ secrets.DEPLOY_HOST_MINICOM }}
+          username: ${{ secrets.DEPLOY_USER_MINICOM }}
+          key: ${{ secrets.DEPLOY_KEY_MINICOM }}
           port: 22
           script: |
-            ln -nsrf ~/preprod/shared/.env ~/preprod/website/.env
-            ln -nsrf ~/preprod/shared/uploads ~/preprod/website/app/uploads
-            ln -nsrf ~/preprod/shared/cache ~/preprod/website/app/cache
-            ln -nsrf ~/preprod/shared/w3tc-config ~/preprod/website/app/w3tc-config
-            rm ~/preprod/website/.htaccess
-            ln -nsrf ~/preprod/shared/.htaccess ~/preprod/website/.htaccess
-            ln -nsrf ~/preprod/shared/.htpasswd ~/preprod/website/.htpasswd
+            ln -nsrf ~/preprod-pdesign/shared/.env ~/preprod-pdesign/website/.env
+            ln -nsrf ~/preprod-pdesign/shared/uploads ~/preprod-pdesign/website/app/uploads
+            ln -nsrf ~/preprod-pdesign/shared/cache ~/preprod-pdesign/website/app/cache
+            ln -nsrf ~/preprod-pdesign/shared/w3tc-config ~/preprod-pdesign/website/app/w3tc-config
+            rm ~/preprod-pdesign/website/.htaccess
+            ln -nsrf ~/preprod-pdesign/shared/.htaccess ~/preprod-pdesign/website/.htaccess
+            ln -nsrf ~/preprod-pdesign/shared/.htpasswd ~/preprod-pdesign/website/.htpasswd
