@@ -178,54 +178,6 @@ $home = new WP_Query(['pagename' => 'accueil']);
 				</section>
 			<?php endwhile; endif; ?>
 
-			<?php if( have_rows('home_values') ): while( have_rows('home_values') ): the_row(); ?>
-				<section class="home-values">
-					<div class="large-container">
-						<div class="content">
-							<div class="text">
-								<div class="section-title">
-									<h2><?php the_sub_field('title'); ?></h2>
-								</div>
-								
-								<?php if( have_rows('values') ): while( have_rows('values') ): the_row(); ?>
-									<div class="item">
-										<?php the_sub_field('description'); ?>
-									</div>
-								<?php endwhile; endif; ?>
-							</div>
-							<div class="image" style="background-image: url(<?= get_sub_field('image')['url']; ?>);"></div>
-						</div>
-					</div>
-				</section>
-			<?php endwhile; endif; ?>
-
-			<?php if( have_rows('home_about') ): while( have_rows('home_about') ): the_row(); ?>
-				<section class="home-about" id="home-about">
-					<div class="container">
-						<div class="body">
-							<div class="small-container">
-								<div class="about-mask" id="about-mask"></div>
-								<div class="content">
-									<?php if( have_rows('numbers') ): while( have_rows('numbers') ): the_row(); ?>
-										<div class="item">
-											<div>
-												<?php the_sub_field('description'); ?>
-											</div>
-										</div>
-									<?php endwhile; endif; ?>
-								</div>
-							</div>
-						</div>
-						<div class="conclusion">
-							<p><?php the_sub_field('description'); ?></p>
-							<?php if (get_sub_field('link')) : ?>
-								<a href="<?= get_sub_field('link')['url']; ?>" class="button button-white button-image"><img src="<?= asset('plus.svg'); ?>" class="svg"></a>
-							<?php endif; ?>
-						</div>
-					</div>
-				</section>
-			<?php endwhile; endif; ?>
-
 			<!-- À finir - Lier les réalisations (3 dernières - juste image à la une + title) -->
 			<?php if( have_rows('home_realisations') ): while( have_rows('home_realisations') ): the_row(); ?>
 				<section class="home-works">
