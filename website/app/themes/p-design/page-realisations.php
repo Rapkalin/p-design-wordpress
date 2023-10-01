@@ -92,7 +92,6 @@ get_header();
                 }
             ?>
 
-
 			<section class="realisations-list">
 				<div class="large-container">
 					<div class="realisations-categories">
@@ -163,9 +162,8 @@ get_header();
                                     </div>
 
                             <?php
-
                                 } else {
-                                        echo 'Terme introuvable.';
+                                        echo 'Aucun article trouvé.';
                                 }
                             endforeach;
                         ?>
@@ -174,17 +172,21 @@ get_header();
 				</div>
 			</section>
 
-
-			<section class="realisations-conclusion">
-				<div class="large-container">
-					<div class="conclusion">
-						<h2>Une question ?</h2>
-						<?php the_field('ask', 'option'); ?>
-						<a href="#" class="button">Contactez-nous</a>
-					</div>
-				</div>
-			</section>
-
+            <?php
+                if (!empty(get_field('ask', 'option'))) {
+            ?>
+                <section class="realisations-conclusion">
+                    <div class="large-container">
+                        <div class="conclusion">
+                            <h2>Une question ?</h2>
+                            <?php the_field('ask', 'option'); ?>
+                            <a href="/contact" class="button">Contactez-nous</a>
+                        </div>
+                    </div>
+                </section>
+            <?php
+                }
+            ?>
 
 		</div>
 
