@@ -174,17 +174,7 @@ get_header();
 
             <?php
                 if (!empty(get_field('ask', 'option'))) {
-            ?>
-                <section class="realisations-conclusion">
-                    <div class="large-container">
-                        <div class="conclusion">
-                            <h2>Une question ?</h2>
-                            <?php the_field('ask', 'option'); ?>
-                            <a href="/contact" class="button">Contactez-nous</a>
-                        </div>
-                    </div>
-                </section>
-            <?php
+                    get_template_part('template-parts/content', 'contact-us');
                 }
             ?>
 
