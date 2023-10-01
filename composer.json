@@ -25,7 +25,6 @@
     "composer/installers": "~1.12",
     "vlucas/phpdotenv": "^5.5",
 
-    "wpackagist-plugin/advanced-custom-fields":"^6.0",
     "wpackagist-plugin/autoptimize":"^3.1",
     "wpackagist-plugin/classic-editor":"^1.6",
     "wpackagist-plugin/auto-login-new-user-after-registration":"^1.9",
