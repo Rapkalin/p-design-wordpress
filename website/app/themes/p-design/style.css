@@ -907,6 +907,13 @@ input[type=submit]:hover {
 /*--------------------------------------------------------------
 # Generals
 --------------------------------------------------------------*/
+#app {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100vh;
+}
+
 .section-title h2 {
   color: #1f3742;
   font-size: 4rem;
@@ -2564,6 +2571,29 @@ input[type=submit]:hover {
   width: 0;
 }
 
+.pdesign-404 {
+  position: relative;
+  margin: auto;
+  text-align: center;
+}
+.pdesign-404 .pdesign-404-title {
+  text-transform: uppercase;
+}
+.pdesign-404 .pdesign-404-text {
+  margin-bottom: 2em;
+}
+.pdesign-404 .pdesign-404-button {
+  color: white;
+  padding: 8px 24px;
+  border-radius: 4px;
+  background: #1f3742;
+  transition: background 0.3s ease;
+}
+.pdesign-404 .pdesign-404-button:hover {
+  background: #1E2C31;
+  color: white;
+}
+
 /*--------------------------------------------------------------
 # Responsive
 --------------------------------------------------------------*/
@@ -3074,6 +3104,11 @@ input[type=submit]:hover {
   .single-products .products-more .products .product {
     width: 50%;
     margin-top: 2.5rem;
+  }
+  .pdesign-404 {
+    margin-top: 20vh;
+    margin-bottom: 10vh;
+    padding: 0 2em;
   }
 }
 @media screen and (max-width: 450px) {
