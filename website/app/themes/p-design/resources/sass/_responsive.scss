@@ -42,8 +42,8 @@
 	.home-values .content .text { padding: 0 2.5rem 7rem 5rem; width: 100%; }
 	.home-values .content .image { height: 50rem; width: 100%; }
 
-	.home-about .body .content .item { font-size: 1.4rem; }
-	.home-about .body .content .item div { padding: 2rem 5rem; }
+	.team-about .body .content .item { font-size: 1.4rem; }
+	.team-about .body .content .item div { padding: 2rem 5rem; }
 
 	.home-works .content { display: block; }
 	.home-works .left, .home-works .right { width: 100%; }
@@ -54,9 +54,8 @@
 	.page-default .page-overlay-intro .content-with-menus { padding-left: 2.5rem; }
 	.single-realisations .intro { padding-left: 2.5rem; }
 
-	.page-template-page-realisations .realisations-conclusion .conclusion,
 	.archive-products .archive-products-conclusion .conclusion,
-	.single-realisations .realisations-conclusion .conclusion { padding-left: 2.5rem; }
+	.pdesign-block-conclusion .pdesign-conclusion { padding-left: 2.5rem; }
 
 	.single-realisations .more-realisations .content { display: block; }
 	.single-realisations .more-realisations .content .left { width: 100%; padding-bottom: 2rem; }
@@ -94,12 +93,12 @@
 
 @media screen and (max-width: 1000px) {
 
-	.home-about .body .small-container { max-width: 60rem; }
-	.home-about .body .content { flex-wrap: wrap; }
-	.home-about .body .about-mask { top: -6rem; }
-	.home-about .body .content .item { width: 50%; padding-bottom: 50%; margin-top: -3.5rem; }
-	.home-about .body .content .item div { padding-top: 4rem; padding-left: 6rem; }
-	.home-about .conclusion { padding-left: 0; }
+	.team-about .body .small-container { max-width: 60rem; }
+	.team-about .body .content { flex-wrap: wrap; }
+	.team-about .body .about-mask { top: -6rem; }
+	.team-about .body .content .item { width: 50%; padding-bottom: 50%; margin-top: -3.5rem; }
+	.team-about .body .content .item div { padding-top: 4rem; padding-left: 6rem; }
+	.team-about .conclusion { padding-left: 0; }
 
 	.home-values { padding-top: 5rem; }
 	.home-values .content .text { padding: 0 0 5rem; }
@@ -145,7 +144,8 @@
 
 	.page-default .page-title .page-title-slider .title h1, .page-default .page-title .page-title-slider .title h2 { font-size: 6rem; }
 	.realisations-categories .category-realisations .realisation { width: calc(50% - 2rem); }
-	.page-template-page-realisations .realisations-conclusion .conclusion, .archive-products .archive-products-conclusion .conclusion, .single-realisations .realisations-conclusion .conclusion { padding-left: 0; }
+	.pdesign-block-conclusion .pdesign-conclusion,
+	.archive-products .archive-products-conclusion .conclusion, { padding-left: 0; }
 
 	.single-realisations .gallery .image { width: 100%; height: 40rem; }
 
@@ -196,8 +196,8 @@
 	.home-quick-access, .home-refs-tabs { display: none; }
 	.home-showroom { margin-top: 3rem; }
 	.home-values .content .image { height: 35rem; }
-	.home-about .body .small-container { max-width: 32rem; }
-	.home-about .body .content .item { width: 100%; padding-bottom: 100%; margin-left: 0; }
+	.team-about .body .small-container { max-width: 32rem; }
+	.team-about .body .content .item { width: 100%; padding-bottom: 100%; margin-left: 0; }
 
 	.home-socials .socials a { margin: 0 .5rem; }
 	.footer .footer-content { padding-right: 2.5rem; }
@@ -227,11 +227,11 @@
 	.page-home .home-video .slide-content .sections-col-3,
 	.page-home .home-video .slide-content .sections-col-4 { display: none; }
 
-	.home-about .body .about-mask { right: -2rem;}
+	.team-about .body .about-mask { right: -2rem;}
 
-	.home-about .body .small-container { padding: 0; }
-	.home-about .conclusion { display: block; }
-	.home-about .conclusion a { margin: 2rem 0 0 0;}
+	.team-about .body .small-container { padding: 0; }
+	.team-about .conclusion { display: block; }
+	.team-about .conclusion a { margin: 2rem 0 0 0;}
 	.home-works .center { height: 20rem; }
 	.home-testimonials .slider-testimonials .slide { height: 40rem;}
 	.home-testimonials .slider-testimonials .slide .quote { font-size: 2rem; padding-right: 2rem; }
