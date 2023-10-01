@@ -1,6 +1,12 @@
 /*--------------------------------------------------------------
 # Generals
 --------------------------------------------------------------*/
+#app {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	height: 100vh;
+}
 
 .section-title h2 {
 	color: $primary-color;
