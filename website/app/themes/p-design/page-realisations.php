@@ -3,6 +3,20 @@
  * Template Name: Réalisations
  */
 global $post;
+// We retrieve all the details for each realisation
+$menu_categories = get_field('realisation_categories', get_the_ID());
+
+// We retrieve all the details for each realisation
+$content_categories = get_terms('categories-realisations');
+
+/*
+ * We put all content category names in an array
+ * This array will be used to check if we can display the category name in the menu
+*/
+$content_categories_names = [];
+foreach ($content_categories as $content_category) {
+    $content_categories_names[] = $content_category->name;
+}
 
 get_header();
 ?>
@@ -27,19 +41,44 @@ get_header();
 				</div>
 			</div>
 
+            <?php
+                if (!empty($menu_categories)) {
+            ?>
 			<div class="page-overlay-intro">
 				<div class="large-container-left">
 					<div class="content-with-menus">
 						<div class="menus">
 							<a href="#" class="active">Tous les projets</a>
-							<a href="#category-bar">Bar</a>
-							<a href="#category-brasserie">Brasserie</a>
-							<a href="#category-restaurant">Restaurant</a>
-							<a href="#category-hotel">Hôtel</a>
+                            <?php
+                                $menu_categories_names = [];
+                                $menu_categories_name_availables = [];
+                                $menu_categories_details = [];
+
+                                foreach ($menu_categories as $menu_category) {
+
+                                    $menu_category_details = get_term($menu_category["category"]);
+                                    $menu_categories_names[] = $menu_category_details->name;
+
+                                    /*
+                                     * We display the category name in the menu only if we have content for it
+                                     *  And we create an array with only the category names we can use
+                                     *  And we create another array with the matching name in index and description for later use
+                                    */
+                                    if (in_array($menu_category_details->name, $content_categories_names)) {
+                                        $menu_categories_name_availables[] = $menu_category_details->name;
+                                        $menu_categories_details[$menu_category_details->name] = $menu_category['description'];
+                            ?>
+							    <a href="<?php echo "#category-" . $menu_category_details->name ?>"><?php echo $menu_category_details->name ?></a>
+                            <?php
+                                    }
+                                }
+
+                                $menu_categories_list = implode(", ", $menu_categories_name_availables);
+                            ?>
 						</div>
 						<div class="row">
 							<div class="left">
-								<p><strong>Retrouvez l’ensemble de nos projets, classés par catégorie : </strong><br>bar, restaurant, brasserie, hôtels</p>
+								<p><strong>Retrouvez l’ensemble de nos projets, classés par catégorie : </strong><br><?php echo $menu_categories_list ?></p>
 							</div>
 							<div class="right">
 								<div class="big">40</div>
@@ -49,78 +88,79 @@ get_header();
 				</div>
 			</div>
 
+            <?php
+                }
+            ?>
+
 
 			<section class="realisations-list">
 				<div class="large-container">
 					<div class="realisations-categories">
 
                         <?php
-                            $categories = get_terms('categories-realisations');
+                            foreach ($content_categories as $content_category) :
+                                $content_category_slug = $content_category->slug;
+                                $content_category_object = get_term_by('slug', $content_category_slug, 'categories-realisations');
 
-                            foreach ($categories as $category) :
-                                $category_slug = $category->slug; // Remplacez 'votre-terme' par le slug du terme que vous souhaitez récupérer
-                                $category = get_term_by('slug', $category_slug, 'categories-realisations'); // Remplacez 'category' par le nom de la taxonomie appropriée (category ou post_tag)
-
-                                if ($category) {
+                                // If the menu name for the category is not set then we don't display the content
+                                if ($content_category_object && in_array($content_category->name, $menu_categories_names)) {
                                     $args = array(
                                         'posts_per_page' => -1, // Récupérer tous les articles liés au terme
                                         'tax_query' => array(
                                             array(
-                                                'taxonomy' => $category->taxonomy,
+                                                'taxonomy' => $content_category_object->taxonomy,
                                                 'field'    => 'id',
-                                                'terms'    => $category->term_id,
+                                                'terms'    => $content_category_object->term_id,
                                             ),
                                         ),
                                     );
                         ?>
+                                    <div class="category">
+                                        <div class="category-title">
+                                            <h2 id="category-<?php echo $content_category_object->name ?>"><?php echo $content_category_object->count . ' ' . $content_category_object->name ?></h2>
+                                            <p><?php echo $menu_categories_details[$content_category_object->name] ?></p>
+                                        </div>
+                                        <div class="category-realisations">
+                                            <?php
+                                                $query = new WP_Query($args);
 
-
-                                        <div class="category">
-                                            <div class="category-title">
-                                                <h2 id="category-<?= $category->name ?>"><?= $category->count . ' ' . $category->name ?></h2>
-                                                <p>Ecus vellique quis in consequi blandit et aceri dolupta nobit facerunt as maximagnis dolorem porest facillum abores xero officitae volupitatem hit officia dolorum et velique.</p>
-                                            </div>
-                                            <div class="category-realisations">
-                                                <?php
-                                                    $query = new WP_Query($args);
-
-                                                    if ($query->have_posts()) {
-                                                        $i = 1;
-                                                        while ($query->have_posts()) {
-                                                        $query->the_post();
-                                                        $image = get_field('realisation_banner', get_the_ID());
-                                                ?>
-                                                        <div class="realisation">
-                                                            <div class="number-ratio">
-                                                                <span class="big"><?= $i; ?></span>
-                                                                <span class="big"><?= $category->count ?> </span>
-                                                            </div>
-                                                                <a href="<?= the_permalink(); ?>">
-                                                                    <div class="image-container">
-                                                                        <div class="image" style="background-image: url(<?= $image['url'] ?>);">
-                                                                            <div class="hover"><img src="<?= asset('plus.svg'); ?>" alt=""></div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="name"><?= the_title() . ' | Paris'; ?> </div>
-                                                                </a>
+                                                if ($query->have_posts()) {
+                                                    $i = 1;
+                                                    while ($query->have_posts()) {
+                                                    $query->the_post();
+                                                    $image = get_field('realisation_banner', get_the_ID());
+                                            ?>
+                                                    <div class="realisation">
+                                                        <div class="number-ratio">
+                                                            <span class="big"><?php echo $i; ?></span>
+                                                            <span class="big"><?php echo $content_category_object->count ?> </span>
                                                         </div>
-                                                <?php
-                                                            $i++;
-                                                        }
-                                                        wp_reset_postdata(); // Réinitialisez les données de l'article après la boucle
-                                                    } else {
-                                                        echo 'Aucun article trouvé pour ce terme.';
-                                                    }
-                                                ?>
-                                                <div class="realisation">
-                                                    <div class="more">
-                                                        <a href="#" class="button button-white button-image">
-                                                            <img src="<?= asset('plus.svg') ?>" class="svg">
-                                                        </a>
+                                                            <a href="<?php echo the_permalink(); ?>">
+                                                                <div class="image-container">
+                                                                    <div class="image" style="background-image: url(<?= $image['url'] ?>);">
+                                                                        <div class="hover"><img src="<?= asset('plus.svg'); ?>" alt=""></div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="name"><?php echo the_title() . ' | Paris'; ?> </div>
+                                                            </a>
                                                     </div>
+                                            <?php
+                                                        $i++;
+                                                    }
+                                                    wp_reset_postdata(); // Réinitialise les données de l'article après la boucle
+                                                } else {
+                                                    echo 'Aucun article trouvé pour ce terme.';
+                                                }
+                                            ?>
+                                            <div class="realisation">
+                                                <div class="more">
+                                                    <a href="#" class="button button-white button-image">
+                                                        <img src="<?php echo asset('plus.svg') ?>" class="svg">
+                                                    </a>
                                                 </div>
                                             </div>
                                         </div>
+                                    </div>
 
                             <?php
 
@@ -129,103 +169,6 @@ get_header();
                                 }
                             endforeach;
                         ?>
-
-
-<!--						<div class="category">
-							<div class="category-title">
-								<h2 id="category-brasserie">6 Brasseries</h2>
-								<p>Ecus vellique quis in consequi blandit et aceri dolupta nobit facerunt as maximagnis dolorem porest facillum abores xero officitae volupitatem hit officia dolorum et velique.</p>
-							</div>
-							<div class="category-realisations">
-								<?php /*for ($i=1; $i <= 7; $i++) : */?>
-									<div class="realisation">
-										<div class="number-ratio">
-											<span class="big"><?php /*= $i; */?></span>
-											<span class="big">15</span>
-										</div>
-										<a href="<?php /*= home_url('realisations/le-choupinet/'); */?>">
-											<div class="image-container">
-												<div class="image" style="background-image: url(<?php /*= asset('home-showroom.jpg') */?>);">
-													<div class="hover"><img src="<?php /*= asset('plus.svg'); */?>" alt=""></div>
-												</div>
-											</div>
-											<div class="name">Ismael | Paris</div>
-										</a>
-									</div>
-								<?php /*endfor; */?>
-								<div class="realisation">
-									<div class="more">
-										<a href="#" class="button button-white button-image">
-											<img src="<?php /*= asset('plus.svg') */?>" class="svg">
-										</a>
-									</div>
-								</div>
-							</div>
-						</div>
-
-                        <div class="category">
-                            <div class="category-title">
-                                <h2 id="category-restaurant">6 Restaurants</h2>
-                                <p>Ecus vellique quis in consequi blandit et aceri dolupta nobit facerunt as maximagnis dolorem porest facillum abores xero officitae volupitatem hit officia dolorum et velique.</p>
-                            </div>
-                            <div class="category-realisations">
-                                <?php /*for ($i=1; $i <= 7; $i++) : */?>
-                                    <div class="realisation">
-                                        <div class="number-ratio">
-                                            <span class="big"><?php /*= $i; */?></span>
-                                            <span class="big">15</span>
-                                        </div>
-                                        <a href="<?php /*= home_url('realisations/le-choupinet/'); */?>">
-                                            <div class="image-container">
-                                                <div class="image" style="background-image: url(<?php /*= asset('home-showroom.jpg') */?>);">
-                                                    <div class="hover"><img src="<?php /*= asset('plus.svg'); */?>" alt=""></div>
-                                                </div>
-                                            </div>
-                                            <div class="name">Ismael | Paris</div>
-                                        </a>
-                                    </div>
-                                <?php /*endfor; */?>
-                                <div class="realisation">
-                                    <div class="more">
-                                        <a href="#" class="button button-white button-image">
-                                            <img src="<?php /*= asset('plus.svg') */?>" class="svg">
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="category">
-                            <div class="category-title">
-                                <h2 id="category-hotel">6 Hotels</h2>
-                                <p>Ecus vellique quis in consequi blandit et aceri dolupta nobit facerunt as maximagnis dolorem porest facillum abores xero officitae volupitatem hit officia dolorum et velique.</p>
-                            </div>
-                            <div class="category-realisations">
-                                <?php /*for ($i=1; $i <= 7; $i++) : */?>
-                                    <div class="realisation">
-                                        <div class="number-ratio">
-                                            <span class="big"><?php /*= $i; */?></span>
-                                            <span class="big">15</span>
-                                        </div>
-                                        <a href="<?php /*= home_url('realisations/le-choupinet/'); */?>">
-                                            <div class="image-container">
-                                                <div class="image" style="background-image: url(<?php /*= asset('home-showroom.jpg') */?>);">
-                                                    <div class="hover"><img src="<?php /*= asset('plus.svg'); */?>" alt=""></div>
-                                                </div>
-                                            </div>
-                                            <div class="name">Ismael | Paris</div>
-                                        </a>
-                                    </div>
-                                <?php /*endfor; */?>
-                                <div class="realisation">
-                                    <div class="more">
-                                        <a href="#" class="button button-white button-image">
-                                            <img src="<?php /*= asset('plus.svg') */?>" class="svg">
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>-->
 
                     </div>
 				</div>
