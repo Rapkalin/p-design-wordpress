@@ -52,89 +52,42 @@ get_header();
                 </section>
             <?php endwhile; endif; ?>
 
-			<!--<section class="realisations-list">
-				<div class="large-container">
-					<div class="realisations-categories">
+            <?php if( have_rows('team_about') ): while( have_rows('team_about') ): the_row(); ?>
+                <section class="team-about" id="team-about">
+                    <div class="container">
+                        <div class="body">
+                            <div class="small-container">
+                                <div class="about-mask" id="about-mask"></div>
+                                <div class="content">
+                                    <?php if( have_rows('team_about_numbers') ): while( have_rows('team_about_numbers') ): the_row(); ?>
+                                        <div class="item">
+                                            <div>
+                                                <?php the_sub_field('team_about_description'); ?>
+                                            </div>
+                                        </div>
+                                    <?php endwhile; endif; ?>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="conclusion">
+                            <p><?php the_sub_field('team_about_block_description'); ?></p>
+                            <?php if (get_sub_field('team_about_link')) : ?>
+                                <a href="<?= get_sub_field('team_about_block_link')['url']; ?>" class="button button-white button-image"><img src="<?= asset('plus.svg'); ?>" class="svg"></a>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </section>
+            <?php endwhile; endif; ?>
 
-						<div class="category">
-							<div class="category-title">
-								<h2>15 Bars</h2>
-								<p>Ecus vellique quis in consequi blandit et aceri dolupta nobit facerunt as maximagnis dolorem porest facillum abores xero officitae volupitatem hit officia dolorum et velique.</p>
-							</div>
-							<div class="category-realisations">
-								<?php /*for ($i=1; $i <= 7; $i++) : */?>
-									<div class="realisation">
-										<div class="number-ratio">
-											<span class="big"><?php /*= $i; */?></span>
-											<span class="big">15</span>
-										</div>
-										<a href="<?php /*= home_url('realisations/le-choupinet/'); */?>">
-											<div class="image-container">
-												<div class="image" style="background-image: url(<?php /*= asset('home-showroom.jpg') */?>);">
-													<div class="hover"><img src="<?php /*= asset('plus.svg'); */?>" alt=""></div>
-												</div>
-											</div>
-											<div class="name">Ismael | Paris</div>
-										</a>
-									</div>
-								<?php /*endfor; */?>
-								<div class="realisation">
-									<div class="more">
-										<a href="#" class="button button-white button-image">
-											<img src="<?php /*= asset('plus.svg') */?>" class="svg">
-										</a>
-									</div>
-								</div>
-							</div>
-						</div>
-
-						<div class="category">
-							<div class="category-title">
-								<h2>6 Brasseries</h2>
-								<p>Ecus vellique quis in consequi blandit et aceri dolupta nobit facerunt as maximagnis dolorem porest facillum abores xero officitae volupitatem hit officia dolorum et velique.</p>
-							</div>
-							<div class="category-realisations">
-								<?php /*for ($i=1; $i <= 7; $i++) : */?>
-									<div class="realisation">
-										<div class="number-ratio">
-											<span class="big"><?php /*= $i; */?></span>
-											<span class="big">15</span>
-										</div>
-										<a href="<?php /*= home_url('realisations/le-choupinet/'); */?>">
-											<div class="image-container">
-												<div class="image" style="background-image: url(<?php /*= asset('home-showroom.jpg') */?>);">
-													<div class="hover"><img src="<?php /*= asset('plus.svg'); */?>" alt=""></div>
-												</div>
-											</div>
-											<div class="name">Ismael | Paris</div>
-										</a>
-									</div>
-								<?php /*endfor; */?>
-								<div class="realisation">
-									<div class="more">
-										<a href="#" class="button button-white button-image">
-											<img src="<?php /*= asset('plus.svg') */?>" class="svg">
-										</a>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</section>-->
-
-			<section class="realisations-conclusion">
-				<div class="large-container">
-					<div class="conclusion">
-						<h2>Une question ?</h2>
-						<?php the_field('ask', 'option'); ?>
-						<a href="#" class="button">Contactez-nous</a>
-					</div>
-				</div>
-			</section>
+            <?php
+                if (!empty(get_field('ask', 'option'))) {
+                    get_template_part('template-parts/content', 'contact-us');
+                }
+            ?>
 		</div>
 
-	<?php endwhile; endif; ?>
+	<?php endwhile; endif;
+    ?>
 
 <?php
 get_footer();

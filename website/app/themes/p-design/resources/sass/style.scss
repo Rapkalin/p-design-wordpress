@@ -17,36 +17,38 @@ Text Domain: p-design
 /*--------------------------------------------------------------
 # Generals
 --------------------------------------------------------------*/
-@import 'variables',
-'mixins',
-'reset';
+@import 'generals/variables',
+'generals/mixins',
+'generals/reset';
 
 /*--------------------------------------------------------------
 # Partials
 --------------------------------------------------------------*/
-@import 'structure',
-'header',
-'footer';
+@import 'partials/structure',
+'partials/header',
+'partials/footer',
+'partials/block_conclusion';
 
 /*--------------------------------------------------------------
 # Modules
 --------------------------------------------------------------*/
-@import 'buttons',
-'popup',
-'form',
-'slick';
+@import 'modules/buttons',
+'modules/popup',
+'modules/form',
+'modules/slick';
 
 /*--------------------------------------------------------------
 # Pages
 --------------------------------------------------------------*/
-@import 'generals',
-'home',
-'product',
-'products',
-'realisations',
-'realisation',
-'showroom',
-'contact';
+@import 'pages/generals',
+'pages/home',
+'pages/product',
+'pages/products',
+'pages/realisations',
+'pages/realisation',
+'pages/showroom',
+'pages/contact',
+'pages/team';
 
 /*--------------------------------------------------------------
 # Responsive
