@@ -51,6 +51,10 @@
 	}
 }
 
+.archive-products .archive-products-list {
+	flex: 1;
+}
+
 .archive-products .archive-products-list .products {
 	align-items: center;
 	color: #646464;
@@ -84,6 +88,7 @@
 
 .archive-products .archive-products-list .products-pagination {
 	margin: 5rem auto;
+	width: 100%;
 
 	.products-navigation {
 		align-items: center;

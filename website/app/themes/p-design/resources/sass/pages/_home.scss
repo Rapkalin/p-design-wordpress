@@ -182,6 +182,7 @@
 .home-refs-tabs .tab .content {
 	display: flex;
 
+	.full { flex: 1;}
 	.left { padding-right: 5rem; width: 50%; }
 	.right { padding-left: 5rem; width: 50%; }
 }
@@ -217,7 +218,9 @@
 	flex-wrap: wrap;
 
 	a {
-		max-width: calc(100% / 7);
+		max-width: calc(100% / 14);
+		text-align: center;
+		width: 100%;
 	}
 
 	a img {

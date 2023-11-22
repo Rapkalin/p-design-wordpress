@@ -35,7 +35,7 @@
 	align-items: center;
 	display: flex;
 	flex: 1;
-	justify-content: space-between;
+	column-gap: 5.3rem;
 	flex-wrap: wrap;
 
 	.realisation {
@@ -111,4 +111,8 @@
 	.button {
 		margin-top: 3rem;
 	}
+}
+
+.realisations-taxonomy-content {
+	padding-top: 48px;
 }

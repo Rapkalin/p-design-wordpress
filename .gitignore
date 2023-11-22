@@ -30,6 +30,8 @@ website/app/*
 
 #Plugins to ignore
 !website/app/plugins/
+website/app/plugins/advanced-custom-fields
+website/app/plugins/advanced-custom-fields-pro
 website/app/plugins/autoptimize
 website/app/plugins/classic-editor
 website/app/plugins/auto-login-new-user-after-registration

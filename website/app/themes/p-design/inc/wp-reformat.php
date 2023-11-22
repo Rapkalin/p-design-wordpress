@@ -8,6 +8,11 @@ function asset($path)
 	echo bloginfo('template_directory') . '/images/' . $path;
 }
 
+function get_asset($path)
+{
+	return get_bloginfo('template_directory') . '/images/' . $path;
+}
+
 /**
  * Disable administration bar
  */
@@ -16,28 +21,29 @@ show_admin_bar(false);
 /**
  * Reformat archive title function
  */
-add_filter( 'get_the_archive_title', function ($title) {
-	if ( is_category() ) {
-			$title = single_cat_title( '', false );
-		} elseif ( is_tag() ) {
-			$title = single_tag_title( '', false );
-		} elseif ( is_author() ) {
-			$title = '<span class="vcard">' . get_the_author() . '</span>' ;
-		} elseif ( is_tax() ) { //for custom post types
-			$title = sprintf( __( '%1$s' ), single_term_title( '', false ) );
-		} elseif (is_post_type_archive()) {
-			$title = post_type_archive_title( '', false );
-		}
+add_filter('get_the_archive_title', function ($title) {
+	if (is_category()) {
+		$title = single_cat_title('', false);
+	} elseif (is_tag()) {
+		$title = single_tag_title('', false);
+	} elseif (is_author()) {
+		$title = '<span class="vcard">' . get_the_author() . '</span>';
+	} elseif (is_tax()) { //for custom post types
+		$title = sprintf(__('%1$s'), single_term_title('', false));
+	} elseif (is_post_type_archive()) {
+		$title = post_type_archive_title('', false);
+	}
 	return $title;
 });
 
 /**
  * Remove menus items
  */
-function remove_menus(){
-	remove_menu_page( 'edit.php' );
-	remove_menu_page( 'upload.php' );
-	remove_menu_page( 'edit-comments.php' );
+function remove_menus()
+{
+	remove_menu_page('edit.php');
+	remove_menu_page('upload.php');
+	remove_menu_page('edit-comments.php');
 	// remove_menu_page( 'themes.php' );
 	// remove_menu_page( 'users.php' );
 	// remove_menu_page( 'tools.php' );
@@ -45,13 +51,13 @@ function remove_menus(){
 	// remove_menu_page( 'edit.php?post_type=acf' );
 	// remove_menu_page( 'wpcf7' );
 }
-add_action( 'admin_menu', 'remove_menus' );
+add_action('admin_menu', 'remove_menus');
 
 /**
  * Filter Yoast SEO priority
  */
-add_filter('wpseo_metabox_prio', function() {
-    return 'low';
+add_filter('wpseo_metabox_prio', function () {
+	return 'low';
 });
 
 /**
@@ -66,8 +72,8 @@ remove_action('wp_head', 'rsd_link');
 remove_action('wp_head', 'wp_shortlink_wp_head', 10, 0);
 remove_action('wp_head', 'adjacent_posts_rel_link_wp_head', 10, 0);
 remove_action('wp_head', 'start_post_rel_link', 10, 0);
-remove_action( 'wp_head', 'rest_output_link_wp_head');
-remove_action( 'wp_head', 'feed_links_extra', 3 );
-remove_action( 'wp_head', 'feed_links', 2 );
-remove_action( 'wp_head', 'wp_oembed_add_discovery_links');
-remove_action( 'wp_head', 'rest_output_link_header', 11, 0);
+remove_action('wp_head', 'rest_output_link_wp_head');
+remove_action('wp_head', 'feed_links_extra', 3);
+remove_action('wp_head', 'feed_links', 2);
+remove_action('wp_head', 'wp_oembed_add_discovery_links');
+remove_action('wp_head', 'rest_output_link_header', 11, 0);
