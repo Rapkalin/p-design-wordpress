@@ -19,6 +19,8 @@
     }
   ],
 
+  "minimum-stability": "RC",
+
   "require": {
     "php": ">=7.4",
     "johnpbloch/wordpress": "^6.3",
@@ -34,7 +36,9 @@
     "wpackagist-plugin/wordpress-seo":"^21.0",
 
     "ext-dom": "*",
-    "ext-libxml": "*"
+    "ext-libxml": "*",
+    "ext-curl": "*",
+    "php-webdriver/webdriver": "^1.15"
   },
 
   "require-dev": {
