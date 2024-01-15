@@ -48,6 +48,7 @@ $numnberOfvalidArguments = count($argv) - count($invalidArgument);
 if ($numnberOfvalidArguments === 0) {
     echo count($invalidArgument) . ' invalid argument(s) found' . "\n";
     echo 'No valid arguments found' . "\n";
+    echo '***********************************' . "\n";
     return false;
 } else {
     echo count($invalidArgument) . ' invalid argument(s) found' . "\n";
@@ -68,28 +69,28 @@ echo "\n" . '***** Starting scrapping ******' . "\n";
 // Selenium WebDriver URL
 $host = 'http://localhost:4444/wd/hub';
 
-
 if (in_array('pedrali', $argv) ) {
-    scrapPedrali($host);
+    getPedraliUrlItems($host);
 }
 
-echo "\n" . '* Scrapping is done *' . "\n";
+echo "\n" . '***** Scrapping is done ******' . "\n";
+
+
+function scrapPedrali($host) {
+   $pedraliUrlItems = getPedraliUrlItems($host);
+}
 
 /**
- * @throws \Facebook\WebDriver\Exception\NoSuchElementException
- * @throws \Facebook\WebDriver\Exception\TimeoutException
+ * @param string $host
+ * @return array|false
+ * @throws Exception
  */
-function scrapPedrali($host) {
+function getPedraliUrlItems(string $host) {
 
-    /*
-     * Init Webdriver
-     */
-    try {
-        $driver = RemoteWebDriver::create($host,  Facebook\WebDriver\Remote\DesiredCapabilities::firefox());
-        $driver->manage()->window()->maximize();
-    } catch (\Exception $e) {
-        echo 'error:' . $e->getMessage() . "\n";
-        die('stop');
+    $driver = initWebDriver($host);
+
+    if (!$driver) {
+        return false;
     }
 
     // Go to the URL and retrieve it
@@ -101,6 +102,7 @@ function scrapPedrali($host) {
      */
 
     // Wait the page to load
+    // @todo: Check if there is an element to check to confirm that the page is loaded
     sleep(3);
 
     // Get the cookie Banner and it exists refuse the cookies by clicking and the refuse button
@@ -111,6 +113,7 @@ function scrapPedrali($host) {
     }
 
     // Wait for the cookie Banner to close
+    // @todo: check if button exist if not we continue
     sleep(1);
 
     // Loading all items
@@ -124,7 +127,7 @@ function scrapPedrali($host) {
     echo '***********************************' . "\n";
     echo '*                                 *' . "\n";
     echo '*                                 *' . "\n";
-    echo '*          '. count($categoryItems) . ' items found' . '          *' . "\n";
+    echo '*          '. count($categoryItems) . ' items found' . '         *' . "\n";
     echo '*                                 *' . "\n";
     echo '*                                 *' . "\n";
     echo '***********************************' . "\n";
@@ -139,10 +142,36 @@ function scrapPedrali($host) {
 
     // xxx
     $driver->quit();
+
+    return $categoryItemsLinks;
     die();
 }
 
-function scrollDown($driver) {
+function savePedraliProduct(string $host, string $itemUrl) {
+    return false;
+}
+
+/**
+ * @param $host
+ * @return void
+ * @throws Exception
+ */
+function getPedraliProduct($host) {
+    // @todo: Add percentage for number of product done
+    $pedraliUrlItemsArray = getPedraliUrlItems($host);
+
+    foreach ($pedraliUrlItemsArray as $pedraliUrlItem) {
+        savePedraliProduct($host, $pedraliUrlItem);
+    }
+}
+
+/**
+ * Script JS to scroll down the page until button to add more products disappear
+ * @param $driver
+ * @return true
+ */
+function scrollDown($driver): bool
+{
     $driver->executeScript('window.scrollTo(0,document.body.scrollHeight);');
     sleep(15);
 
@@ -151,4 +180,21 @@ function scrollDown($driver) {
     }
 
     return true;
+}
+
+/**
+ * @param $host
+ * @return RemoteWebDriver
+ * @throws Exception
+ */
+function initWebDriver ($host) {
+    try {
+        // @todo: Check if possible to hide the navigator
+        $driver = RemoteWebDriver::create($host,  Facebook\WebDriver\Remote\DesiredCapabilities::firefox());
+        $driver->manage()->window()->maximize();
+        return $driver;
+    } catch (\Exception $e) {
+        echo 'error:' . $e->getMessage() . "\n";
+        throw new \Exception($e->getMessage());
+    }
 }
