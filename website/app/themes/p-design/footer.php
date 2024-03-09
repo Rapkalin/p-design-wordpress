@@ -35,7 +35,7 @@
 					<span>|</span>
 					Design Agence 426c
 					<span>|</span>
-					<a href="#">Mentions légales</a>
+					<a href="<?= home_url('/mentions-legales') ?>">Mentions légales</a>
 				</div>
 			</div>
 		</div>

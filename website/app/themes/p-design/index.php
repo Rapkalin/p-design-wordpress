@@ -153,7 +153,6 @@ $realisationsPageId = 21
 			<?php endwhile;
 			endif; ?>
 
-			<!-- À finir - Lier les réalisations (3 dernières - juste image à la une + title) -->
 			<?php if (have_rows('home_realisations')) : while (have_rows('home_realisations')) : the_row(); ?>
 					<section class="home-works">
 						<div class="large-container-left">
@@ -167,21 +166,15 @@ $realisationsPageId = 21
 										<a href="<?= get_sub_field('link')['url']; ?>" class="button button-white button-image"><img src="<?= asset('plus.svg'); ?>" class="svg"></a>
 									<?php endif; ?>
 								</div>
-								<div class="center home-realisation-cover" style="background-image: url(<?= asset('home-works.jpg'); ?>);"></div>
-								<div class="right">
-									<div class="works-slider-dots">
-										<?php
-										$k = 0;
-										$realisations_query = new WP_Query(['post_type' => 'realisations', 'posts_per_page' => 3]);
-										if ($realisations_query->have_posts()) : while ($realisations_query->have_posts()) : $realisations_query->the_post(); ?>
-												<div class="dot home-realisation-item <?= $k === 0 ? "active" : "" ?>" data-image="<?= get_field('realisation_banner')['url']; ?>"><span></span> <?php the_title(); ?></div>
-										<?php $k++;
-											endwhile;
-											$home->reset_postdata();
-										endif; ?>
-										<div class="more"><a href="<?= get_sub_field('link')['url']; ?>"><img src="<?= asset('plus.svg'); ?>" alt="En voir plus"></a></div>
+								<?php
+								$last_realisation = wp_get_recent_posts(['post_type' => 'realisations', 'posts_per_page' => 1]);
+								$realisations_query = new WP_Query(['post_type' => 'realisations', 'posts_per_page' => 1]);
+								if ($last_realisation && $last_realisation[0]) : ?>
+									<?php $realisation_url = get_field('realisation_banner', $last_realisation[0]['ID'])['url'] ?>
+									<div class="center home-realisation-cover" style="background-image: url('<?= $realisation_url; ?>')">
+										<img src="<?= $realisation_url; ?>" />
 									</div>
-								</div>
+								<?php endif; ?>
 							</div>
 						</div>
 					</section>
