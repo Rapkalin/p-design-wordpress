@@ -314,11 +314,14 @@
 	}
 
 	.center {
-		background-position: center center;
-		background-repeat: no-repeat;
-		background-size: cover;
-		width: calc(45% - 5rem);
-		margin-right: 4rem;
+		flex: 1;
+		position: relative;
+
+		img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+		}
 	}
 
 	.right {
@@ -460,7 +463,7 @@
 
 	a {
 		display: inline-block;
-		margin: 0 1.5rem;
+		margin: 0 2.5rem;
 		vertical-align: middle;
 	}
 
@@ -470,7 +473,7 @@
 
 	img {
 		display: inline-block;
-		height: 4.5rem;
+		height: 4rem;
 		transition: transform 0.3s;
 		width: auto;
 	}

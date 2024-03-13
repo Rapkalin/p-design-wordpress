@@ -51,17 +51,17 @@ $products = new WP_Query($args);
 		<div class="page-title">
 			<div class="large-container">
 				<h1><?php the_archive_title(); ?></h1>
-				<div class="breadcrumbs">
-					<a href="<?= home_url('/categories/nouveautes'); ?>"><strong>Nouveautés</strong></a>
-					<?php if ($parent_term_id) : ?>
-						<span>|</span>
-						<a href="<?= get_term_link($parent_term_id); ?>"><?= $parent_taxonomy->name; ?></a>
-					<?php endif; ?>
-					<?php if ($taxonomy->name !== "Nouveautés") : ?>
+				<?php if ($taxonomy->name !== "Nouveautés") : ?>
+					<div class="breadcrumbs">
+						<a href="<?= home_url('/categories/nouveautes'); ?>"><strong>Nouveautés</strong></a>
+						<?php if ($parent_term_id) : ?>
+							<span>|</span>
+							<a href="<?= get_term_link($parent_term_id); ?>"><?= $parent_taxonomy->name; ?></a>
+						<?php endif; ?>
 						<span>|</span>
 						<a href="<?= get_term_link($term_id); ?>"><?= $taxonomy->name; ?></a>
-					<?php endif; ?>
-				</div>
+					</div>
+				<?php endif; ?>
 			</div>
 		</div>
 
