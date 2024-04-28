@@ -7,7 +7,7 @@ use Facebook\WebDriver\Remote\DesiredCapabilities;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Facebook\WebDriver\WebDriverBy;
 
-class ScrappingBase implements ScrappingInterface
+class ScrappingBase
 {
 
     /**
@@ -69,16 +69,6 @@ class ScrappingBase implements ScrappingInterface
     public function getWebsiteConfig(): array
     {
         return $this->websiteConfig;
-    }
-
-    /**
-     * Return the website name
-     *
-     * @return string
-     */
-    public function getWebsiteName(): string
-    {
-        return $this->websiteName;
     }
 
     /**

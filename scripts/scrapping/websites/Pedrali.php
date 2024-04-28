@@ -3,12 +3,12 @@
 namespace Scrapping\websites;
 
 use Scrapping\ScrappingBase;
+use Scrapping\ScrappingInterface;
 
-class Pedrali extends ScrappingBase
+class Pedrali extends ScrappingBase implements ScrappingInterface
 {
-    public function __construct()
-    {
-        parent::__construct('pedrali', $this->getWebsiteConfig());
+    public function __construct() {
+        parent::__construct($this->getWebsiteName(), $this->getWebsiteConfig());
     }
 
     /**
@@ -16,8 +16,7 @@ class Pedrali extends ScrappingBase
      *
      * @return array
      */
-    public function getWebsiteConfig(): array
-    {
+    public function getWebsiteConfig(): array {
         return [
             'categories' => [
                 'chairs' => [
@@ -31,5 +30,10 @@ class Pedrali extends ScrappingBase
                 'rejectButtonId' => 'onetrust-reject-all-handler'
             ],
         ];
+    }
+
+    public function getWebsiteName(): string
+    {
+        return 'pedrali';
     }
 }
