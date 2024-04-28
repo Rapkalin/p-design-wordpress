@@ -97,3 +97,31 @@ To use the auto-deploy using Github Workflows please follow the below instructio
   git merge your-branch"
   git push
 ```
+
+### 6/ SCRAPPING SCRIPT
+/!\ Make sure the Selenium server is installed on your computer
+PHP package: php-webdriver
+Webdriver: Selenium
+Selenium version: Selenium server version: 3.141.59. Selenium serveur runs on port 4444
+Browser: Firefox
+
+- The scrapping script is located in the scripts directory
+- To run the script, you need to be in the root directory of the project
+- Run the script with the following command and adding the website to scrap as an argument in lowcase (see example below):
+- The list of the authorized websites are listed in scripts/scrapping/scrapping.php.
+
+- The below command is an example with the website Pedrali.
+```
+  php scripts/scrapping/scrapping.php pedrali
+```
+
+- Start the webdriver with the following command:
+```
+  webdriver-manager start 
+```
+
+- If there is an error, try to update the Selenium webdriver with the following command:
+```
+  webdriver-manager update --versions.firefox
+  webdriver-manager start
+```
