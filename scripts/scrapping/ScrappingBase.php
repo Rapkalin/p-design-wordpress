@@ -62,16 +62,6 @@ class ScrappingBase
     }
 
     /**
-     * Return the website configuration
-     *
-     * @return array
-     */
-    public function getWebsiteConfig(): array
-    {
-        return $this->websiteConfig;
-    }
-
-    /**
      * Init a new webDriver
      *
      * @param string $host
