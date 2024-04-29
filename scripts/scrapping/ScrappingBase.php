@@ -114,14 +114,7 @@ class ScrappingBase
      */
     function getCategoryItems(array $category): array
     {
-        // Go to the URL and retrieve it
-        $this->webDriver->manage()->window()->maximize();
-        $this->webDriver->get($category['url']);
-
-        // Wait the page to load
-        // @todo: Check if there is an element to check to confirm that the page is loaded
-        // @todo: Update DB with cron every hour
-        sleep(3);
+        $this->getBrowserTab($category['url']);
 
         /*
          * Handling cookie banner
@@ -190,9 +183,31 @@ class ScrappingBase
      * @param string $itemUrl
      * @return array
      */
-    function getProduct(string $itemUrl) {
+    function getProduct(string $itemUrl): array
+    {
         $item = [];
 
+        // intro--image__box -> get the span element with the data-img attribute to get the image href
+        // intro--text__descr -> the description of the product
+        // titles--label -> the title of the product
+        // titles--sub -> the reference of the product
+
+        $imageBox = $this->webDriver->findElements(WebDriverBy::className($this->websiteConfig['product']['image']));
+        $productDescription = $this->webDriver->findElements(WebDriverBy::className($this->websiteConfig['product']['description']));
+        $productTitle = $this->webDriver->findElements(WebDriverBy::className($this->websiteConfig['product']['title']));
+        $productId = $this->webDriver->findElements(WebDriverBy::className($this->websiteConfig['product']['id']));
+        $productPrice = $this->webDriver->findElements(WebDriverBy::className($this->websiteConfig['product']['price']));
+
+        $item = [
+            'image' => $imageBox[0]->findElement(WebDriverBy::tagName('span'))->getAttribute('data-img'),
+            'title' => $productTitle[0]->getText(),
+            'id' => $productId[0]->getText(),
+            'price' => $productPrice[0]->getText(),
+            'description' => $productDescription[0]->getText(),
+        ];
+
+        $this->getBrowserTab($itemUrl);
+        die('stop');
         return $item;
     }
 
@@ -205,5 +220,23 @@ class ScrappingBase
     function saveProducts(array $categoryItems) {
         // Save the products
     }
+
+    /**
+     * Get & open a browser tab with the url
+     *
+     * @param string $url
+     * @return void
+     */
+    private function getBrowserTab(string $url) {
+        // Go to the URL and retrieve it
+        $this->webDriver->get($url);
+        $this->webDriver->manage()->window()->maximize();
+
+        // Wait the page to load
+        // @todo: Check if there is an element to check to confirm that the page is loaded
+        // @todo: Update DB with cron every hour
+        sleep(3);
+    }
+
 
 }
