@@ -64,7 +64,7 @@ echo '***********************************' . "\n";
 /*
  * Scrapping
  */
-echo "\n" . '***** Starting scrapping ******' . "\n";
+echo "\n" . '****** Starting scrapping ******' . "\n";
 
 // Todo : add for each on all argv
 if (in_array('pedrali', $argv) ) {
@@ -76,4 +76,4 @@ if (in_array('pedrali', $argv) ) {
     }
 }
 
-echo "\n" . '***** Scrapping is done ******' . "\n";
+echo "\n" . '****** Scrapping is done ******' . "\n";
