@@ -19,6 +19,13 @@ class Pedrali extends ScrappingBase implements ScrappingInterface
     public function getWebsiteConfig(): array {
         return [
             'categories' => [
+                'accessories' => [
+                    'id' => 'categoria--item',
+                    'item-href-element' => 'href',
+                    'type' => [ // indoor && outdoor || all
+                        'all' => 'https://www.pedrali.com/fr-fr/produits/accessoires-design',
+                    ],
+                ],
                 'chairs' => [
                     'id' => 'categoria--item',
                     'item-href-element' => 'href',
@@ -26,6 +33,41 @@ class Pedrali extends ScrappingBase implements ScrappingInterface
                         'all' => 'https://www.pedrali.com/fr-fr/produits/chaises-design',
                     ],
                 ],
+                'stools' => [
+                    'id' => 'categoria--item',
+                    'item-href-element' => 'href',
+                    'type' => [ // indoor && outdoor || all
+                        'all' => 'https://www.pedrali.com/fr-fr/produits/tabourets-design-pouf',
+                    ],
+                ],
+                'sofas' => [
+                    'id' => 'categoria--item',
+                    'item-href-element' => 'href',
+                    'type' => [ // indoor && outdoor || all
+                        'all' => 'https://www.pedrali.com/fr-fr/produits/canape-design-banquettes',
+                    ],
+                ],
+                'tables' => [
+                    'id' => 'categoria--item',
+                    'item-href-element' => 'href',
+                    'type' => [ // indoor && outdoor || all
+                        'all' => 'https://www.pedrali.com/fr-fr/produits/tables-design',
+                    ],
+                ],
+                'table-legs' => [
+                    'id' => 'categoria--item',
+                    'item-href-element' => 'href',
+                    'type' => [ // indoor && outdoor || all
+                        'all' => 'https://www.pedrali.com/fr-fr/produits/tables-base-centrale',
+                    ],
+                ],
+                'tops' => [ // Plateaux de table
+                    'id' => 'categoria--item',
+                    'item-href-element' => 'href',
+                    'type' => [ // indoor && outdoor || all
+                        'all' => 'https://www.pedrali.com/fr-fr/produits/plateaux',
+                    ],
+                ]
             ],
             'product' => [
                 'global-infos' => [
@@ -61,7 +103,7 @@ class Pedrali extends ScrappingBase implements ScrappingInterface
                 'id' => 'onetrust-banner-sdk',
                 'rejectButtonId' => 'onetrust-reject-all-handler'
             ],
-            'scroll-down' => true,
+            'scroll-down' => 'categoria--load-more',
         ];
     }
 

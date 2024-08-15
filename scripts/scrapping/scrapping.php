@@ -30,7 +30,7 @@ $authorizedFileArguments = [
  */
 $invalidArgument = [];
 
-if ($argv && count($argv) > 1 && $argv[0] === 'scripts/scrapping.php') {
+if ($argv && count($argv) > 1 && $argv[0] === 'scripts/scrapping/scrapping.php') {
     unset($argv[0]);
 
     foreach ($argv as $argument) {
@@ -41,7 +41,10 @@ if ($argv && count($argv) > 1 && $argv[0] === 'scripts/scrapping.php') {
     }
 
 } else {
-    echo 'File arguments invalid or empty' . "\n";
+    echo "Something went wrong. \n";
+    echo "Please make sure you called scripts/scrapping.php argument1 ... \n";
+    echo "Or check that your argument(s) are valid";
+    die();
 }
 
 $numnberOfvalidArguments = count($argv) - count($invalidArgument);

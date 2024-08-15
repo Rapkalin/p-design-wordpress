@@ -7,8 +7,17 @@ use Facebook\WebDriver\Remote\DesiredCapabilities;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Facebook\WebDriver\WebDriverBy;
 
+define( 'WPPATH', __DIR__ . '/../../website/wordpress-core/wp-load.php' );
+if (file_exists(WPPATH)) {
+    require WPPATH;
+    echo 'Wordpress successfully loaded for: ' . get_bloginfo();
+} else {
+    die('Failed to load Wordpress.');
+}
+
 class ScrappingBase
 {
+
 
     /**
      * The webDriver
@@ -46,6 +55,14 @@ class ScrappingBase
     private scrappingUtils $scrappingUtils;
 
     /**
+     * Array of field keys
+     *
+     * @var array
+     */
+    private array $fieldKeys;
+
+
+    /**
      * websiteName: The name of the website that needs to be included in $authorizedFileArguments
      * websiteConfig: The configuration website for the scrapping
      *
@@ -60,10 +77,12 @@ class ScrappingBase
         $this->websiteConfig = $websiteConfig;
         $this->websiteName = $websiteName;
         $this->scrappingUtils = new scrappingUtils();
+        $this->fieldKeys = $this->getFieldKeys();
     }
 
     /**
      * Return the website configuration
+     * This array is an example and must be overriden in each website class
      *
      * @return array
      */
@@ -81,7 +100,7 @@ class ScrappingBase
                     ],
 
                     /*
-                     * Ex:
+                     * Ex for all:
                      * 'type' => [ // indoor / outdoor / both
                      * 'all' => 'https://www.pedrali.com/fr-fr/produits/chaises-design',
                      * ],
@@ -134,7 +153,7 @@ class ScrappingBase
      * @return RemoteWebDriver
      * @throws Exception
      */
-    function initWebDriver (string $host): RemoteWebDriver
+    private function initWebDriver (string $host): RemoteWebDriver
     {
         try {
             // @todo: Check if possible to hide the navigator
@@ -154,6 +173,7 @@ class ScrappingBase
     private function getBrowserTab(string $url)
     {
         // Go to the URL and retrieve it
+        $this->webDriver->switchTo()->newWindow();
         $this->webDriver->get($url);
         $this->webDriver->manage()->window()->maximize();
 
@@ -170,7 +190,7 @@ class ScrappingBase
      * @param $driver
      * @return void
      */
-    function handleCookieBanner(array $cookieBannerDetails, $driver): void
+    private function handleCookieBanner(array $cookieBannerDetails, $driver): void
     {
         // Get the cookie Banner and if it exists refuses the cookies by clicking on the refuse button
         $cookieBanner = $driver->findElement(WebDriverBy::id($cookieBannerDetails['id']));
@@ -190,25 +210,19 @@ class ScrappingBase
      * @return true
      * @throws Exception
      */
-    function scrapWebsite(): bool
+    public function scrapWebsite(): bool
     {
         $categories = $this->websiteConfig['categories'];
-        $categoryProducts = [];
 
-        foreach ($categories as $category) {
+        foreach ($categories as $categoryName => $category) {
             foreach ($category['type'] as $categoryUrl) {
-                $this->getCategoryItems($category, $categoryUrl);
+                $categoryProducts = $this->getCategoryItemsDetails($category, $categoryUrl, $categoryName);
             }
-        }
 
-        try {
             echo 'Saving products...' . "\n";
             $this->saveProducts($categoryProducts);
-            echo 'Products successfully saved in database' . "\n";
-        } catch (\Exception $e) {
-            echo 'error:' . $e->getMessage() . "\n";
-            throw new \Exception('saveProducts Error: ' . $e->getMessage());
         }
+
 
         return true;
     }
@@ -219,20 +233,20 @@ class ScrappingBase
      * @Return array
      * @throws Exception
      */
-    function getCategoryItems(array $category, $categoryUrl): array
+    private function getCategoryItemsDetails(array $category, string $categoryUrl, string $categoryName): array
     {
         $this->getBrowserTab($categoryUrl);
 
         /*
          * Handling cookie banner
          */
-        if (isset($this->websiteConfig['cookie-banner'])) {
+        /*if (isset($this->websiteConfig['cookie-banner'])) {
             $this->handleCookieBanner($this->websiteConfig['cookie-banner'], $this->webDriver);
-        }
+        }*/
 
-        if ($this->websiteConfig['scroll-down']) {
+        if (isset($this->websiteConfig['scroll-down'])) {
             // Loading all items
-            $this->scrappingUtils->scrollDown($this->webDriver);
+            $this->scrappingUtils->scrollDown($this->webDriver, $this->websiteConfig['scroll-down']);
             // End of loading all items
         }
 
@@ -242,28 +256,41 @@ class ScrappingBase
         echo "\n";
         echo '***********************************' . "\n";
         echo '*                                 *' . "\n";
-        echo '*                                 *' . "\n";
-        echo '*          '. count($categoryItems) . ' items found' . '         *' . "\n";
-        echo '*                                 *' . "\n";
+        echo '*  Category: ' . $categoryName . "\n";
+        echo '*  '. count($categoryItems) . ' items found' . "\n";
         echo '*                                 *' . "\n";
         echo '***********************************' . "\n";
         echo "\n";
 
-        $categoryProducts = [];
         // @todo: Add percentage for number of product done
+        $itemUrls = $categoryProductsDetails = [];
         if ($categoryItems && count($categoryItems) > 0) {
             foreach ($categoryItems as $categoryItem) {
-                $itemUrl = $categoryItem->getAttribute($category['item-href-element']);
-                dump('$itemUrl', $itemUrl);
-                $item = $this->getProductDetails($itemUrl);
-                $categoryProducts[] = $item;
+                $itemUrls[] = $categoryItem->getAttribute($category['item-href-element']);
+            }
+
+            foreach ($itemUrls as $i => $itemUrl) {
+                if ($i > 1) {
+                    break;
+                }
+
+                $itemDetails = $this->getProductDetails($itemUrl);
+                $categoryProductsDetails[] = $itemDetails;
+
             }
         }
 
-        // Close the browser
-        $this->webDriver->quit();
+        try {
+            echo "Trying to quit browser... \n";
+            // Close the browser
+            $this->webDriver->quit();
+            echo "Browser quit successfully... \n";
+        } catch (Exception $e) {
+            echo "Error while trying to quit webdriver \n";
+            throw new Exception("Quitting browser error: " . $e->getMessage());
+        }
 
-        return $categoryProducts;
+        return $categoryProductsDetails;
     }
 
     /**
@@ -272,7 +299,7 @@ class ScrappingBase
      * @param string $itemUrl
      * @return array
      */
-    function getProductDetails(string $itemUrl): array
+    private function getProductDetails(string $itemUrl): array
     {
         $this->getBrowserTab($itemUrl);
         $productWebsiteConfig = $this->websiteConfig['product'];
@@ -291,7 +318,10 @@ class ScrappingBase
                     // Get the images for the cover
                     if ($productWebsiteConfig['images']['cover']) {
                         $itemDetails['images-cover'] = [];
-                        if ($productWebsiteConfig['images']['cover']['single']) {
+                        if (
+                            isset($productWebsiteConfig['images']['cover']['single'])
+                            && $productWebsiteConfig['images']['cover']['single']
+                        ) {
                             $imageBox = $this->webDriver->findElements(WebDriverBy::className($productWebsiteConfig['images']['cover']));
                             $itemDetails['images-cover'][] = $imageBox[0]->findElement(WebDriverBy::tagName('span'))->getAttribute('data-img');
                         } elseif ($productWebsiteConfig['images']['cover']['multiple']) {
@@ -324,8 +354,6 @@ class ScrappingBase
             }
         }
 
-        dump('$itemDetails', $itemDetails);
-        die('stop');
         return $itemDetails;
     }
 
@@ -335,10 +363,64 @@ class ScrappingBase
      * @param array $categoryItems
      * @return void
      */
-    function saveProducts(array $categoryItems) {
+    private function saveProducts(array $categoryItems): void
+    {
+        dump('field keys', acf_get_field('product_description'));
+        die();
         // Save the products
+        foreach ($categoryItems as $item) {
+            echo "Saving " . $item['title'] . "\n";
+
+            dump('$item', $item);
+
+            $post_data = [
+                'post_title'    => $item['title'],
+                'post_name' => $this->scrappingUtils->slugify($item['title']),
+                'post_type'     => 'produits',
+                'post_status'   => 'draft',
+                'comment_status' =>  'closed',
+                'post_author' => 1,
+            ];
+
+            dump('$post_data', $post_data);
+
+            $post_id = wp_insert_post($post_data);
+            dump('$post_id ', $post_id);
+            if (!is_wp_error($post_id)) {
+                //the post is valid
+                echo 'Item' . $item['title'] .  'successfully saved at id: ' . $post_id . "\n";
+            } else {
+                //there was an error in the post insertion,
+                echo $post_id->get_error_message();
+            }
+
+
+            die('product saved');
+
+        }
+
+        echo 'Products successfully saved in database' . "\n";
+
     }
 
+    private function getFieldKeys(): array
+    {
+        $fields = [
+            acf_get_field('product_banner'),
+            acf_get_field('product_featured_image'),
+            acf_get_field('product_description'),
+            acf_get_field('product_colors'),
+            acf_get_field('product_images'),
+            acf_get_field('product_more'),
+            acf_get_field('product_details'),
+        ];
 
+        $fieldKeys = [];
+        foreach ($fields as $field) {
+            $fieldKeys[] = $field['key'];
+        }
+
+        return $fieldKeys;
+    }
 
 }
