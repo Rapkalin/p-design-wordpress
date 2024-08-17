@@ -95,8 +95,8 @@ class Pedrali extends ScrappingBase implements ScrappingInterface
                     'colors' => false,
                 ],
                 'product-availability' => [
-                    'order-only' => false,
-                    'in-stock' => false,
+                    'order-only' => false, // @todo conflict when true with getProductDetails line 347
+                    'in-stock' => false, // @todo conflict when true with getProductDetails line 347
                 ],
             ],
             'cookie-banner' => [
@@ -107,8 +107,7 @@ class Pedrali extends ScrappingBase implements ScrappingInterface
         ];
     }
 
-    public function getWebsiteName(): string
-    {
+    public function getWebsiteName(): string {
         return 'pedrali';
     }
 }

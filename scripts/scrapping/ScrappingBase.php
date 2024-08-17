@@ -7,18 +7,20 @@ use Facebook\WebDriver\Remote\DesiredCapabilities;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Facebook\WebDriver\WebDriverBy;
 
+/*
+ * Load the WordPress environment
+ * So we have access to WP and ACF functions
+ */
 define( 'WPPATH', __DIR__ . '/../../website/wordpress-core/wp-load.php' );
 if (file_exists(WPPATH)) {
     require WPPATH;
-    echo 'Wordpress successfully loaded for: ' . get_bloginfo();
+    echo 'Wordpress successfully loaded for: ' . get_bloginfo() . "\n\n";
 } else {
     die('Failed to load Wordpress.');
 }
 
 class ScrappingBase
 {
-
-
     /**
      * The webDriver
      *
@@ -59,7 +61,15 @@ class ScrappingBase
      *
      * @var array
      */
-    private array $fieldKeys;
+    private array $fieldKeys = [
+        'product_banner',
+        'product_featured_image',
+        'product_description',
+        'product_colors',
+        'product_images',
+        'product_more',
+        'product_details',
+    ];
 
 
     /**
@@ -77,7 +87,6 @@ class ScrappingBase
         $this->websiteConfig = $websiteConfig;
         $this->websiteName = $websiteName;
         $this->scrappingUtils = new scrappingUtils();
-        $this->fieldKeys = $this->getFieldKeys();
     }
 
     /**
@@ -86,8 +95,7 @@ class ScrappingBase
      *
      * @return array
      */
-    public function getWebsiteConfig(): array
-    {
+    public function getWebsiteConfig(): array {
         return [
             'categories' => [
                 'categoryName' => [
@@ -153,8 +161,7 @@ class ScrappingBase
      * @return RemoteWebDriver
      * @throws Exception
      */
-    private function initWebDriver (string $host): RemoteWebDriver
-    {
+    private function initWebDriver (string $host): RemoteWebDriver {
         try {
             // @todo: Check if possible to hide the navigator
             return RemoteWebDriver::create($host, DesiredCapabilities::firefox());
@@ -170,12 +177,11 @@ class ScrappingBase
      * @param string $url
      * @return void
      */
-    private function getBrowserTab(string $url)
-    {
+    private function getBrowserTab(string $url): void {
         // Go to the URL and retrieve it
         $this->webDriver->switchTo()->newWindow();
         $this->webDriver->get($url);
-        $this->webDriver->manage()->window()->maximize();
+        $this->webDriver->manage()->window()->maximize(); // @todo: when ready, change it to minimize
 
         // Wait the page to load
         // @todo: Check if there is an element to check to confirm that the page is loaded
@@ -190,8 +196,7 @@ class ScrappingBase
      * @param $driver
      * @return void
      */
-    private function handleCookieBanner(array $cookieBannerDetails, $driver): void
-    {
+    private function handleCookieBanner(array $cookieBannerDetails, $driver): void {
         // Get the cookie Banner and if it exists refuses the cookies by clicking on the refuse button
         $cookieBanner = $driver->findElement(WebDriverBy::id($cookieBannerDetails['id']));
 
@@ -210,8 +215,7 @@ class ScrappingBase
      * @return true
      * @throws Exception
      */
-    public function scrapWebsite(): bool
-    {
+    public function scrapWebsite(): bool {
         $categories = $this->websiteConfig['categories'];
 
         foreach ($categories as $categoryName => $category) {
@@ -233,8 +237,7 @@ class ScrappingBase
      * @Return array
      * @throws Exception
      */
-    private function getCategoryItemsDetails(array $category, string $categoryUrl, string $categoryName): array
-    {
+    private function getCategoryItemsDetails(array $category, string $categoryUrl, string $categoryName): array {
         $this->getBrowserTab($categoryUrl);
 
         /*
@@ -299,8 +302,7 @@ class ScrappingBase
      * @param string $itemUrl
      * @return array
      */
-    private function getProductDetails(string $itemUrl): array
-    {
+    private function getProductDetails(string $itemUrl): array {
         $this->getBrowserTab($itemUrl);
         $productWebsiteConfig = $this->websiteConfig['product'];
         $itemDetails = [];
@@ -363,64 +365,180 @@ class ScrappingBase
      * @param array $categoryItems
      * @return void
      */
-    private function saveProducts(array $categoryItems): void
-    {
-        dump('field keys', acf_get_field('product_description'));
-        die();
+    private function saveProducts(array $categoryItems): void {
         // Save the products
         foreach ($categoryItems as $item) {
             echo "Saving " . $item['title'] . "\n";
 
-            dump('$item', $item);
-
             $post_data = [
                 'post_title'    => $item['title'],
-                'post_name' => $this->scrappingUtils->slugify($item['title']),
+                'post_name' => acf_slugify($item['title']),
                 'post_type'     => 'produits',
                 'post_status'   => 'draft',
                 'comment_status' =>  'closed',
                 'post_author' => 1,
             ];
-
             dump('$post_data', $post_data);
 
-            $post_id = wp_insert_post($post_data);
-            dump('$post_id ', $post_id);
-            if (!is_wp_error($post_id)) {
+            $postId = wp_insert_post($post_data);
+            dump('$postId ', $postId);
+
+            if (!is_wp_error($postId)) {
                 //the post is valid
-                echo 'Item' . $item['title'] .  'successfully saved at id: ' . $post_id . "\n";
+                echo 'Item' . $item['title'] .  'successfully saved at id: ' . $postId . "\n";
             } else {
                 //there was an error in the post insertion,
-                echo $post_id->get_error_message();
+                echo $postId->get_error_message();
             }
 
-
-            die('product saved');
-
+            $this->saveAcfFields($item, $postId);
+            die('product saved'); // @todo: to be removed
         }
 
         echo 'Products successfully saved in database' . "\n";
 
     }
 
-    private function getFieldKeys(): array
-    {
-        $fields = [
-            acf_get_field('product_banner'),
-            acf_get_field('product_featured_image'),
-            acf_get_field('product_description'),
-            acf_get_field('product_colors'),
-            acf_get_field('product_images'),
-            acf_get_field('product_more'),
-            acf_get_field('product_details'),
-        ];
+    /**
+     * @return array
+     */
+    private function getFieldKeys(): array {
+        $keys = [];
+        foreach ($this->fieldKeys as $field) {
+            $fieldDetails = acf_get_field($field);
+            $keys[$fieldDetails['name']] = ['key' => $fieldDetails['key']];
 
-        $fieldKeys = [];
-        foreach ($fields as $field) {
-            $fieldKeys[] = $field['key'];
+            if (isset($fieldDetails['sub_fields'])) {
+
+                foreach ($fieldDetails['sub_fields'] as $subField) {
+                    /*
+                     * Here we add the subfield's keys of the current field
+                     * It will look like that:
+                     *     "product_details" => array:2 [
+                              "key" => "field_62b9bf2bdee16"
+                              "subkeys" => array:2 [
+                                "key" => "field_62b9bf3cdee17"
+                                "value" => "field_62b9bf4cdee18"
+                              ]
+                            ]
+                     */
+                    $keys[$fieldDetails['name']]['subkeys'][$subField['name']] = $subField['key'];
+                }
+            }
         }
 
-        return $fieldKeys;
+        return $keys;
     }
 
+    /**
+     * @param array $itemDetails
+     * @param int $postId
+     * @return void
+     */
+    private function saveAcfFields (array $itemDetails, int $postId): void {
+        $fieldKeys = $this->getFieldKeys();
+
+        dump('$fieldKeys', $fieldKeys);
+
+        foreach ($fieldKeys as $keyType => $key) {
+            switch ($keyType) {
+                case 'product_banner':
+                    dump('in product_banner');
+                    dump('condition', isset($itemDetails['images-cover']) && $itemDetails['images-cover']);
+                    if (isset($itemDetails['images-cover']) && $itemDetails['images-cover']) {
+                        // We always take the first image by default for the cover
+                        $imageId = $this->scrappingUtils->downloadImage(
+                            $itemDetails['images-cover'][0],
+                            $postId,
+                            acf_slugify($itemDetails['title']) . '-p-design-image'
+                        );
+                        update_field($key['key'], $imageId, $postId);
+                    }
+                    die('update field image');
+                    break;
+                case 'product_featured_image':
+                    if (isset($itemDetails['image-product']) && $itemDetails['image-product']) {
+                        $imageId = $this->scrappingUtils->downloadImage(
+                            $itemDetails['image-product'],
+                            $postId,
+                            acf_slugify($itemDetails['title']) . '-p-design-image'
+                        );
+                        update_field($key['key'], $imageId, $postId);
+                    }
+                    break;
+                case 'product_description':
+                    if (isset($itemDetails['description']) && $itemDetails['description']) {
+                        update_field($key['key'], $itemDetails['description'], $postId);
+                    }
+                    break;
+                case 'product_colors':
+                    if (isset($itemDetails['colors']) && $itemDetails['colors']) {
+                        foreach ($itemDetails['colors'] as $color) {
+                            update_field($key['key'], $color, $postId);
+                        }
+                    }
+                    break;
+                case 'product_images':
+                    if (isset($itemDetails['images-cover'])) {
+                        foreach ($itemDetails['images-cover'] as $imageCoverUrl) {
+                            $imageId = $this->scrappingUtils->downloadImage(
+                                $imageCoverUrl,
+                                $postId,
+                                acf_slugify($itemDetails['title']) . '-p-design-image'
+                            );
+                            update_field($key['key'], $imageId, $postId);
+                        }
+                    }
+                    break;
+
+                // no case 'product_more'. It has to be completed manually
+
+                case 'product_details':
+                    if (isset($itemDetails['weight']) && $itemDetails['weight']) {
+                        foreach ($key as $subKey) {
+                            // For update_sub_field $postId needs to be in an array
+                            update_sub_field($subKey, $itemDetails['weight'], [$postId]);
+                        }
+                    }
+
+                    if (isset($itemDetails['width']) && $itemDetails['width']) {
+                        foreach ($key as $subKey) {
+                            // For update_sub_field $postId needs to be in an array
+                            update_sub_field($subKey, $itemDetails['width'], [$postId]);
+                        }
+                    }
+
+                    if (isset($itemDetails['height']) && $itemDetails['height']) {
+                        foreach ($key as $subKey) {
+                            // For update_sub_field $postId needs to be in an array
+                            update_sub_field($subKey, $itemDetails['height'], [$postId]);
+                        }
+                    }
+
+                    if (isset($itemDetails['depth']) && $itemDetails['depth']) {
+                        foreach ($key as $subKey) {
+                            // For update_sub_field $postId needs to be in an array
+                            update_sub_field($subKey, $itemDetails['depth'], [$postId]);
+                        }
+                    }
+
+                    if (isset($itemDetails['order-only']) && $itemDetails['order-only']) {
+                        foreach ($key as $subKey) {
+                            // For update_sub_field $postId needs to be in an array
+                            update_sub_field($subKey, $itemDetails['order-only'], [$postId]);
+                        }
+                    }
+
+                    if (isset($itemDetails['in-stock']) && $itemDetails['in-stock']) {
+                        foreach ($key as $subKey) {
+                            // For update_sub_field $postId needs to be in an array
+                            update_sub_field($subKey, $itemDetails['in-stock'], [$postId]);
+                        }
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
 }
