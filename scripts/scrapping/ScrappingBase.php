@@ -343,6 +343,11 @@ class ScrappingBase
                 case 'scroll-down':
                 case 'cookie-banner':
                     break;
+                case 'technical-data':
+                    foreach ($configArray as $key => $value) {
+                        $itemDetails[$key] = $value;
+                    }
+                    break;
                 default:
                     foreach ($configArray as $key => $value) {
                         if ($value) {
@@ -364,39 +369,25 @@ class ScrappingBase
      *
      * @param array $categoryItems
      * @return void
+     * @throws Exception
      */
     private function saveProducts(array $categoryItems): void {
         // Save the products
         foreach ($categoryItems as $item) {
             echo "Saving " . $item['title'] . "\n";
 
-            $post_data = [
-                'post_title'    => $item['title'],
-                'post_name' => acf_slugify($item['title']),
-                'post_type'     => 'produits',
-                'post_status'   => 'draft',
-                'comment_status' =>  'closed',
-                'post_author' => 1,
-            ];
-            dump('$post_data', $post_data);
+            $postId = $this->savePost($item);
 
-            $postId = wp_insert_post($post_data);
-            dump('$postId ', $postId);
-
-            if (!is_wp_error($postId)) {
-                //the post is valid
-                echo 'Item' . $item['title'] .  'successfully saved at id: ' . $postId . "\n";
+            if ($postId) {
+                $this->saveAcfFields($item, $postId);
             } else {
-                //there was an error in the post insertion,
-                echo $postId->get_error_message();
+                throw new Exception('Error while saving product: ' . $item['title']);
             }
 
-            $this->saveAcfFields($item, $postId);
             die('product saved'); // @todo: to be removed
         }
 
         echo 'Products successfully saved in database' . "\n";
-
     }
 
     /**
@@ -439,12 +430,11 @@ class ScrappingBase
         $fieldKeys = $this->getFieldKeys();
 
         dump('$fieldKeys', $fieldKeys);
+        dump('$itemDetails', $itemDetails);
 
         foreach ($fieldKeys as $keyType => $key) {
             switch ($keyType) {
                 case 'product_banner':
-                    dump('in product_banner');
-                    dump('condition', isset($itemDetails['images-cover']) && $itemDetails['images-cover']);
                     if (isset($itemDetails['images-cover']) && $itemDetails['images-cover']) {
                         // We always take the first image by default for the cover
                         $imageId = $this->scrappingUtils->downloadImage(
@@ -452,9 +442,10 @@ class ScrappingBase
                             $postId,
                             acf_slugify($itemDetails['title']) . '-p-design-image'
                         );
+                        dump('updating field: ' . $keyType, $key);
+                        dump('image id field: ' . $keyType, $imageId);
                         update_field($key['key'], $imageId, $postId);
                     }
-                    die('update field image');
                     break;
                 case 'product_featured_image':
                     if (isset($itemDetails['image-product']) && $itemDetails['image-product']) {
@@ -463,6 +454,8 @@ class ScrappingBase
                             $postId,
                             acf_slugify($itemDetails['title']) . '-p-design-image'
                         );
+                        dump('updating field: ' . $keyType, $key);
+                        dump('image id field: ' . $keyType, $imageId);
                         update_field($key['key'], $imageId, $postId);
                     }
                     break;
@@ -473,72 +466,139 @@ class ScrappingBase
                     break;
                 case 'product_colors':
                     if (isset($itemDetails['colors']) && $itemDetails['colors']) {
-                        foreach ($itemDetails['colors'] as $color) {
-                            update_field($key['key'], $color, $postId);
-                        }
+                        dump('colors key', $key);
+                        update_field($key['key'], $itemDetails['colors'], $postId);
                     }
                     break;
                 case 'product_images':
                     if (isset($itemDetails['images-cover'])) {
+                        $imageIds = [];
                         foreach ($itemDetails['images-cover'] as $imageCoverUrl) {
-                            $imageId = $this->scrappingUtils->downloadImage(
+                            $imageIds[] = $this->scrappingUtils->downloadImage(
                                 $imageCoverUrl,
                                 $postId,
                                 acf_slugify($itemDetails['title']) . '-p-design-image'
                             );
-                            update_field($key['key'], $imageId, $postId);
                         }
+                        dump('$imageIds update product images: ', $imageIds);
+                        update_field($key['key'], $imageIds, $postId);
                     }
                     break;
 
                 // no case 'product_more'. It has to be completed manually
 
                 case 'product_details':
+                    /*
+                     * As this is a repeater
+                     * We need to clarify which row to update with $rowNumber
+                     */
+
                     if (isset($itemDetails['weight']) && $itemDetails['weight']) {
-                        foreach ($key as $subKey) {
-                            // For update_sub_field $postId needs to be in an array
-                            update_sub_field($subKey, $itemDetails['weight'], [$postId]);
+                        // For update_sub_field $postId needs to be in an array
+                        $value = [
+                            'sub_field_1' => 'key',
+                            'sub_field_2' => $itemDetails['weight']
+                        ];
+                        if (update_field($key['key'], $value, $postId)) {
+                            // add row
                         }
                     }
 
                     if (isset($itemDetails['width']) && $itemDetails['width']) {
-                        foreach ($key as $subKey) {
-                            // For update_sub_field $postId needs to be in an array
-                            update_sub_field($subKey, $itemDetails['width'], [$postId]);
+                        // For update_sub_field $postId needs to be in an array
+                        $value = [
+                            'sub_field_1' => 'key',
+                            'sub_field_2' => $itemDetails['width']
+                        ];
+                        if (update_field($key['key'], $value, $postId)) {
+                            // add row
                         }
                     }
 
                     if (isset($itemDetails['height']) && $itemDetails['height']) {
-                        foreach ($key as $subKey) {
+                        foreach ($key as $label => $subKey) {
                             // For update_sub_field $postId needs to be in an array
-                            update_sub_field($subKey, $itemDetails['height'], [$postId]);
+                            $value = [
+                                'sub_field_1' => 'key',
+                                'sub_field_2' => $itemDetails['height']
+                            ];
+                            update_field($subKey, $value, $postId);
                         }
                     }
 
                     if (isset($itemDetails['depth']) && $itemDetails['depth']) {
-                        foreach ($key as $subKey) {
+                        foreach ($key as $label => $subKey) {
                             // For update_sub_field $postId needs to be in an array
-                            update_sub_field($subKey, $itemDetails['depth'], [$postId]);
+                            $value = [
+                                'sub_field_1' => 'key',
+                                'sub_field_2' => $itemDetails['depth']
+                            ];
+                            update_field($subKey, $value, $postId);
                         }
                     }
 
                     if (isset($itemDetails['order-only']) && $itemDetails['order-only']) {
-                        foreach ($key as $subKey) {
-                            // For update_sub_field $postId needs to be in an array
-                            update_sub_field($subKey, $itemDetails['order-only'], [$postId]);
-                        }
+                        // For update_sub_field $postId needs to be in an array
+                        dump('order key', $key);
+
+                        $row = [
+                            'key' => 'Commander',
+                            'value' => $itemDetails['order-only']
+                        ];
+
+                        dump('$row', $row);
+                        dump('key order', $key['key']);
+                        $rowAdded = add_row($key['key'], $row, [$postId]);
+                        dump('$rowAdded', $rowAdded);
                     }
 
                     if (isset($itemDetails['in-stock']) && $itemDetails['in-stock']) {
-                        foreach ($key as $subKey) {
-                            // For update_sub_field $postId needs to be in an array
-                            update_sub_field($subKey, $itemDetails['in-stock'], [$postId]);
+                        // For update_sub_field $postId needs to be in an array
+                        dump('in stock key', $key);
+
+                        $row = [
+                            $key['subkeys']['key'] => 'Stock',
+                            $key['subkeys']['value'] => $itemDetails['in-stock']
+                        ];
+
+                        if (add_row($key['key'], $row, [$postId])) {
+                            dump('raw stock updated');
                         }
                     }
                     break;
                 default:
                     break;
             }
+        }
+    }
+
+    /**
+     * @param array $itemDetails
+     * @return false|int|\WP_Error
+     */
+    private function savePost (array $itemDetails): \WP_Error|bool|int
+    {
+        $post_data = [
+            'post_title'    => $itemDetails['title'],
+            'post_name' => acf_slugify($itemDetails['title']),
+            'post_type'     => 'produits',
+            'post_status'   => 'draft',
+            'comment_status' =>  'closed',
+            'post_author' => 1,
+        ];
+        dump('$post_data', $post_data);
+
+        $postId = wp_insert_post($post_data);
+        dump('$postId saved: ', $postId);
+
+        if (!is_wp_error($postId)) {
+            //the post is valid
+            echo 'Item: ' . $itemDetails['title'] .  ' => successfully saved at id: ' . $postId . "\n";
+            return $postId;
+        } else {
+            //there was an error in the post insertion,
+            echo $postId->get_error_message();
+            return false;
         }
     }
 }
