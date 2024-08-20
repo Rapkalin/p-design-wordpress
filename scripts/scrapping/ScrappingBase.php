@@ -542,8 +542,8 @@ class ScrappingBase
                         dump('order key', $key);
 
                         $row = [
-                            'key' => 'Commander',
-                            'value' => $itemDetails['order-only']
+                            $key['subkeys']['key'] => 'Commander',
+                            $key['subkeys']['value'] => $itemDetails['order-only']
                         ];
 
                         dump('$row', $row);
@@ -578,17 +578,17 @@ class ScrappingBase
      */
     private function savePost (array $itemDetails): \WP_Error|bool|int
     {
-        $post_data = [
-            'post_title'    => $itemDetails['title'],
+        $postData = [
+            'post_title' => $itemDetails['title'],
             'post_name' => acf_slugify($itemDetails['title']),
-            'post_type'     => 'produits',
-            'post_status'   => 'draft',
-            'comment_status' =>  'closed',
+            'post_type' => 'produits',
+            'post_status' => 'publish',
+            'comment_status' => 'closed',
             'post_author' => 1,
         ];
-        dump('$post_data', $post_data);
+        dump('$post_data', $postData);
 
-        $postId = wp_insert_post($post_data);
+        $postId = wp_insert_post($postData);
         dump('$postId saved: ', $postId);
 
         if (!is_wp_error($postId)) {
