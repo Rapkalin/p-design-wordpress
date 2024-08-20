@@ -92,7 +92,13 @@ $table_prefix = 'wp_';
  *
  * @link https://wordpress.org/documentation/article/debugging-in-wordpress/
  */
-define( 'WP_DEBUG', false );
+if ($env['_ENV'] === 'production') {
+    define( 'WP_DEBUG', false );
+} else {
+    define( 'WP_DEBUG', true );
+    define( 'WP_DEBUG_DISPLAY', true );
+    @ini_set( 'display_errors', 1 );
+}
 
 /* Add any custom values between this line and the "stop editing" line. */
 

@@ -488,83 +488,21 @@ class ScrappingBase
                 // no case 'product_more'. It has to be completed manually
 
                 case 'product_details':
-                    /*
-                     * As this is a repeater
-                     * We need to clarify which row to update with $rowNumber
-                     */
+                    $productDetails = [
+                        'weight' => 'Poids',
+                        'width' => 'Largeur',
+                        'height' => 'Hauteur',
+                        'depth'=> 'Profondeur',
+                        'order-only' => 'Sur commande',
+                        'in-stock' => 'En stock'
+                    ];
 
-                    if (isset($itemDetails['weight']) && $itemDetails['weight']) {
-                        // For update_sub_field $postId needs to be in an array
-                        $value = [
-                            'sub_field_1' => 'key',
-                            'sub_field_2' => $itemDetails['weight']
-                        ];
-                        if (update_field($key['key'], $value, $postId)) {
-                            // add row
+                    foreach ($productDetails as $keyDetail => $trad) {
+                        if (isset($itemDetails[$keyDetail]) && $itemDetails[$keyDetail]) {
+                            $this->addAcfRepeaterRow($itemDetails[$keyDetail], $key, $postId, $trad);
                         }
                     }
 
-                    if (isset($itemDetails['width']) && $itemDetails['width']) {
-                        // For update_sub_field $postId needs to be in an array
-                        $value = [
-                            'sub_field_1' => 'key',
-                            'sub_field_2' => $itemDetails['width']
-                        ];
-                        if (update_field($key['key'], $value, $postId)) {
-                            // add row
-                        }
-                    }
-
-                    if (isset($itemDetails['height']) && $itemDetails['height']) {
-                        foreach ($key as $label => $subKey) {
-                            // For update_sub_field $postId needs to be in an array
-                            $value = [
-                                'sub_field_1' => 'key',
-                                'sub_field_2' => $itemDetails['height']
-                            ];
-                            update_field($subKey, $value, $postId);
-                        }
-                    }
-
-                    if (isset($itemDetails['depth']) && $itemDetails['depth']) {
-                        foreach ($key as $label => $subKey) {
-                            // For update_sub_field $postId needs to be in an array
-                            $value = [
-                                'sub_field_1' => 'key',
-                                'sub_field_2' => $itemDetails['depth']
-                            ];
-                            update_field($subKey, $value, $postId);
-                        }
-                    }
-
-                    if (isset($itemDetails['order-only']) && $itemDetails['order-only']) {
-                        // For update_sub_field $postId needs to be in an array
-                        dump('order key', $key);
-
-                        $row = [
-                            $key['subkeys']['key'] => 'Commander',
-                            $key['subkeys']['value'] => $itemDetails['order-only']
-                        ];
-
-                        dump('$row', $row);
-                        dump('key order', $key['key']);
-                        $rowAdded = add_row($key['key'], $row, [$postId]);
-                        dump('$rowAdded', $rowAdded);
-                    }
-
-                    if (isset($itemDetails['in-stock']) && $itemDetails['in-stock']) {
-                        // For update_sub_field $postId needs to be in an array
-                        dump('in stock key', $key);
-
-                        $row = [
-                            $key['subkeys']['key'] => 'Stock',
-                            $key['subkeys']['value'] => $itemDetails['in-stock']
-                        ];
-
-                        if (add_row($key['key'], $row, [$postId])) {
-                            dump('raw stock updated');
-                        }
-                    }
                     break;
                 default:
                     break;
@@ -573,11 +511,25 @@ class ScrappingBase
     }
 
     /**
+     * @param $rowDetails
+     * @param array $key
+     * @param int $postId
+     * @return void
+     */
+    private function addAcfRepeaterRow ($rowDetails, array $key, int $postId, string $trad): void {
+        // For update_sub_field $postId needs to be in an array
+        $row = [
+            $key['subkeys']['key'] => $trad,
+            $key['subkeys']['value'] => $rowDetails
+        ];
+        add_row($key['key'], $row, $postId);
+    }
+
+    /**
      * @param array $itemDetails
      * @return false|int|\WP_Error
      */
-    private function savePost (array $itemDetails): \WP_Error|bool|int
-    {
+    private function savePost (array $itemDetails): \WP_Error|bool|int {
         $postData = [
             'post_title' => $itemDetails['title'],
             'post_name' => acf_slugify($itemDetails['title']),
