@@ -52,7 +52,7 @@
   "config": {
     "vendor-dir": "website/vendor",
     "allow-plugins": {
-      "johnpbloch/wordpress-core-installer": trueg,
+      "johnpbloch/wordpress-core-installer": true,
       "composer/installers": true
     }
   },
