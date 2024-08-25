@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "87bdabbea8a0192cc5e6a9eeed65bd2d",
+    "content-hash": "db9005ea2efad968b7b57685a292e63d",
     "packages": [
         {
             "name": "composer/installers",
@@ -1008,12 +1008,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "251a4f1fefcc6e6cc90d50514fee6b6e3745cb3e"
+                "reference": "f8de2a81061775002d96aea80b12f2ab3c5eeb8d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/251a4f1fefcc6e6cc90d50514fee6b6e3745cb3e",
-                "reference": "251a4f1fefcc6e6cc90d50514fee6b6e3745cb3e",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/f8de2a81061775002d96aea80b12f2ab3c5eeb8d",
+                "reference": "f8de2a81061775002d96aea80b12f2ab3c5eeb8d",
                 "shasum": ""
             },
             "conflict": {
@@ -1051,7 +1051,7 @@
                 "athlon1600/php-proxy-app": "<=3",
                 "austintoddj/canvas": "<=3.4.2",
                 "auth0/wordpress": "<=4.6",
-                "automad/automad": "<=2.0.0.0-alpha5",
+                "automad/automad": "<2.0.0.0-alpha5",
                 "automattic/jetpack": "<9.8",
                 "awesome-support/awesome-support": "<=6.0.7",
                 "aws/aws-sdk-php": "<3.288.1",
@@ -1224,7 +1224,7 @@
                 "friendsoftypo3/mediace": ">=7.6.2,<7.6.5",
                 "friendsoftypo3/openid": ">=4.5,<4.5.31|>=4.7,<4.7.16|>=6,<6.0.11|>=6.1,<6.1.6",
                 "froala/wysiwyg-editor": "<3.2.7|>=4.0.1,<=4.1.3",
-                "froxlor/froxlor": "<2.1.9",
+                "froxlor/froxlor": "<=2.2.0.0-RC3",
                 "frozennode/administrator": "<=5.0.12",
                 "fuel/core": "<1.8.1",
                 "funadmin/funadmin": "<=3.2|>=3.3.2,<=3.3.3",
@@ -1817,7 +1817,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-08-14T19:05:08+00:00"
+            "time": "2024-08-23T19:04:38+00:00"
         },
         {
             "name": "symfony/var-dumper",
@@ -1917,7 +1917,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=8.1",
+        "php": "<8.2",
         "ext-dom": "*",
         "ext-libxml": "*",
         "ext-curl": "*",

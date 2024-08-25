@@ -43,7 +43,7 @@ if ($argv && count($argv) > 1 && $argv[0] === 'scripts/scrapping/scrapping.php')
 } else {
     echo "Something went wrong. \n";
     echo "Please make sure you called scripts/scrapping.php argument1 ... \n";
-    echo "Or check that your argument(s) are valid";
+    echo "Or check that your arguments are valid";
     die();
 }
 

@@ -61,7 +61,7 @@ class ScrappingBase
      *
      * @var array
      */
-    private array $fieldKeys = [
+    private array $acfFieldKeys = [
         'product_banner',
         'product_featured_image',
         'product_description',
@@ -71,6 +71,17 @@ class ScrappingBase
         'product_details',
     ];
 
+    private array $categories;
+
+    private array $pDesingCategories = [
+        'accessories' => 'Accessoires',
+        'chairs' => 'Chaises et Fauteuils',
+        'stools' => 'Tabourets et poufs',
+        'sofas' => 'Canapés et banquettes',
+        'tables' => 'Tables',
+        'table-legs' => 'Pieds de table',
+        'tops' => 'Plateaux de table',
+    ];
 
     /**
      * websiteName: The name of the website that needs to be included in $authorizedFileArguments
@@ -87,6 +98,10 @@ class ScrappingBase
         $this->websiteConfig = $websiteConfig;
         $this->websiteName = $websiteName;
         $this->scrappingUtils = new scrappingUtils();
+        $this->categories = get_terms([
+            'taxonomy' => 'categories',
+            'hide_empty' => false,
+        ]);
     }
 
     /**
@@ -161,7 +176,7 @@ class ScrappingBase
      * @return RemoteWebDriver
      * @throws Exception
      */
-    private function initWebDriver (string $host): RemoteWebDriver {
+    private function initWebDriver(string $host): RemoteWebDriver {
         try {
             // @todo: Check if possible to hide the navigator
             return RemoteWebDriver::create($host, DesiredCapabilities::firefox());
@@ -196,7 +211,10 @@ class ScrappingBase
      * @param $driver
      * @return void
      */
-    private function handleCookieBanner(array $cookieBannerDetails, $driver): void {
+    private function handleCookieBanner(
+        array $cookieBannerDetails,
+        $driver
+    ): void {
         // Get the cookie Banner and if it exists refuses the cookies by clicking on the refuse button
         $cookieBanner = $driver->findElement(WebDriverBy::id($cookieBannerDetails['id']));
 
@@ -227,7 +245,6 @@ class ScrappingBase
             $this->saveProducts($categoryProducts);
         }
 
-
         return true;
     }
 
@@ -237,7 +254,11 @@ class ScrappingBase
      * @Return array
      * @throws Exception
      */
-    private function getCategoryItemsDetails(array $category, string $categoryUrl, string $categoryName): array {
+    private function getCategoryItemsDetails(
+        array $category,
+        string $categoryUrl,
+        string $categoryName
+    ): array {
         $this->getBrowserTab($categoryUrl);
 
         /*
@@ -265,7 +286,7 @@ class ScrappingBase
         echo '***********************************' . "\n";
         echo "\n";
 
-        // @todo: Add percentage for number of product done
+        // @todo: Add percentage for number of products done
         $itemUrls = $categoryProductsDetails = [];
         if ($categoryItems && count($categoryItems) > 0) {
             foreach ($categoryItems as $categoryItem) {
@@ -277,7 +298,7 @@ class ScrappingBase
                     break;
                 }
 
-                $itemDetails = $this->getProductDetails($itemUrl);
+                $itemDetails = $this->getProductDetails($itemUrl, $categoryName);
                 $categoryProductsDetails[] = $itemDetails;
 
             }
@@ -300,9 +321,10 @@ class ScrappingBase
      * Return all the infos of a product from its url
      *
      * @param string $itemUrl
+     * @param string $categoryName
      * @return array
      */
-    private function getProductDetails(string $itemUrl): array {
+    private function getProductDetails(string $itemUrl, string $categoryName): array {
         $this->getBrowserTab($itemUrl);
         $productWebsiteConfig = $this->websiteConfig['product'];
         $itemDetails = [];
@@ -361,7 +383,43 @@ class ScrappingBase
             }
         }
 
+
+        $itemDetails['categories'] = $this->getItemCategories($categoryName, $itemDetails['type']);
         return $itemDetails;
+    }
+
+    /**
+     * Get all categories ids for a given item
+     *
+     * @param string $categoryName
+     * @param string $type // indoor / outdoor / both
+     * @return array
+     */
+    private function getItemCategories (
+        string $categoryName,
+        string $type
+    ): array
+    {
+        $parentCat = $type === 'outdoor' ?
+            get_term_by('slug', 'exterieur', 'categories') :
+            (
+                $type === 'indoor' ?
+                    get_term_by('slug', 'interieur', 'categories') : 0
+            )
+        ;
+
+        foreach ($this->categories as $category) {
+            if (
+                $parentCat->term_id === $category->parent &&
+                $this->pDesingCategories[$categoryName] === $category->name
+            ) {
+                $categories[] = $category->term_id;
+            }
+        }
+
+        // Todo: Check if there is a parent cat
+        $categories[] = $parentCat->term_id;
+        return $categories;
     }
 
     /**
@@ -395,7 +453,7 @@ class ScrappingBase
      */
     private function getFieldKeys(): array {
         $keys = [];
-        foreach ($this->fieldKeys as $field) {
+        foreach ($this->acfFieldKeys as $field) {
             $fieldDetails = acf_get_field($field);
             $keys[$fieldDetails['name']] = ['key' => $fieldDetails['key']];
 
@@ -426,13 +484,16 @@ class ScrappingBase
      * @param int $postId
      * @return void
      */
-    private function saveAcfFields (array $itemDetails, int $postId): void {
-        $fieldKeys = $this->getFieldKeys();
+    private function saveAcfFields (
+        array $itemDetails,
+        int $postId
+    ): void {
+        $acfFieldKeys = $this->getFieldKeys();
 
-        dump('$fieldKeys', $fieldKeys);
+        dump('$acfFieldKeys', $acfFieldKeys);
         dump('$itemDetails', $itemDetails);
 
-        foreach ($fieldKeys as $keyType => $key) {
+        foreach ($acfFieldKeys as $keyType => $key) {
             switch ($keyType) {
                 case 'product_banner':
                     if (isset($itemDetails['images-cover']) && $itemDetails['images-cover']) {
@@ -514,9 +575,15 @@ class ScrappingBase
      * @param $rowDetails
      * @param array $key
      * @param int $postId
+     * @param string $trad
      * @return void
      */
-    private function addAcfRepeaterRow ($rowDetails, array $key, int $postId, string $trad): void {
+    private function addAcfRepeaterRow (
+        $rowDetails,
+        array $key,
+        int $postId,
+        string $trad
+    ): void {
         // For update_sub_field $postId needs to be in an array
         $row = [
             $key['subkeys']['key'] => $trad,
@@ -534,9 +601,10 @@ class ScrappingBase
             'post_title' => $itemDetails['title'],
             'post_name' => acf_slugify($itemDetails['title']),
             'post_type' => 'produits',
-            'post_status' => 'publish',
+            'post_status' => 'draft',
             'comment_status' => 'closed',
             'post_author' => 1,
+            'post_category' => $itemDetails['categories']
         ];
         dump('$post_data', $postData);
 
