@@ -39,6 +39,8 @@ website/app/plugins/contact-form-7
 website/app/plugins/duplicate-page
 website/app/plugins/login-with-ajax
 website/app/plugins/wordpress-seo
+website/app/plugins/advanced-custom-fields/
+website/app/plugins/advanced-google-recaptcha/
 
 # Global gitignore setup
 website/.env

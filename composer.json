@@ -27,11 +27,11 @@
 
     "wpackagist-plugin/autoptimize":"^3.1",
     "wpackagist-plugin/classic-editor":"^1.6",
-    "wpackagist-plugin/auto-login-new-user-after-registration":"^1.9",
     "wpackagist-plugin/contact-form-7":"^5.7",
     "wpackagist-plugin/duplicate-page":"^4.5",
     "wpackagist-plugin/login-with-ajax":"^4.1",
     "wpackagist-plugin/wordpress-seo":"^21.0",
+    "wpackagist-plugin/advanced-google-recaptcha":"^1.22",
 
     "ext-dom": "*",
     "ext-libxml": "*"
