@@ -408,8 +408,11 @@ class ScrappingBase
             )
         ;
 
+        dump('$parentCat', $parentCat);
+
         foreach ($this->categories as $category) {
             if (
+                $parentCat &&
                 $parentCat->term_id === $category->parent &&
                 $this->pDesingCategories[$categoryName] === $category->name
             ) {
@@ -418,7 +421,7 @@ class ScrappingBase
         }
 
         // Todo: Check if there is a parent cat
-        $categories[] = $parentCat->term_id;
+        $categories[] = $parentCat ? $parentCat->term_id : $parentCat;
         return $categories;
     }
 
@@ -490,8 +493,8 @@ class ScrappingBase
     ): void {
         $acfFieldKeys = $this->getFieldKeys();
 
-        dump('$acfFieldKeys', $acfFieldKeys);
-        dump('$itemDetails', $itemDetails);
+        // dump('$acfFieldKeys', $acfFieldKeys);
+        // dump('$itemDetails', $itemDetails);
 
         foreach ($acfFieldKeys as $keyType => $key) {
             switch ($keyType) {
@@ -503,8 +506,6 @@ class ScrappingBase
                             $postId,
                             acf_slugify($itemDetails['title']) . '-p-design-image'
                         );
-                        dump('updating field: ' . $keyType, $key);
-                        dump('image id field: ' . $keyType, $imageId);
                         update_field($key['key'], $imageId, $postId);
                     }
                     break;
@@ -515,8 +516,6 @@ class ScrappingBase
                             $postId,
                             acf_slugify($itemDetails['title']) . '-p-design-image'
                         );
-                        dump('updating field: ' . $keyType, $key);
-                        dump('image id field: ' . $keyType, $imageId);
                         update_field($key['key'], $imageId, $postId);
                     }
                     break;
@@ -527,7 +526,6 @@ class ScrappingBase
                     break;
                 case 'product_colors':
                     if (isset($itemDetails['colors']) && $itemDetails['colors']) {
-                        dump('colors key', $key);
                         update_field($key['key'], $itemDetails['colors'], $postId);
                     }
                     break;
@@ -541,7 +539,7 @@ class ScrappingBase
                                 acf_slugify($itemDetails['title']) . '-p-design-image'
                             );
                         }
-                        dump('$imageIds update product images: ', $imageIds);
+                        echo 'imageIds update product images: ' . implode(',', $imageIds);
                         update_field($key['key'], $imageIds, $postId);
                     }
                     break;
@@ -563,7 +561,6 @@ class ScrappingBase
                             $this->addAcfRepeaterRow($itemDetails[$keyDetail], $key, $postId, $trad);
                         }
                     }
-
                     break;
                 default:
                     break;
@@ -604,21 +601,26 @@ class ScrappingBase
             'post_status' => 'draft',
             'comment_status' => 'closed',
             'post_author' => 1,
-            'post_category' => $itemDetails['categories']
         ];
-        dump('$post_data', $postData);
-
+        // dump('$post_data', $postData);
         $postId = wp_insert_post($postData);
-        dump('$postId saved: ', $postId);
-
         if (!is_wp_error($postId)) {
             //the post is valid
+            $this->saveCatgories($itemDetails['categories'], $postId);
             echo 'Item: ' . $itemDetails['title'] .  ' => successfully saved at id: ' . $postId . "\n";
             return $postId;
         } else {
             //there was an error in the post insertion,
+            echo 'Item: ' . $itemDetails['title'] .  ' => failed to be saved at id: ' . $postId . "\n";
             echo $postId->get_error_message();
             return false;
         }
     }
+
+    private function saveCatgories(array $categoryIds, int $postId): void {
+        wp_set_object_terms($postId, $categoryIds, 'categories');
+    }
 }
+
+
+
