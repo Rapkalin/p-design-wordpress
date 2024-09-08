@@ -3,7 +3,7 @@ name: Deploy preprod on push develop
 on:
   push:
     branches:
-    - 'develop'
+      - 'develop'
 
 jobs:
   build:
@@ -53,7 +53,7 @@ jobs:
           username: ${{ secrets.DEPLOY_USER }}
           key: ${{ secrets.DEPLOY_KEY }}
           port: 22
-#          script: "[ ! -d ~/preprod/website ] || rm -rf ~/preprod/old_website ~/preprod/website/vendor ~/preprod/website/wordpress-core && mv -fu ~/preprod/website ~/preprod/old_website"
+          #          script: "[ ! -d ~/preprod/website ] || rm -rf ~/preprod/old_website ~/preprod/website/vendor ~/preprod/website/wordpress-core && mv -fu ~/preprod/website ~/preprod/old_website"
           script: "[ ! -d ~/preprod/website ] || rm -rf ~/preprod/old_website ~/preprod/website/vendor ~/preprod/website/wordpress-core"
 
       - name: checkout preprod
@@ -66,7 +66,7 @@ jobs:
 
       - name: unzip artifact for deployment
         run: |
-         unzip -o release.zip
+          unzip -o release.zip
 
       - name: Deploy with rsync
         uses: burnett01/rsync-deployments@5.2

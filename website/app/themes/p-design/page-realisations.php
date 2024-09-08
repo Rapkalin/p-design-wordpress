@@ -118,7 +118,7 @@ get_header();
                         ?>
                                 <div class="category">
                                     <div class="category-title">
-                                        <h2 id="category-<?php echo $content_category_object->name ?>"><?php echo $content_category_object->count . ' ' . $content_category_object->name ?></h2>
+                                        <h2 id="category-<?php echo $content_category_object->name ?>"><?php echo $content_category_object->name ?></h2>
                                         <p><?php echo $menu_categories_details[$content_category_object->name] ?></p>
                                     </div>
                                     <div class="category-realisations">

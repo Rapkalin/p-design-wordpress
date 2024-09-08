@@ -55,7 +55,7 @@
 						<?php else : ?>
 							<a href="#" data-popup="popup-auth" class="popup-link account"><img src="<?= asset('account.svg'); ?>" class="svg" alt="Compte"> Connexion</a>
 						<?php endif; ?> -->
-						<a href="tel:+33148474849" class="number"><img src="<?= asset('phone.svg'); ?>" class="svg" alt="Téléphone"> 01 48 47 48 49</a>
+						<a href="tel:+33158910526" class="number"><img src="<?= asset('phone.svg'); ?>" class="svg" alt="Téléphone"> 01 58 91 05 26</a>
 					</div>
 				</div>
 				<div class="header-products-nav">
