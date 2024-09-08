@@ -2,7 +2,6 @@
 get_header();
 
 $home = new WP_Query(['pagename' => 'accueil']);
-
 $realisationsPageId = 21
 ?>
 
@@ -79,7 +78,7 @@ $realisationsPageId = 21
 							$i = 0;
 							foreach ($home_products_categories as $category) :
 							?>
-								<a href="<?= get_term_link($category->term_id, 'categories'); ?>" data-tab="tab-product-<?= $category->term_id ?>" class="tab-link <?= $i === 0 ? "active" : "" ?>">
+								<a href="<?= get_term_link($category->term_id, 'product_categories'); ?>" data-tab="tab-product-<?= $category->term_id ?>" class="tab-link <?= $i === 0 ? "active" : "" ?>">
 									<?= $category->name ?>
 								</a>
 							<?php $i++;
@@ -107,7 +106,7 @@ $realisationsPageId = 21
 													<?php
 													$products_query = new WP_Query(['post_type' => 'produits', 'tax_query' => [
 														[
-															'taxonomy' => 'categories',
+															'taxonomy' => 'product_categories',
 															'field' => 'term_id',
 															'terms' => $category->term_id,
 														]
@@ -122,7 +121,7 @@ $realisationsPageId = 21
 													<?php else : ?>
 														<p>Aucun produit trouvé</p>
 													<?php endif; ?>
-													<a href="<?= get_term_link($category->term_id, 'categories'); ?>" class="more"><img src="<?= asset('plus.svg'); ?>" alt=""></a>
+													<a href="<?= get_term_link($category->term_id, 'product_categories'); ?>" class="more"><img src="<?= asset('plus.svg'); ?>" alt=""></a>
 												</div>
 											</div>
 										</div>

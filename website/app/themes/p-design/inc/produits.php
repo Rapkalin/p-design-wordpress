@@ -35,13 +35,13 @@ function brigit_produits_init()
     );
 
     register_taxonomy(
-        'categories',
+        'product_categories',
         'produits',
         array(
-            'label' => 'Catégories',
+            'label' => 'Catégories Mobilier',
             'labels' => array(
-                'name' => 'Catégories',
-                'singular_name' => 'Catégorie',
+                'name' => 'Catégories Mobilier',
+                'singular_name' => 'Catégorie Mobilier',
                 'all_items' => 'Toutes les catégories',
                 'edit_item' => 'Éditer la catégorie',
                 'view_item' => 'Voir la catégorie',
@@ -50,10 +50,10 @@ function brigit_produits_init()
                 'new_item_name' => 'Nouvelle catégorie',
                 'search_items' => 'Rechercher parmi les catégories',
 				'popular_items' => 'Catégories les plus utilisées',
-				'rewrite' => array('slug' => 'categories'),
+				'rewrite' => array('slug' => 'product_categories'),
             ),
             'hierarchical' => true,
         )
     );
-    register_taxonomy_for_object_type('categories', 'produits');
+    register_taxonomy_for_object_type('product_categories', 'produits');
 }

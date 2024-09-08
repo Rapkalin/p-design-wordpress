@@ -2,17 +2,16 @@
 global $post;
 get_header();
 
-
 $term_id = get_queried_object()->term_id;
 $taxonomy = get_term($term_id);
 
-$parent_term_id = wp_get_term_taxonomy_parent_id($term_id, 'categories');
+$parent_term_id = wp_get_term_taxonomy_parent_id($term_id, 'product_categories');
 $parent_taxonomy = get_term($parent_term_id);
 
 $order = isset($_GET['ordre']) ? $_GET['ordre'] : "";
 
 $paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
-$args = ['post_type' => 'produits', 'tax_query' => [['taxonomy' => 'categories', 'field' => 'term_id', 'terms' => $term_id,]], 'posts_per_page' => -1, 'paged' => $paged];
+$args = ['post_type' => 'produits', 'tax_query' => [['taxonomy' => 'product_categories', 'field' => 'term_id', 'terms' => $term_id,]], 'posts_per_page' => -1, 'paged' => $paged];
 if ($order) {
 	switch ($order) {
 		case 'nom':

@@ -2,9 +2,8 @@
 global $post;
 get_header();
 
-$term = get_the_terms($post->ID, 'categories')[0];
-
-$parent_term_id = wp_get_term_taxonomy_parent_id($term->term_id, 'categories');
+$term = get_the_terms($post->ID, 'product_categories')[0];
+$parent_term_id = wp_get_term_taxonomy_parent_id($term->term_id, 'product_categories');
 $parent_taxonomy = get_term($parent_term_id);
 
 ?>
@@ -137,7 +136,7 @@ $parent_taxonomy = get_term($parent_term_id);
 			</section>
 
 			<!-- À faire -->
-			<?php $otherProducts = new WP_Query(['post_type' => 'produits', 'tax_query' => [['taxonomy' => 'categories', 'field' => 'term_id', 'terms' => $term->term_id,]], 'posts_per_page' => 4, 'post__not_in' => [get_the_ID()]]) ?>
+			<?php $otherProducts = new WP_Query(['post_type' => 'produits', 'tax_query' => [['taxonomy' => 'product_categories', 'field' => 'term_id', 'terms' => $term->term_id,]], 'posts_per_page' => 4, 'post__not_in' => [get_the_ID()]]) ?>
 			<?php if ($otherProducts->have_posts()) : ?>
 				<section class="products-more">
 					<div class="large-container">
