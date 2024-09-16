@@ -39,7 +39,8 @@
     "ext-libxml": "*",
     "ext-curl": "*",
     "php-webdriver/webdriver": "^1.15",
-    "ext-iconv": "*"
+    "ext-iconv": "*",
+    "ext-mysqli": "*"
   },
 
   "require-dev": {
