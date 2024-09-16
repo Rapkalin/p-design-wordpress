@@ -9,57 +9,17 @@ require __DIR__ . "/../../website/vendor/autoload.php";
 
 echo '***********************************' . "\n";
 echo 'Checking arguments...' . "\n";
-
 /*
- * List of valid arguments
+ * The $argv comes from the command line arguments
  */
-$authorizedFileArguments = [
-    'pedrali',
-    'iconchairs',
-    'flexmob',
-    'woodlabpoland',
-    'misterwils',
-    'nardioutdoor',
-    'fenabel',
-    'fameg',
-    'euroterrasse'
-];
 
-/*
- * Arguments validity checking step
- */
-$invalidArgument = [];
+$scrappingUtils = new ScrappingUtils(loadWordpress:true);
 
-if ($argv && count($argv) > 1 && $argv[0] === 'scripts/scrapping/scrapping.php') {
-    unset($argv[0]);
-
-    foreach ($argv as $argument) {
-        if (!in_array($argument, $authorizedFileArguments)) {
-            echo 'invalid argument: ' . $argument  . "\n";
-            $invalidArgument[] = $argument;
-        }
-    }
-
-} else {
-    echo "Something went wrong. \n";
-    echo "Please make sure you called scripts/scrapping.php argument1 ... \n";
-    echo "Or check that your arguments are valid";
-    die();
+try {
+    $scrappingUtils->checkArguments($argv);
+} catch (\Exception $e) {
+    echo 'Error: ' . $e->getMessage() . "\n";
 }
-
-$numnberOfvalidArguments = count($argv) - count($invalidArgument);
-
-if ($numnberOfvalidArguments === 0) {
-    echo count($invalidArgument) . ' invalid argument(s) found' . "\n";
-    echo 'No valid arguments found' . "\n";
-    echo '***********************************' . "\n";
-    return false;
-} else {
-    echo count($invalidArgument) . ' invalid argument(s) found' . "\n";
-    echo $numnberOfvalidArguments . ' valid argument(s) found' . "\n";
-}
-echo '***********************************' . "\n";
-
 /*
  * End of arguments validity checking step
  */
@@ -72,11 +32,19 @@ echo "\n" . '****** Starting scrapping ******' . "\n";
 // Todo : add for each on all argv
 if (in_array('pedrali', $argv) ) {
     try {
-        $scrappingPedrali = new Pedrali();
-        $scrappingPedrali->scrapWebsite();
+        $website = new Pedrali();
+        $urls = $scrappingUtils->getUrlsFromDb();
+        if ($urls) {
+            die('stop in');
+            $website->scrapWebsite();
+        } else {
+            $scrappingUtils->getUrlsFromScrapping($website);
+        }
     } catch (Exception $e) {
         echo 'Error: ' . $e->getMessage() . "\n";
     }
 }
 
 echo "\n" . '****** Scrapping is done ******' . "\n";
+
+

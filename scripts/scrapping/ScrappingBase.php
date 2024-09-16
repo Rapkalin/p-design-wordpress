@@ -11,12 +11,14 @@ use Facebook\WebDriver\WebDriverBy;
  * Load the WordPress environment
  * So we have access to WP and ACF functions
  */
-define( 'WPPATH', __DIR__ . '/../../website/wordpress-core/wp-load.php' );
-if (file_exists(WPPATH)) {
-    require WPPATH;
-    echo 'Wordpress successfully loaded for: ' . get_bloginfo() . "\n\n";
-} else {
-    die('Failed to load Wordpress.');
+if (!define('WPPATH',  __DIR__ . '/../../website/wordpress-core/wp-load.php')) {
+    define( 'WPPATH', __DIR__ . '/../../website/wordpress-core/wp-load.php' );
+    if (file_exists(WPPATH)) {
+        require WPPATH;
+        echo 'Wordpress successfully loaded for: ' . get_bloginfo() . "\n\n";
+    } else {
+        die('Failed to load Wordpress.');
+    }
 }
 
 class ScrappingBase
@@ -97,9 +99,9 @@ class ScrappingBase
         $this->webDriver = $this->initWebDriver($this->host);
         $this->websiteConfig = $websiteConfig;
         $this->websiteName = $websiteName;
-        $this->scrappingUtils = new scrappingUtils();
+        $this->scrappingUtils = new scrappingUtils(loadWordpressMedia:true);
         $this->categories = get_terms([
-            'taxonomy' => 'categories',
+            'taxonomy' => 'product_categories',
             'hide_empty' => false,
         ]);
     }
@@ -300,7 +302,6 @@ class ScrappingBase
 
                 $itemDetails = $this->getProductDetails($itemUrl, $categoryName);
                 $categoryProductsDetails[] = $itemDetails;
-
             }
         }
 
@@ -315,6 +316,79 @@ class ScrappingBase
         }
 
         return $categoryProductsDetails;
+    }
+
+    /**
+     * Handle the website scrapping
+     *
+     * @return true
+     * @throws Exception
+     */
+    public function scrapCategoryUrls(): bool {
+        $categories = $this->websiteConfig['categories'];
+
+        foreach ($categories as $categoryName => $category) {
+            foreach ($category['type'] as $categoryUrl) {
+                $categoryUrls = $this->getCategoryUrls($category, $categoryUrl, $categoryName);
+            }
+
+            echo 'Saving category urls...' . "\n";
+            $this->scrappingUtils->saveCategoryUrls($categoryUrls, $categoryName, $this->websiteName);
+        }
+
+        return true;
+    }
+
+    /**
+     * Return all category items
+     *
+     * @Return array
+     * @throws Exception
+     */
+    private function getCategoryUrls(
+        array $category,
+        string $categoryUrl,
+        string $categoryName
+    ): array {
+        $this->getBrowserTab($categoryUrl);
+
+        if (isset($this->websiteConfig['scroll-down'])) {
+            // Loading all items
+            $this->scrappingUtils->scrollDown($this->webDriver, $this->websiteConfig['scroll-down']);
+            // End of loading all items
+        }
+
+        // Get the category's children
+        $categoryItems = $this->webDriver->findElements(WebDriverBy::className($category['id']));
+
+        echo "\n";
+        echo '***********************************' . "\n";
+        echo '*                                 *' . "\n";
+        echo '*  Category: ' . $categoryName . "\n";
+        echo '*  '. count($categoryItems) . ' items found' . "\n";
+        echo '*                                 *' . "\n";
+        echo '***********************************' . "\n";
+        echo "\n";
+
+        // @todo: Add percentage for number of products done
+        $itemUrls = [];
+        if ($categoryItems && count($categoryItems) > 0) {
+            foreach ($categoryItems as $categoryItem) {
+                $itemUrls[] = $categoryItem->getAttribute($category['item-href-element']);
+            }
+        }
+
+        try {
+            echo "Trying to quit browser... \n";
+            // Close the browser
+            $this->webDriver->quit();
+            echo "Browser quit successfully... \n";
+        } catch (Exception $e) {
+            echo "Error while trying to quit webdriver \n";
+            throw new Exception("Quitting browser error: " . $e->getMessage());
+        }
+
+        return $itemUrls;
     }
 
     /**
@@ -539,7 +613,7 @@ class ScrappingBase
                                 acf_slugify($itemDetails['title']) . '-p-design-image'
                             );
                         }
-                        echo 'imageIds update product images: ' . implode(',', $imageIds);
+                        echo 'imageIds update product images: ' . implode(',', $imageIds) . "\n";
                         update_field($key['key'], $imageIds, $postId);
                     }
                     break;
