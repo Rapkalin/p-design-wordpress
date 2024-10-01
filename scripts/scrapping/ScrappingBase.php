@@ -243,11 +243,43 @@ class ScrappingBase
                 $categoryProducts = $this->getCategoryItemsDetails($category, $categoryUrl, $categoryName);
             }
 
-            echo 'Saving products...' . "\n";
+            echo "Saving products for category $categoryName\n";
             $this->saveProducts($categoryProducts);
         }
 
-        return true;
+        try {
+            echo "Trying to quit browser... \n";
+            // Close the browser
+            $this->webDriver->quit();
+            echo "Browser quit successfully... \n";
+            return true;
+        } catch (Exception $e) {
+            echo "Error while trying to quit webdriver \n";
+            throw new Exception("Quitting browser error: " . $e->getMessage());
+        }
+    }
+
+    public function ScrapProductUrls(): bool {
+        $categories = $this->websiteConfig['categories'];
+
+        foreach ($productUrls as $productUrl) {
+            $categoryName = $productUrl['category_name'];
+
+            $categoryProducts = $this->getCategoryItemsDetails($categories[$categoryName], $categories[$categoryName]['type'], $categoryName);
+            echo "Saving products for category $categoryName\n";
+            $this->saveProducts($categoryProducts);
+        }
+
+        try {
+            echo "Trying to quit browser... \n";
+            // Close the browser
+            $this->webDriver->quit();
+            echo "Browser quit successfully... \n";
+            return true;
+        } catch (Exception $e) {
+            echo "Error while trying to quit webdriver \n";
+            throw new Exception("Quitting browser error: " . $e->getMessage());
+        }
     }
 
     /**
@@ -305,21 +337,11 @@ class ScrappingBase
             }
         }
 
-        try {
-            echo "Trying to quit browser... \n";
-            // Close the browser
-            $this->webDriver->quit();
-            echo "Browser quit successfully... \n";
-        } catch (Exception $e) {
-            echo "Error while trying to quit webdriver \n";
-            throw new Exception("Quitting browser error: " . $e->getMessage());
-        }
-
         return $categoryProductsDetails;
     }
 
     /**
-     * Handle the website scrapping
+     * Scrap & save all the products urls from a category
      *
      * @return true
      * @throws Exception
@@ -336,7 +358,7 @@ class ScrappingBase
             echo 'Saving category urls...' . "\n";
             $this->scrappingUtils->saveCategoryUrls($categoryUrls, $categoryName, $this->websiteName);
         }
-        
+
         try {
             echo "Trying to quit browser... \n";
             // Close the browser
@@ -351,7 +373,7 @@ class ScrappingBase
     }
 
     /**
-     * Return all category items
+     * Scrap all the products urls from a category
      *
      * @Return array
      * @throws Exception

@@ -33,10 +33,13 @@ echo "\n" . '****** Starting scrapping ******' . "\n";
 if (in_array('pedrali', $argv) ) {
     try {
         $website = new Pedrali();
-        $urls = $scrappingUtils->getUrlsFromDb($website->getWebsiteName());
-        if ($urls) {
-            $website->scrapWebsite();
-            $scrappingUtils->updateDbUrls($website->getWebsiteName(), $urls);
+        $productUrls = $scrappingUtils->getUrlsFromDb($website->getWebsiteName());
+        dump('$urls', $productUrls);
+        die();
+        if ($productUrls) {
+            // Todo : retrieve 25 urls to scrap
+            $website->scrapProductUrls($productUrls);
+            $scrappingUtils->updateDbUrls($website->getWebsiteName(), $productUrls);
         } else {
             $scrappingUtils->getUrlsFromScrapping($website);
             echo "get Urls From Scrapping Done \n";

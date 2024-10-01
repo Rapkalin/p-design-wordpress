@@ -198,18 +198,26 @@ final class ScrappingUtils
         }
     }
 
-    private function getUrls(string $websiteName): \mysqli_result|bool|int|null {
+    private function getUrls(string $websiteName, int $limit = 25): array {
         global $wpdb;
         try {
             echo "Getting urls form Database for $websiteName. \n";
 
-            $query = $wpdb->prepare("SELECT * FROM %i WHERE `last_updated` = '0000-00-00 00:00:00' AND `site_name` = %s", $this->tableName, $websiteName);
+            $query = $wpdb->prepare(
+                "SELECT * FROM %i
+                WHERE `last_updated` = '0000-00-00 00:00:00' 
+                AND `site_name` = %s 
+                LIMIT %d",
+                $this->tableName,
+                $websiteName,
+                $limit
+            );
         } catch (\Exception $e) {
             echo 'Query getUrlsFromDb failed: ' . $e->getMessage() . "\n";
-            return null;
+            return [];
         }
 
-        return $wpdb->query($query);
+        return $wpdb->get_results($query, ARRAY_A);
     }
 
     public function updateDbUrls(string $websiteName, array $urls): \mysqli_result|bool|int|null {
