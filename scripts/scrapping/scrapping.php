@@ -33,10 +33,10 @@ echo "\n" . '****** Starting scrapping ******' . "\n";
 if (in_array('pedrali', $argv) ) {
     try {
         $website = new Pedrali();
-        $urls = $scrappingUtils->getUrlsFromDb();
+        $urls = $scrappingUtils->getUrlsFromDb($website->getWebsiteName());
         if ($urls) {
-            die('stop in');
             $website->scrapWebsite();
+            $scrappingUtils->updateDbUrls($website->getWebsiteName());
         } else {
             $scrappingUtils->getUrlsFromScrapping($website);
         }

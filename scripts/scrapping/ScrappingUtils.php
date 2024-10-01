@@ -79,37 +79,6 @@ final class ScrappingUtils
     }
 
     /**
-     * @param $text
-     * @param string $divider
-     * @return string
-     */
-    public function slugify($text, string $divider = '-'): string {
-        // replace non letter or digits by divider
-        $text = preg_replace('~[^\pL\d]+~u', $divider, $text);
-
-        // transliterate
-        $text = iconv('utf-8', 'us-ascii//TRANSLIT', $text);
-
-        // remove unwanted characters
-        $text = preg_replace('~[^-\w]+~', '', $text);
-
-        // trim
-        $text = trim($text, $divider);
-
-        // remove duplicate divider
-        $text = preg_replace('~-+~', $divider, $text);
-
-        // lowercase
-        $text = strtolower($text);
-
-        if (empty($text)) {
-            return 'n-a';
-        }
-
-        return $text;
-    }
-
-    /**
      *  It will return the downloaded image id
      *
      * @param string $imageUrl
@@ -182,14 +151,12 @@ final class ScrappingUtils
     ) {
         global $wpdb;
         try {
-            $query = $wpdb->prepare("INSERT INTO %i (last_updated, category_name, site_name, url)", $this->tableName);
-            $date = date('now');
-            foreach ($urls as $url) {
-                $query .= " VALUES ($date, $categoryName, $siteName, $url)";
+            $query = $wpdb->prepare("INSERT INTO %i (last_updated, category_name, site_name, url) VALUES ", $this->tableName);
+            $date = time();
+            foreach ($urls as $key => $url) {
+                $end = $key+1 < count($urls) ? ', ' : ';';
+                $query .= "($date, " . "'" . "$categoryName" . "'" . ", " . "'" . "$siteName" . "'" . ", " . "'" . "$url" . "'" . ")$end";
             }
-
-            dump('query', $query);
-            die();
         } catch (\Exception $e) {
             echo 'Query saveCategoryUrls failed: ' . $e->getMessage() . "\n";
             return null;
@@ -198,9 +165,9 @@ final class ScrappingUtils
         return $wpdb->query($query);
     }
 
-    public function getUrlsFromDb() {
+    public function getUrlsFromDb(string $websiteName) {
         $this->checkIfTableExists();
-        return $this->getUrls();
+        return $this->getUrls($websiteName);
     }
 
     private function checkIfTableExists(): void {
@@ -230,10 +197,39 @@ final class ScrappingUtils
         }
     }
 
-    private function getUrls(): \mysqli_result|bool|int|null {
+    private function getUrls(string $websiteName): \mysqli_result|bool|int|null {
         global $wpdb;
         try {
-            $query = $wpdb->prepare("SELECT * FROM %i WHERE `last_updated` = null", $this->tableName);
+            $query = $wpdb->prepare("SELECT * FROM %i WHERE `last_updated` = null AND `site_name` = %s", $this->tableName, $websiteName);
+        } catch (\Exception $e) {
+            echo 'Query getUrlsFromDb failed: ' . $e->getMessage() . "\n";
+            return null;
+        }
+
+        return $wpdb->query($query);
+    }
+
+    public function updateDbUrls(string $websiteName, array $urls): \mysqli_result|bool|int|null {
+        global $wpdb;
+        try {
+            $time = time();
+            $query = $wpdb->prepare(
+                "UPDATE %i
+                    SET last_updated =  (CASE url                      
+                    ", $this->tableName
+            );
+
+            foreach ($urls as $key => $url) {
+                $end = $key+1 < count($urls) ? ' ' : 'END)';
+                $query .= "WHEN" . "'" . "$url" . "'" . "THEN" . "'" . "$time" . "'" . "$end";
+            }
+
+            /*$urlsString = implode(",", $urls);
+            $query .= " WHERE url IN($urlsString) AND site_name = $websiteName;";*/
+
+            dump('query', $query);
+            die();
+
         } catch (\Exception $e) {
             echo 'Query getUrlsFromDb failed: ' . $e->getMessage() . "\n";
             return null;

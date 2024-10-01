@@ -506,7 +506,7 @@ class ScrappingBase
      * @return void
      * @throws Exception
      */
-    private function saveProducts(array $categoryItems): void {
+    private function saveProducts(array $categoryItems): bool {
         // Save the products
         foreach ($categoryItems as $item) {
             echo "Saving " . $item['title'] . "\n";
@@ -516,13 +516,15 @@ class ScrappingBase
             if ($postId) {
                 $this->saveAcfFields($item, $postId);
             } else {
-                throw new Exception('Error while saving product: ' . $item['title']);
+                echo'Error while saving product: ' . $item['title'] . "\n";
+                return false;
             }
 
             die('product saved'); // @todo: to be removed
         }
 
         echo 'Products successfully saved in database' . "\n";
+        return true;
     }
 
     /**
@@ -680,7 +682,7 @@ class ScrappingBase
         $postId = wp_insert_post($postData);
         if (!is_wp_error($postId)) {
             //the post is valid
-            $this->saveCatgories($itemDetails['categories'], $postId);
+            $this->saveCategories($itemDetails['categories'], $postId);
             echo 'Item: ' . $itemDetails['title'] .  ' => successfully saved at id: ' . $postId . "\n";
             return $postId;
         } else {
@@ -691,7 +693,7 @@ class ScrappingBase
         }
     }
 
-    private function saveCatgories(array $categoryIds, int $postId): void {
+    private function saveCategories(array $categoryIds, int $postId): void {
         wp_set_object_terms($postId, $categoryIds, 'categories');
     }
 }
