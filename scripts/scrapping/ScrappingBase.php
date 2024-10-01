@@ -11,7 +11,7 @@ use Facebook\WebDriver\WebDriverBy;
  * Load the WordPress environment
  * So we have access to WP and ACF functions
  */
-if (!define('WPPATH',  __DIR__ . '/../../website/wordpress-core/wp-load.php')) {
+if (!defined('WPPATH')) {
     define( 'WPPATH', __DIR__ . '/../../website/wordpress-core/wp-load.php' );
     if (file_exists(WPPATH)) {
         require WPPATH;
@@ -329,14 +329,25 @@ class ScrappingBase
 
         foreach ($categories as $categoryName => $category) {
             foreach ($category['type'] as $categoryUrl) {
+                echo "Getting category urls for $categoryName\n";
                 $categoryUrls = $this->getCategoryUrls($category, $categoryUrl, $categoryName);
             }
 
             echo 'Saving category urls...' . "\n";
             $this->scrappingUtils->saveCategoryUrls($categoryUrls, $categoryName, $this->websiteName);
         }
+        
+        try {
+            echo "Trying to quit browser... \n";
+            // Close the browser
+            $this->webDriver->quit();
+            echo "Browser quit successfully... \n";
+            return true;
 
-        return true;
+        } catch (Exception $e) {
+            echo "Error while trying to quit webdriver \n";
+            throw new Exception("Quitting browser error: " . $e->getMessage());
+        }
     }
 
     /**
@@ -376,16 +387,6 @@ class ScrappingBase
             foreach ($categoryItems as $categoryItem) {
                 $itemUrls[] = $categoryItem->getAttribute($category['item-href-element']);
             }
-        }
-
-        try {
-            echo "Trying to quit browser... \n";
-            // Close the browser
-            $this->webDriver->quit();
-            echo "Browser quit successfully... \n";
-        } catch (Exception $e) {
-            echo "Error while trying to quit webdriver \n";
-            throw new Exception("Quitting browser error: " . $e->getMessage());
         }
 
         return $itemUrls;

@@ -36,9 +36,10 @@ if (in_array('pedrali', $argv) ) {
         $urls = $scrappingUtils->getUrlsFromDb($website->getWebsiteName());
         if ($urls) {
             $website->scrapWebsite();
-            $scrappingUtils->updateDbUrls($website->getWebsiteName());
+            $scrappingUtils->updateDbUrls($website->getWebsiteName(), $urls);
         } else {
             $scrappingUtils->getUrlsFromScrapping($website);
+            echo "get Urls From Scrapping Done \n";
         }
     } catch (Exception $e) {
         echo 'Error: ' . $e->getMessage() . "\n";

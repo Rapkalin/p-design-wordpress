@@ -8,7 +8,7 @@ use Facebook\WebDriver\WebDriverBy;
 
 final class ScrappingUtils
 {
-    private string $tableName;
+    private string $tableName = 'pdesign_urls';
 
     public function __construct (
        bool $loadWordpressMedia = false,
@@ -56,7 +56,6 @@ final class ScrappingUtils
                 die('Failed to load Wordpress.');
             }
         }
-        $this->tableName = 'pdesign_urls';
     }
 
     /**
@@ -157,6 +156,8 @@ final class ScrappingUtils
                 $end = $key+1 < count($urls) ? ', ' : ';';
                 $query .= "($date, " . "'" . "$categoryName" . "'" . ", " . "'" . "$siteName" . "'" . ", " . "'" . "$url" . "'" . ")$end";
             }
+
+            echo 'Query saveCategoryUrls succeed: ' . $categoryName . "\n";
         } catch (\Exception $e) {
             echo 'Query saveCategoryUrls failed: ' . $e->getMessage() . "\n";
             return null;
@@ -173,7 +174,7 @@ final class ScrappingUtils
     private function checkIfTableExists(): void {
         global $wpdb;
         try {
-            $query = $wpdb->prepare('SHOW TABLES LIKE %s', $wpdb->esc_like($this->tableName));
+            $query = $wpdb->prepare("SHOW TABLES LIKE %s", "%$this->tableName%");
         } catch (\Exception $e) {
             echo 'Query getUrlsFromDb failed: ' . $e->getMessage() . "\n";
             return;
@@ -188,7 +189,7 @@ final class ScrappingUtils
               last_updated  datetime DEFAULT NULL,
               category_name tinytext NOT NULL,
               site_name tinytext NOT NULL,
-              url varchar(55) DEFAULT '' NOT NULL,
+              url varchar(255) DEFAULT '' NOT NULL,
               PRIMARY KEY  (id)
             ) $charset_collate;";
 
@@ -200,7 +201,9 @@ final class ScrappingUtils
     private function getUrls(string $websiteName): \mysqli_result|bool|int|null {
         global $wpdb;
         try {
-            $query = $wpdb->prepare("SELECT * FROM %i WHERE `last_updated` = null AND `site_name` = %s", $this->tableName, $websiteName);
+            echo "Getting urls form Database for $websiteName. \n";
+
+            $query = $wpdb->prepare("SELECT * FROM %i WHERE `last_updated` = '0000-00-00 00:00:00' AND `site_name` = %s", $this->tableName, $websiteName);
         } catch (\Exception $e) {
             echo 'Query getUrlsFromDb failed: ' . $e->getMessage() . "\n";
             return null;
