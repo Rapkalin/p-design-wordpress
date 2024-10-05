@@ -10,6 +10,16 @@ final class ScrappingUtils
 {
     private string $tableName = 'pdesign_urls';
 
+    protected array $colors = [
+        'black' => "\033[30m",
+        'red' => "\033[31m",
+        'green' => "\033[32m",
+        'yellow' => "\033[33m",
+        'blue' => "\033[34m",
+        'cyan' => "\033[36m",
+        'white' => "\033[39m",
+    ];
+
     public function __construct (
        bool $loadWordpressMedia = false,
        bool $loadWordpress = false,
@@ -166,9 +176,9 @@ final class ScrappingUtils
         return $wpdb->query($query);
     }
 
-    public function getUrlsFromDb(string $websiteName) {
+    public function getUrlsFromDb(string $websiteName, int $limit = 25) {
         $this->checkIfTableExists();
-        return $this->getUrls($websiteName);
+        return $this->getUrls($websiteName, $limit);
     }
 
     private function checkIfTableExists(): void {
@@ -198,7 +208,7 @@ final class ScrappingUtils
         }
     }
 
-    private function getUrls(string $websiteName, int $limit = 25): array {
+    private function getUrls(string $websiteName, int $limit): array {
         global $wpdb;
         try {
             echo "Getting urls form Database for $websiteName. \n";
@@ -235,12 +245,12 @@ final class ScrappingUtils
                 $query .= "WHEN" . "'" . "$url" . "'" . "THEN" . "'" . "$time" . "'" . "$end";
             }
 
-            /*$urlsString = implode(",", $urls);
-            $query .= " WHERE url IN($urlsString) AND site_name = $websiteName;";*/
+            $urlsString = implode(",", $urls);
+            $query .= " WHERE url IN($urlsString) AND site_name = $websiteName;";
 
-            dump('query', $query);
+            dump('query updateDbUrls', $query);
+            $wpdb->query($query);
             die();
-
         } catch (\Exception $e) {
             echo 'Query getUrlsFromDb failed: ' . $e->getMessage() . "\n";
             return null;

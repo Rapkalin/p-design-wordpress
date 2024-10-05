@@ -259,26 +259,15 @@ class ScrappingBase
         }
     }
 
-    public function ScrapProductUrls(): bool {
-        $categories = $this->websiteConfig['categories'];
-
+    /**
+     * @throws Exception
+     */
+    public function ScrapProductUrls(array $productUrls): void {
         foreach ($productUrls as $productUrl) {
-            $categoryName = $productUrl['category_name'];
-
-            $categoryProducts = $this->getCategoryItemsDetails($categories[$categoryName], $categories[$categoryName]['type'], $categoryName);
-            echo "Saving products for category $categoryName\n";
-            $this->saveProducts($categoryProducts);
-        }
-
-        try {
-            echo "Trying to quit browser... \n";
-            // Close the browser
-            $this->webDriver->quit();
-            echo "Browser quit successfully... \n";
-            return true;
-        } catch (Exception $e) {
-            echo "Error while trying to quit webdriver \n";
-            throw new Exception("Quitting browser error: " . $e->getMessage());
+            $productDetails = $this->getProductDetails($productUrl['url'], $productUrl['category_name']);
+            echo "Saving products for product" . $productDetails['title'] . PHP_EOL;
+            $this->saveProduct($productDetails);
+            die('product saved'); // @todo: to be removed
         }
     }
 
@@ -339,6 +328,7 @@ class ScrappingBase
 
         return $categoryProductsDetails;
     }
+
 
     /**
      * Scrap & save all the products urls from a category
@@ -480,6 +470,7 @@ class ScrappingBase
             }
         }
 
+        dump('$itemDetails', $itemDetails);
 
         $itemDetails['categories'] = $this->getItemCategories($categoryName, $itemDetails['type']);
         return $itemDetails;
@@ -498,14 +489,15 @@ class ScrappingBase
     ): array
     {
         $parentCat = $type === 'outdoor' ?
-            get_term_by('slug', 'exterieur', 'categories') :
+            get_term_by('slug', 'mobilier-exterieur', 'product_categories') :
             (
                 $type === 'indoor' ?
-                    get_term_by('slug', 'interieur', 'categories') : 0
+                    get_term_by('slug', 'mobilier-interieur', 'product_categories') : 0
             )
         ;
 
         dump('$parentCat', $parentCat);
+        dump(' $type',  $type);
 
         foreach ($this->categories as $category) {
             if (
@@ -548,6 +540,28 @@ class ScrappingBase
 
         echo 'Products successfully saved in database' . "\n";
         return true;
+    }
+
+    /**
+     * Save the products in the database
+     *
+     * @param array $productDetails
+     * @return bool
+     */
+    private function saveProduct(array $productDetails): bool {
+        // Save the product
+        echo "Saving " . $productDetails['title'] . "\n";
+
+        $postId = $this->savePost($productDetails);
+
+        if ($postId) {
+            $this->saveAcfFields($productDetails, $postId);
+            echo 'Product successfully saved in database at id: ' . $postId . "\n";
+            return true;
+        } else {
+            echo'Error while saving product: ' . $productDetails['title'] . "\n";
+            return false;
+        }
     }
 
     /**
@@ -717,7 +731,21 @@ class ScrappingBase
     }
 
     private function saveCategories(array $categoryIds, int $postId): void {
-        wp_set_object_terms($postId, $categoryIds, 'categories');
+        wp_set_object_terms($postId, $categoryIds, 'product_categories');
+    }
+
+    public function closeBrowser()
+    {
+        try {
+            echo "Trying to quit browser... \n";
+            // Close the browser
+            $this->webDriver->quit();
+            echo "Browser quit successfully... \n";
+            return true;
+        } catch (Exception $e) {
+            echo "Error while trying to quit webdriver \n";
+            throw new Exception("Quitting browser error: " . $e->getMessage());
+        }
     }
 }
 
