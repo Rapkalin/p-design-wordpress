@@ -120,7 +120,7 @@ final class ScrappingUtils
         */
        $invalidArgument = [];
 
-       if ($argv && count($argv) > 1 && $argv[0] === __DIR__ . '/scrapping.php') {
+       if ($argv && count($argv) > 1 && str_contains(__DIR__ . '/scrapping.php', $argv[0])) {
            unset($argv[0]);
 
            foreach ($argv as $argument) {
