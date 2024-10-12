@@ -399,7 +399,7 @@ class ScrappingBase
         echo "\n";
 
         if (
-            !$categoryItems &&
+            !count($categoryItems) &&
             $try > 5
         ) {
             $try++;
