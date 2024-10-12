@@ -233,7 +233,7 @@ final class ScrappingUtils
     public function updateDbUrls(string $websiteName, array $urls): \mysqli_result|bool|int|null {
         global $wpdb;
         try {
-            $time = time();
+            $time =  date('Y-m-d H:i:s', time());
             $query = $wpdb->prepare(
                 "UPDATE %i
                     SET last_updated =  (CASE url                      
@@ -241,21 +241,33 @@ final class ScrappingUtils
             );
 
             foreach ($urls as $key => $url) {
-                $end = $key+1 < count($urls) ? ' ' : 'END)';
-                $query .= "WHEN" . "'" . "$url" . "'" . "THEN" . "'" . "$time" . "'" . "$end";
+                $end = $key+1 < count($urls) ? ' ' : ' END)';
+                $query .= "WHEN " . "'" . "$url" . "'" . " THEN " . "'" . "$time" . "'" . "$end";
             }
 
-            $urlsString = implode(",", $urls);
-            $query .= " WHERE url IN($urlsString) AND site_name = $websiteName;";
+            $urlsString = $this->formatUrlsString($urls);
+            $query .= " WHERE url IN($urlsString) AND site_name =" . "'" . $websiteName . "'" . ";";
 
-            dump('query updateDbUrls', $query);
+            dump('URLs to update: ', $urls);
+            dump('$query ', $query);
+
             $wpdb->query($query);
-            die();
+
         } catch (\Exception $e) {
-            echo 'Query getUrlsFromDb failed: ' . $e->getMessage() . "\n";
+            echo 'Query updateDbUrls failed: ' . $e->getMessage() . "\n";
             return null;
         }
 
         return $wpdb->query($query);
+    }
+
+    private function formatUrlsString(array $urlsArray) : string {
+        $urlsString = '';
+        foreach ($urlsArray as $key => $url) {
+            $end = $key+1 < count($urlsArray) ? ',' : '';
+            $urlsString .= "'" . $url . "'" . $end;
+        }
+
+        return $urlsString;
     }
 }

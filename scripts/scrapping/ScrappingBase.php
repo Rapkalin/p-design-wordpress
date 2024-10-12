@@ -71,6 +71,9 @@ class ScrappingBase
         'product_images',
         'product_more',
         'product_details',
+        'product_reference',
+        'product_url_reference',
+        'product_on_order',
     ];
 
     private array $categories;
@@ -265,9 +268,9 @@ class ScrappingBase
     public function ScrapProductUrls(array $productUrls): void {
         foreach ($productUrls as $productUrl) {
             $productDetails = $this->getProductDetails($productUrl['url'], $productUrl['category_name']);
-            echo "Saving products for product" . $productDetails['title'] . PHP_EOL;
+            echo "Saving products for product: " . $productDetails['title'] . PHP_EOL;
             $this->saveProduct($productDetails);
-            die('product saved'); // @todo: to be removed
+            // die('product saved'); // @todo: to be removed
         }
     }
 
@@ -371,7 +374,8 @@ class ScrappingBase
     private function getCategoryUrls(
         array $category,
         string $categoryUrl,
-        string $categoryName
+        string $categoryName,
+        int $try = 0
     ): array {
         $this->getBrowserTab($categoryUrl);
 
@@ -392,6 +396,15 @@ class ScrappingBase
         echo '*                                 *' . "\n";
         echo '***********************************' . "\n";
         echo "\n";
+
+        if (
+            !$categoryItems &&
+            $try > 5
+        ) {
+            $try++;
+            echo "Retrying to get category urls for $categoryName. Try N° $try" . PHP_EOL;
+            $this->getCategoryUrls($category, $categoryUrl, $categoryName, $try);
+        }
 
         // @todo: Add percentage for number of products done
         $itemUrls = [];
@@ -457,6 +470,9 @@ class ScrappingBase
                         $itemDetails[$key] = $value;
                     }
                     break;
+                case 'reference_prefix':
+                    $itemDetails[$configKey] = $configArray;
+                    break;
                 default:
                     foreach ($configArray as $key => $value) {
                         if ($value) {
@@ -496,8 +512,8 @@ class ScrappingBase
             )
         ;
 
-        dump('$parentCat', $parentCat);
-        dump(' $type',  $type);
+        /*dump('$parentCat', $parentCat);
+        dump(' $type',  $type);*/
 
         foreach ($this->categories as $category) {
             if (
@@ -535,7 +551,7 @@ class ScrappingBase
                 return false;
             }
 
-            die('product saved'); // @todo: to be removed
+            // die('product saved in saveproducts'); // @todo: to be removed
         }
 
         echo 'Products successfully saved in database' . "\n";
@@ -571,6 +587,11 @@ class ScrappingBase
         $keys = [];
         foreach ($this->acfFieldKeys as $field) {
             $fieldDetails = acf_get_field($field);
+
+            if (!$fieldDetails) {
+                echo 'Field ' . $field . ' does not exist in database. Skipping...' . "\n";
+                continue;
+            }
             $keys[$fieldDetails['name']] = ['key' => $fieldDetails['key']];
 
             if (isset($fieldDetails['sub_fields'])) {
@@ -632,6 +653,7 @@ class ScrappingBase
                         update_field($key['key'], $imageId, $postId);
                     }
                     break;
+                    break;
                 case 'product_description':
                     if (isset($itemDetails['description']) && $itemDetails['description']) {
                         update_field($key['key'], $itemDetails['description'], $postId);
@@ -656,9 +678,6 @@ class ScrappingBase
                         update_field($key['key'], $imageIds, $postId);
                     }
                     break;
-
-                // no case 'product_more'. It has to be completed manually
-
                 case 'product_details':
                     $productDetails = [
                         'weight' => 'Poids',
@@ -675,8 +694,25 @@ class ScrappingBase
                         }
                     }
                     break;
+                case 'product_url_reference':
+                    update_field($key['key'], $itemDetails['product-url'], $postId);
+                    break;
+                case 'product_reference':
+                    $productReference = $itemDetails['reference_prefix'] . $itemDetails['title'] . $itemDetails['reference'];
+                    update_field($key['key'], strtoupper($productReference), $postId);
+                    break;
+                case 'product_on_order':
+                    update_field($key['key'], true, $postId);
+                    break;
+                case 'product_price':
+                    if(isset($itemDetails['price']) && $itemDetails['price']) {
+                        update_field($key['key'], $itemDetails['price'], $postId);
+                    }
+                    break;
                 default:
                     break;
+                // no case 'product_more'.
+                // no case 'product_stock'. They have to be completed manually
             }
         }
     }

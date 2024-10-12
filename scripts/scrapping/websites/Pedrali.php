@@ -70,6 +70,7 @@ class Pedrali extends ScrappingBase implements ScrappingInterface
                 ]
             ],
             'product' => [
+                'reference_prefix' => 'PED',
                 'global-infos' => [
                     'title' => 'titles--label',
                     'description' => 'intro--text__descr',

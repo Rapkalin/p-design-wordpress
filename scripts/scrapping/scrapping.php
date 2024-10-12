@@ -35,9 +35,11 @@ if (in_array('pedrali', $argv) ) {
         $website = new Pedrali();
         $productUrls = $scrappingUtils->getUrlsFromDb($website->getWebsiteName());
         if ($productUrls) {
-            // Todo : retrieve 25 urls to scrap
             $website->scrapProductUrls($productUrls);
-            $scrappingUtils->updateDbUrls($website->getWebsiteName(), $productUrls);
+            $urlsToUpdate = array_map(function ($url) use (&$urlsString, &$urlsToUpdate) {
+                return $url['url'];
+            }, $productUrls);
+            $scrappingUtils->updateDbUrls($website->getWebsiteName(), $urlsToUpdate);
             $website->closeBrowser();
         } else {
             $scrappingUtils->getUrlsFromScrapping($website);
