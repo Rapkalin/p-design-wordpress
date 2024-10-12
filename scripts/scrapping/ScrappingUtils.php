@@ -120,7 +120,7 @@ final class ScrappingUtils
         */
        $invalidArgument = [];
 
-       if ($argv && count($argv) > 1 && $argv[0] === 'scripts/scrapping/scrapping.php') {
+       if ($argv && count($argv) > 1 && $argv[0] === __DIR__ . '/scrapping.php') {
            unset($argv[0]);
 
            foreach ($argv as $argument) {
@@ -250,7 +250,6 @@ final class ScrappingUtils
 
             dump('URLs to update: ', $urls);
             $wpdb->query($query);
-
         } catch (\Exception $e) {
             echo 'Query updateDbUrls failed: ' . $e->getMessage() . "\n";
             return null;
