@@ -137,6 +137,7 @@ class ScrappingBase
                 ],
             ],
             'product' => [
+                'reference_prefix' => 'XXX',
                 'title' => 'className', // ex: titles--label
                 'description' => 'className', // ex: intro--text__descr
                 'reference' => 'className', // ex: titles--sub -> constructor reference
