@@ -513,9 +513,6 @@ class ScrappingBase
             )
         ;
 
-        /*dump('$parentCat', $parentCat);
-        dump(' $type',  $type);*/
-
         foreach ($this->categories as $category) {
             if (
                 $parentCat &&
@@ -526,8 +523,8 @@ class ScrappingBase
             }
         }
 
-        // Todo: Check if there is a parent cat
-        $categories[] = $parentCat ? $parentCat->term_id : $parentCat;
+        $defaultCat = get_term_by('slug', 'a-trier', 'product_categories');
+        $categories[] = $parentCat ? $parentCat->term_id : $defaultCat->term_id;
         return $categories;
     }
 
@@ -769,6 +766,7 @@ class ScrappingBase
 
     private function saveCategories(array $categoryIds, int $postId): void {
         wp_set_object_terms($postId, $categoryIds, 'product_categories');
+        echo "Categories saved for post ID $postId: " . implode(',', $categoryIds) . "\n";
     }
 
     public function closeBrowser()

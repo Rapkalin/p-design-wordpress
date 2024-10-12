@@ -249,8 +249,6 @@ final class ScrappingUtils
             $query .= " WHERE url IN($urlsString) AND site_name =" . "'" . $websiteName . "'" . ";";
 
             dump('URLs to update: ', $urls);
-            dump('$query ', $query);
-
             $wpdb->query($query);
 
         } catch (\Exception $e) {
