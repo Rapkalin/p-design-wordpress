@@ -42,7 +42,11 @@ $parent_taxonomy = get_term($parent_term_id);
 					<div class="product-main">
 						<div class="product-primary">
 							<div class="image">
-								<img src="<?= get_field('product_featured_image')['url']; ?>" alt="<?= get_field('product_featured_image')['alt']; ?>">
+                                <?php
+                                    $url = get_field('product_featured_image')['url'] ?? '#';
+                                    $alt = get_field('product_featured_image')['alt'] ?? 'p-design-alt';
+                                ?>
+								<img src="<?= $url ?>" alt="<?= $alt ?>">
 							</div>
 							<div class="infos">
 								<h1><?php the_title(); ?></h1>
