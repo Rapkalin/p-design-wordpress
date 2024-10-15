@@ -31,7 +31,7 @@ jobs:
         uses: php-actions/composer@v6
         with:
           dev: no
-          args: --prefer-dist --no-interaction --no-dev
+          args: --prefer-dist --no-interaction
 
       - name: Zip artifact for deployment
         run: zip -r release.zip website/app/* website/vendor/* website/wordpress-core/* -x ".git/*" -x ".github/*"
