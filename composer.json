@@ -19,8 +19,10 @@
     }
   ],
 
+  "minimum-stability": "RC",
+
   "require": {
-    "php": ">=7.4",
+    "php": "<8.2",
     "johnpbloch/wordpress": "^6.3",
     "composer/installers": "~1.12",
     "vlucas/phpdotenv": "^5.5",
@@ -34,7 +36,11 @@
     "wpackagist-plugin/advanced-google-recaptcha":"^1.22",
 
     "ext-dom": "*",
-    "ext-libxml": "*"
+    "ext-libxml": "*",
+    "ext-curl": "*",
+    "php-webdriver/webdriver": "^1.15",
+    "ext-iconv": "*",
+    "ext-mysqli": "*"
   },
 
   "require-dev": {
@@ -44,7 +50,8 @@
 
   "autoload": {
     "psr-4": {
-      "App\\": "website/app"
+      "App\\": "website/app",
+      "Scrapping\\": "scripts/scrapping"
     }
   },
 

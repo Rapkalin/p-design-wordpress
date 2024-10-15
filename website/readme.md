@@ -97,3 +97,59 @@ To use the auto-deploy using Github Workflows please follow the below instructio
   git merge your-branch"
   git push
 ```
+
+### 6/ SCRAPPING SCRIPT
+/!\ Make sure the Selenium server is installed on your computer
+PHP package: php-webdriver
+Webdriver: Selenium
+Selenium version: Selenium server version: 3.141.59. Selenium serveur runs on port 4444
+Browser: Firefox
+
+To Install webdriver and selenium 
+
+1_ Add the Java path to .zshrc
+```
+  which java
+```
+
+Add the following to your.zshrc
+```
+  JAVA_HOME="path/which/java"
+  source ~/.zshrc
+```
+
+2_ Install the whole Java JDK
+https://stackoverflow.com/questions/44009058/even-though-jre-8-is-installed-on-my-mac-no-java-runtime-present-requesting-t
+https://www.oracle.com/java/technologies/downloads/#java23
+
+3_ Then install webdriver-manager
+https://www.npmjs.com/package/webdriver-manager
+
+```
+npm install -g selenium-side-runner  
+npm install -g geckodriver  
+npm install -g webdriver-manager    
+webdriver-manager update    
+webdriver-manager start
+```
+
+- The scrapping script is located in the scripts directory
+- To run the script, you need to be in the root directory of the project
+- Run the script with the following command and adding the website to scrap as an argument in lowcase (see example below):
+- The list of the authorized websites are listed in scripts/scrapping/scrapping.php.
+
+- The below command is an example with the website Pedrali.
+```
+  php scripts/scrapping/scrapping.php pedrali
+```
+
+- Start the webdriver with the following command:
+```
+  webdriver-manager start 
+```
+
+- If there is an error, try to update the Selenium webdriver with the following command:
+```
+  webdriver-manager update --versions.firefox
+  webdriver-manager start
+```
