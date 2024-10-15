@@ -38,14 +38,14 @@
     "ext-dom": "*",
     "ext-libxml": "*",
     "ext-curl": "*",
-    "php-webdriver/webdriver": "^1.15",
-    "ext-iconv": "*",
-    "ext-mysqli": "*"
+    "ext-iconv": "*"
   },
 
   "require-dev": {
     "roave/security-advisories": "dev-latest",
-    "symfony/var-dumper": "^5.4"
+    "symfony/var-dumper": "^5.4",
+    "php-webdriver/webdriver": "^1.15",
+    "ext-mysqli": "*"
   },
 
   "autoload": {
