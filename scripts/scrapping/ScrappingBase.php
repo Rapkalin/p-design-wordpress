@@ -349,6 +349,9 @@ class ScrappingBase
                 $categoryUrls = $this->getCategoryUrls($category, $categoryUrl, $categoryName);
             }
 
+            dump('$categoryUrls', $categoryUrls);
+            die();
+
             echo 'Saving category urls...' . "\n";
             $this->scrappingUtils->saveCategoryUrls($categoryUrls, $categoryName, $this->websiteName);
         }
@@ -380,7 +383,7 @@ class ScrappingBase
     ): array {
         $this->getBrowserTab($categoryUrl);
 
-        if (isset($this->websiteConfig['scroll-down'])) {
+        if (isset($this->websiteConfig['scroll-down']) && $this->websiteConfig['scroll-down']) {
             // Loading all items
             $this->scrappingUtils->scrollDown($this->webDriver, $this->websiteConfig['scroll-down']);
             // End of loading all items
@@ -388,15 +391,6 @@ class ScrappingBase
 
         // Get the category's children
         $categoryItems = $this->webDriver->findElements(WebDriverBy::className($category['id']));
-
-        echo "\n";
-        echo '***********************************' . "\n";
-        echo '*                                 *' . "\n";
-        echo '*  Category: ' . $categoryName . "\n";
-        echo '*  '. count($categoryItems) . ' items found' . "\n";
-        echo '*                                 *' . "\n";
-        echo '***********************************' . "\n";
-        echo "\n";
 
         if (
             !count($categoryItems) &&
@@ -407,13 +401,26 @@ class ScrappingBase
             $this->getCategoryUrls($category, $categoryUrl, $categoryName, $try);
         }
 
-        // @todo: Add percentage for number of products done
         $itemUrls = [];
-        if ($categoryItems && count($categoryItems) > 0) {
-            foreach ($categoryItems as $categoryItem) {
-                $itemUrls[] = $categoryItem->getAttribute($category['item-href-element']);
-            }
+        $this->scrappingUtils->getItemURls($categoryName,
+            $categoryItems,
+            $itemUrls,
+            $category['item-href-element']
+        );
+
+        if(isset($this->websiteConfig['turn-pages']) && $this->websiteConfig['turn-pages']) {
+            $this->scrappingUtils->turnPage(
+                $this->webDriver,
+                $this->websiteConfig['turn-pages'],
+                $category['id'],
+                $categoryName,
+                $itemUrls,
+                $category['item-href-element']
+            );
         }
+
+        dump('$itemUrls', $itemUrls);
+        die();
 
         return $itemUrls;
     }
