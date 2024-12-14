@@ -11,7 +11,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        php: [ 7.4 ]
+        php: [ 8.1 ]
 
     steps:
       - name: checkout code
@@ -32,6 +32,7 @@ jobs:
         with:
           dev: no
           args: --prefer-dist --no-interaction
+          php_version: 8.1
 
       - name: Zip artifact for deployment
         run: zip -r release.zip website/app/* website/vendor/* website/wordpress-core/* -x ".git/*" -x ".github/*"
