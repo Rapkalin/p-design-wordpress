@@ -87,6 +87,62 @@ final class ScrappingUtils
         return true;
     }
 
+    public function turnPage(
+        $driver,
+        string $turnPagesClassName,
+        string $categoryId,
+        string $categoryName,
+        array &$itemUrls,
+        string $itemHrefElement
+    ) : bool {
+        $nextPageButton = $driver->findElement(WebDriverBy::className($turnPagesClassName));
+        echo "Turning the pages..." . PHP_EOL;
+
+        // If there is a load more button we keep scrolling
+        if (!$nextPageButton->getDomProperty('ariaDisabled')) {
+            $nextPageButton->click();
+            // We wait 3 seconds let the time to the elements to appear on the screen
+            sleep(3);
+            $categoryItems = $driver->findElements(WebDriverBy::className($categoryId));
+
+            $this->getItemURls($categoryName,
+                $categoryItems,
+                $itemUrls,
+                $itemHrefElement
+            );
+
+            $this->turnPage(
+                $driver,
+                $turnPagesClassName,
+                $categoryId,
+                $categoryName,
+            $itemUrls,
+                $itemHrefElement
+            );
+
+        }
+
+        return true;
+    }
+
+    public function getItemURls(string $categoryName, array $categoryItems, array &$itemUrls, $itemHrefElement): void {
+        echo "\n";
+        echo '***********************************' . "\n";
+        echo '*                                 *' . "\n";
+        echo '*  Category: ' . $categoryName . "\n";
+        echo '*  '. count($categoryItems) . ' items found' . "\n";
+        echo '*                                 *' . "\n";
+        echo '***********************************' . "\n";
+        echo "\n";
+
+        // @todo: Add percentage for number of products done
+        if ($categoryItems && count($categoryItems) > 0) {
+            foreach ($categoryItems as $categoryItem) {
+                $itemUrls[] = $categoryItem->getAttribute($itemHrefElement);
+            }
+        }
+    }
+
     /**
      *  It will return the downloaded image id
      *

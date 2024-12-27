@@ -3,6 +3,7 @@
 namespace Scrapping;
 
 use Exception;
+use Scrapping\websites\Fermob;
 use Scrapping\websites\Pedrali;
 
 require __DIR__ . "/../../website/vendor/autoload.php";
@@ -33,6 +34,27 @@ echo "\n" . '****** Starting scrapping ******' . "\n";
 if (in_array('pedrali', $argv) ) {
     try {
         $website = new Pedrali();
+        $productUrls = $scrappingUtils->getUrlsFromDb($website->getWebsiteName());
+        if ($productUrls) {
+            $website->scrapProductUrls($productUrls);
+            $urlsToUpdate = array_map(function ($url) use (&$urlsString, &$urlsToUpdate) {
+                return $url['url'];
+            }, $productUrls);
+            $scrappingUtils->updateDbUrls($website->getWebsiteName(), $urlsToUpdate);
+            $website->closeBrowser();
+        } else {
+            $scrappingUtils->getUrlsFromScrapping($website);
+            echo "get Urls From Scrapping Done \n";
+        }
+    } catch (Exception $e) {
+        echo 'Error: ' . $e->getMessage() . "\n";
+    }
+}
+
+// Todo : add for each on all argv
+if (in_array('fermob', $argv) ) {
+    try {
+        $website = new Fermob();
         $productUrls = $scrappingUtils->getUrlsFromDb($website->getWebsiteName());
         if ($productUrls) {
             $website->scrapProductUrls($productUrls);
