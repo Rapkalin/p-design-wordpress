@@ -34,21 +34,21 @@ final class ScrappingUtils
             define( 'WPIMAGE', __DIR__ . '/../../website/wordpress-core/wp-admin/includes/image.php' );
             if (file_exists(WPMEDIA)) {
                 require WPMEDIA;
-                echo 'Wordpress media.php successfully loaded for: ' . get_bloginfo() . "\n\n";
+                echo 'Wordpress media.php successfully loaded for: ' . get_bloginfo() . "\n";
             } else {
                 die('Failed to load Wordpress media.php.');
             }
 
             if (file_exists(WPFILE)) {
                 require WPFILE;
-                echo 'Wordpress file.php successfully loaded for: ' . get_bloginfo() . "\n\n";
+                echo 'Wordpress file.php successfully loaded for: ' . get_bloginfo() . "\n";
             } else {
                 die('Failed to load Wordpress file.php.');
             }
 
             if (file_exists(WPIMAGE)) {
                 require WPIMAGE;
-                echo 'Wordpress image.php successfully loaded for: ' . get_bloginfo() . "\n\n";
+                echo 'Wordpress image.php successfully loaded for: ' . get_bloginfo() . "\n";
             } else {
                 die('Failed to load Wordpress image.php.');
             }
@@ -61,7 +61,7 @@ final class ScrappingUtils
             define( 'WPPATH', __DIR__ . '/../../website/wordpress-core/wp-load.php' );
             if (file_exists(WPPATH)) {
                 require WPPATH;
-                echo 'Wordpress successfully loaded for: ' . get_bloginfo() . "\n\n";
+                echo 'Wordpress successfully loaded for: ' . get_bloginfo() . "\n";
             } else {
                 die('Failed to load Wordpress.');
             }
@@ -211,7 +211,7 @@ final class ScrappingUtils
     private function getUrls(string $websiteName, int $limit): array {
         global $wpdb;
         try {
-            echo "Getting urls form Database for $websiteName. \n";
+            echo "\n" . "Getting urls form Database for $websiteName. \n\n";
 
             $query = $wpdb->prepare(
                 "SELECT * FROM %i
