@@ -176,9 +176,25 @@ final class ScrappingUtils
         return $wpdb->query($query);
     }
 
-    public function getUrlsFromDb(string $websiteName, int $limit = 50) {
+    public function getUrlsFromDb(string $websiteName, int $limit = 50): array|object|int
+    {
         $this->checkIfTableExists();
-        return $this->getUrls($websiteName, $limit);
+
+        $results = $this->getQueryResult($websiteName, $limit);
+        if ($results) {
+            return $results;
+        }
+
+        /*
+        Maybe all urls have been already scrapped
+        In that case we check if there are existing rows for current website in database
+        */
+        $results = $this->countUrlForWebsite($websiteName);
+        if ($results) {
+            return $results;
+        }
+
+        return [];
     }
 
     private function checkIfTableExists(): void {
@@ -208,10 +224,10 @@ final class ScrappingUtils
         }
     }
 
-    private function getUrls(string $websiteName, int $limit): array {
+    private function getQueryResult(string $websiteName, int $limit) {
         global $wpdb;
         try {
-            echo "\n" . "Getting urls form Database for $websiteName. \n\n";
+            echo "\n{$this->colors['yellow']}Getting urls form Database for $websiteName. {$this->colors['white']}\n";
 
             $query = $wpdb->prepare(
                 "SELECT * FROM %i
@@ -223,11 +239,37 @@ final class ScrappingUtils
                 $limit
             );
         } catch (\Exception $e) {
-            echo 'Query getUrlsFromDb failed: ' . $e->getMessage() . "\n";
+            echo "Query getUrlsFromDb failed: {$e->getMessage()} \n";
             return [];
         }
 
-        return $wpdb->get_results($query, ARRAY_A);
+        $result = $wpdb->get_results($query, ARRAY_A);
+        $count = count($result);
+        echo "{$this->colors['green']}Got $count urls to update found in Database for $websiteName. {$this->colors['white']}\n";
+
+        return $result;
+    }
+
+    private function countUrlForWebsite(string $websiteName): int {
+        global $wpdb;
+        try {
+            echo "\n{$this->colors['yellow']}Checking count urls form Database for $websiteName. {$this->colors['white']}\n";
+
+            $query = $wpdb->prepare(
+                "SELECT COUNT(*) FROM %i
+                WHERE `site_name` = %s",
+                $this->tableName,
+                $websiteName
+            );
+        } catch (\Exception $e) {
+            echo 'Query getUrlsFromDb failed: ' . $e->getMessage() . "\n";
+            return 0;
+        }
+
+        $result = $wpdb->get_var($query);
+        echo "{$this->colors['green']}Checking count: $result urls found in Database for $websiteName. {$this->colors['white']}\n";
+
+        return $result;
     }
 
     public function updateDbUrls(string $websiteName, array $urls): \mysqli_result|bool|int|null {
