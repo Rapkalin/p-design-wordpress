@@ -176,7 +176,7 @@ final class ScrappingUtils
         return $wpdb->query($query);
     }
 
-    public function getUrlsFromDb(string $websiteName, int $limit = 25) {
+    public function getUrlsFromDb(string $websiteName, int $limit = 50) {
         $this->checkIfTableExists();
         return $this->getUrls($websiteName, $limit);
     }
