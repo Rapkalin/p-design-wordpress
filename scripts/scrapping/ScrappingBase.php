@@ -78,13 +78,21 @@ class ScrappingBase
 
     private array $categories;
 
+    /**
+     * Mapping between category name in code and contributed category name
+     *
+     * @var array|string[] 
+     */
     private array $pDesingCategories = [
         'accessories' => 'Accessoires',
-        'chairs' => 'Chaises et Fauteuils',
-        'stools' => 'Tabourets et poufs',
-        'sofas' => 'Canapés et banquettes',
+        'chairs' => 'Chaises & fauteuils',
+        'chairs-lounge' => 'Banquettes & canapés',
+        'stools' => 'Tabourets & poufs',
+        'sofas' => 'Banquettes & canapés',
         'tables' => 'Tables',
-        'table-legs' => 'Pieds de table',
+        'tables-small' => 'Tables',
+        'tables-bottom' => 'Tables',
+        'table-legs' => 'Piétements de tables',
         'tops' => 'Plateaux de table',
     ];
 
@@ -372,16 +380,23 @@ class ScrappingBase
                     break;
             }
         }
-        
+
+        $itemDetails['title'] = $this->getItemTitle($itemDetails);
         $itemDetails['categories'] = $this->getItemCategories($categoryName, explode("\n", $itemDetails['type']));
         return $itemDetails;
+    }
+
+    private function getItemTitle(array $itemDetails): string
+    {
+        // return preg_match('/([^\/]+)$/', $itemUrl, $matches) ? $matches[1] : $defaultTitle;
+        return "{$itemDetails['title']} {$itemDetails['reference']}";
     }
 
     /**
      * Get all categories ids for a given item
      *
      * @param string $categoryName
-     * @param string $type // indoor / outdoor / both / Accessories
+     * @param array $type // indoor / outdoor / both / Accessories
      * @return array
      */
     private function getItemCategories (
@@ -389,19 +404,21 @@ class ScrappingBase
         array $type
     ): array
     {
+        $categories = [];
+
         $parentCat = $this->getParentCategory($categoryName, $type);
+        $categories[] = $parentCat ? $parentCat->term_id : (get_term_by('slug', 'a-trier', 'product_categories'))->term_id;
 
         foreach ($this->categories as $category) {
             if (
                 $parentCat &&
                 $parentCat->term_id === $category->parent &&
-                $this->pDesingCategories[$categoryName] === $category->name
+                $this->pDesingCategories[$categoryName] === htmlspecialchars_decode($category->name)
             ) {
                 $categories[] = $category->term_id;
             }
         }
 
-        $categories[] = $this->addParentCategory($parentCat);
         return $categories;
     }
 
@@ -418,34 +435,21 @@ class ScrappingBase
     {
         if ($categoryName === 'accessories') {
             // Accessories is the only other parent category with outdoor and indoor
-            $parentCat = get_term_by('slug', 'accessoires', 'product_categories');
-        } elseif (in_array('indoor', $type)) {
-            $parentCat = get_term_by('slug', 'mobilier-interieur', 'product_categories');
+            return get_term_by('slug', 'accessoires', 'product_categories');
         } elseif (in_array('outdoor', $type)) {
-        $parentCat = get_term_by('slug', 'mobilier-exterieur', 'product_categories');
-    }
-
-        return $parentCat ?? 0;
-    }
-
-    private function addParentCategory (\WP_Term $parentCat): int
-    {
-        if (!$parentCat) {
-            $defaultCat = get_term_by('slug', 'a-trier', 'product_categories');
-            return $defaultCat->term_id;
+            return get_term_by('slug', 'mobilier-exterieur', 'product_categories');
+        } else {
+            return get_term_by('slug', 'mobilier-interieur', 'product_categories');
         }
-
-        return $parentCat->term_id;
     }
 
     /**
-     * Save the products in the database
+     * Save the product and the corresponding acf fields in the database
      *
      * @param array $productDetails
      * @return bool
      */
     private function saveProduct(array $productDetails): bool {
-        // Save the product
         echo "Saving product: " . $productDetails['title'] . PHP_EOL;
         $postId = $this->savePost($productDetails);
 
@@ -454,7 +458,7 @@ class ScrappingBase
             echo 'Product successfully saved in database at id: ' . $postId . PHP_EOL . PHP_EOL;
             return true;
         } else {
-            echo'Error while saving product: ' . $productDetails['title'] . "\n";
+            echo "Error while saving ACF fields for product: {$productDetails['title']} at id $postId \n";
             return false;
         }
     }
