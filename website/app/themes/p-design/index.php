@@ -133,7 +133,8 @@ $realisationsPageId = 21
 					</div>
 				</section>
 			<?php endif; ?>
-			<?php if (have_rows('home_showroom')) : while (have_rows('home_showroom')) : the_row(); ?>
+    
+			<?php if (have_rows('home_showroom') && get_sub_field('image')['url']) : while (have_rows('home_showroom')) : the_row(); ?>
 					<section class="home-showroom">
 						<div class="large-container-left">
 							<div class="banner" style="background-image: url(<?= get_sub_field('image')['url']; ?>);">
