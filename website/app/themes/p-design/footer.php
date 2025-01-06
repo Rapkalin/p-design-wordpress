@@ -22,8 +22,8 @@
 					<nav class="item secondary-nav">
 						<ul>
 							<?php wp_nav_menu([
-								'theme_location' => 'products-menu',
-								'menu_id' => 'products-menu',
+								'theme_location' => 'footer-products-menu',
+								'menu_id' => 'footer-products-menu',
 								'items_wrap' => '%3$s',
 								'container' => false
 							]); ?>
@@ -31,7 +31,7 @@
 					</nav>
 				</div>
 				<div class="legal">
-					©2020 PDESIGN Tous droits réservés
+					©2025 PDESIGN Tous droits réservés
 					<span>|</span>
 					Design Agence 426c
 					<span>|</span>

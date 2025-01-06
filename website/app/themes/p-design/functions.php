@@ -22,6 +22,7 @@ if (!function_exists('pdesign_setup')) :
 			'header-menu' => esc_html__('Header Menu', 'pdesign'),
 			'products-menu' => esc_html__('Products Menu', 'pdesign'),
 			'footer-menu' => esc_html__('Footer Menu', 'pdesign'),
+			'footer-products-menu' => esc_html__('Footer Products Menu', 'pdesign'),
 		]);
 	}
 endif;
