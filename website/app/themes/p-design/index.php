@@ -31,9 +31,6 @@ $realisationsPageId = 21
 									<div class="sections-container large-container-left">
 										<div class="sections-col-1">
 											<div class="content">
-												<?php if ($hashtag) : ?>
-													<div class="hashtag"><?= $hashtag; ?></div>
-												<?php endif; ?>
 												<div class="title">
 													<?= $title; ?>
 												</div>
@@ -68,25 +65,6 @@ $realisationsPageId = 21
 			$home_products_categories = get_field('home_products_categories');
 			if ($home_products_categories) :
 			?>
-				<section class="home-quick-access" id="home-quick-access">
-					<div class="sections-container large-container-left">
-						<div class="sections-col-1">
-							<?php the_sub_field('title'); ?>
-						</div>
-						<div class="sections-col-2 tabs-navigation">
-							<?php
-							$i = 0;
-							foreach ($home_products_categories as $category) :
-							?>
-								<a href="<?= get_term_link($category->term_id, 'product_categories'); ?>" data-tab="tab-product-<?= $category->term_id ?>" class="tab-link <?= $i === 0 ? "active" : "" ?>">
-									<?= $category->name ?>
-								</a>
-							<?php $i++;
-							endforeach; ?>
-						</div>
-					</div>
-				</section>
-
 				<section class="home-refs-tabs">
 					<div class="large-container">
 						<div class="tabs-content">
@@ -133,7 +111,7 @@ $realisationsPageId = 21
 					</div>
 				</section>
 			<?php endif; ?>
-    
+
 			<?php if (have_rows('home_showroom') && get_sub_field('image')['url']) : while (have_rows('home_showroom')) : the_row(); ?>
 					<section class="home-showroom">
 						<div class="large-container-left">
