@@ -54,7 +54,6 @@
 		.title {
 			strong { font-size: 2rem; font-weight: $regular; }
 			&:before {
-				@include separator;
 				margin: .5rem 0;
 			}
 		}

@@ -1208,14 +1208,6 @@ input[type=submit]:hover {
   font-weight: 400;
 }
 .page-home .home-video .slide-content .sections-col-1 .title:before {
-  border-top-right-radius: 1rem;
-  border-bottom-right-radius: 1rem;
-  background: #FFF;
-  content: "";
-  display: block;
-  opacity: 1;
-  height: 0.4rem;
-  width: 1.8rem;
   margin: 0.5rem 0;
 }
 .page-home .home-video .slide-content .sections-col-2 .content {
