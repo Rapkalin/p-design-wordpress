@@ -1162,18 +1162,19 @@ input[type=submit]:hover {
   background: rgba(0, 0, 0, 0.7);
   padding: 2.5rem;
   height: 100%;
+  align-content: center;
 }
 .page-home .sections-container .sections-col-1 {
-  width: 17%;
+  width: 20%;
 }
 .page-home .sections-container .sections-col-2 {
-  width: 37%;
+  width: 40%;
 }
 .page-home .sections-container .sections-col-3 {
-  width: 22%;
+  width: 20%;
 }
 .page-home .sections-container .sections-col-4 {
-  width: 24%;
+  width: 20%;
 }
 
 .page-home .home-video .lines {
@@ -1192,7 +1193,7 @@ input[type=submit]:hover {
   left: 0;
   right: 0;
   bottom: 0;
-  height: 20rem;
+  height: 18rem;
 }
 .page-home .home-video .slide-content .sections-col-1,
 .page-home .home-video .slide-content .sections-col-2,
@@ -1211,7 +1212,6 @@ input[type=submit]:hover {
   margin: 0.5rem 0;
 }
 .page-home .home-video .slide-content .sections-col-2 .content {
-  padding: 6rem 3.5rem 2.5rem;
   font-size: 1.4rem;
 }
 .page-home .home-video .slide-content .sections-col-3 .content {
