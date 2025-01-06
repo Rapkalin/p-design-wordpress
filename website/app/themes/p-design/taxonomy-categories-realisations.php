@@ -43,7 +43,7 @@ $count = $posts_taxonomy->found_posts;
                                                 <div class="hover"><img src="<?= asset('plus.svg'); ?>" alt=""></div>
                                             </div>
                                         </div>
-                                        <div class="name"><?php echo the_title() . ' | Paris'; ?> </div>
+                                        <div class="name"><?php echo the_title(); ?> </div>
                                     </a>
                                 </div>
                         <?php

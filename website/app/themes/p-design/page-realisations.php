@@ -28,16 +28,14 @@ get_header();
             <div class="page-title">
                 <div class="large-container-left">
                     <div class="page-title-slider">
-                        <div class="slide" style="background-image: url(<?= asset('home-showroom.jpg'); ?>)">
-                            <div class="title">
-                                <h1><?php the_title(); ?></h1>
+                        <?php if (have_rows('realisations_covers')) : while (have_rows('realisations_covers')) : the_row(); ?>
+                            <div class="slide" style="background-image: url(<?= get_sub_field('realisation_cover'); ?>)">
+                                <div class="title">
+                                    <h1><?= get_sub_field('realisation_title'); ?></h1>
+                                </div>
                             </div>
-                        </div>
-                        <div class="slide" style="background-image: url(<?= asset('home-showroom.jpg'); ?>)">
-                            <div class="title">
-                                <h1><?php the_title(); ?></h1>
-                            </div>
-                        </div>
+                        <?php endwhile;
+                        endif; ?>
                     </div>
                 </div>
             </div>
@@ -69,7 +67,7 @@ get_header();
                                         $menu_categories_name_availables[] = $menu_category_details->name;
                                         $menu_categories_details[$menu_category_details->name] = $menu_category['description'];
                                 ?>
-                                        <a href="<?php echo "#category-" . $menu_category_details->name ?>" class="scrollto"><?php echo $menu_category_details->name ?></a>
+                                        <a href="<?php echo "#category-" . $menu_category_details->slug ?>" class="scrollto"><?php echo $menu_category_details->name ?></a>
                                 <?php
                                     }
                                 }
@@ -118,7 +116,7 @@ get_header();
                         ?>
                                 <div class="category">
                                     <div class="category-title">
-                                        <h2 id="category-<?php echo $content_category_object->name ?>"><?php echo $content_category_object->name ?></h2>
+                                        <h2 id="category-<?php echo $content_category_object->slug ?>"><?php echo $content_category_object->name ?></h2>
                                         <p><?php echo $menu_categories_details[$content_category_object->name] ?></p>
                                     </div>
                                     <div class="category-realisations">
@@ -142,7 +140,7 @@ get_header();
                                                                 <div class="hover"><img src="<?= asset('plus.svg'); ?>" alt=""></div>
                                                             </div>
                                                         </div>
-                                                        <div class="name"><?php echo the_title() . ' | Paris'; ?> </div>
+                                                        <div class="name"><?php echo the_title(); ?> </div>
                                                     </a>
                                                 </div>
                                         <?php
