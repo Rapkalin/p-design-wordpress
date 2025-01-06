@@ -9,32 +9,10 @@ $categories = get_field('realisation_categories', $realisationPageId);
 
 <?php if (have_posts()) : while (have_posts()) : the_post(); ?>
 
-		<div class="page page-default single-realisations realisation-<?= $post->post_name; ?>">
-			<div class="page-title">
-				<div class="large-container-left">
-					<div class="page-title-slider">
-						<?php if (have_rows('realisation_slider')) : while (have_rows('realisation_slider')) : the_row(); ?>
-								<div class="slide" style="background-image: url(<?= get_sub_field('image')['url']; ?>)">
-									<div class="title">
-										<h2>Réalisations</h2>
-									</div>
-								</div>
-						<?php endwhile;
-						endif; ?>
-					</div>
-				</div>
-			</div>
-
+		<div class="page page-default single-realisations single-realisation realisation-<?= $post->post_name; ?>">
 			<div class="page-overlay-intro with-right-block">
 				<div class="large-container-left">
 					<div class="content-with-menus">
-						<div class="menus">
-							<a href="<?= get_page_link($realisationPageId); ?>">Tous les projets</a>
-							<?php foreach ($categories as $category) : ?>
-								<?php $term = get_term($category['category'], 'categories-realisations'); ?>
-								<a href="<?= get_page_link($realisationPageId); ?>#category-<?= $term->name ?>" class="<?= has_term($term, 'categories-realisations', get_the_ID()) ? "active" : "" ?>"><?= $term->name; ?></a>
-							<?php endforeach; ?>
-						</div>
 						<div class="row">
 							<div class="left">
 								<h1><?php the_title(); ?></h1>

@@ -2253,6 +2253,10 @@ input[type=submit]:hover {
   width: 100%;
 }
 
+.single-realisation {
+  margin-top: 10rem;
+}
+
 .single-realisations .more-realisations .content {
   align-items: center;
   background: rgba(241, 241, 241, 0.9);
