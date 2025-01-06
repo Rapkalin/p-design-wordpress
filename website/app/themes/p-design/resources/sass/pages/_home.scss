@@ -304,16 +304,17 @@
 
 	.left {
 		background: rgba($tertiary-color, .1);
-		width: calc(30% - 5rem);
-		padding: 5rem 2rem 5rem 8rem;
+		padding: 5rem;
 		margin-right: 4rem;
+		flex: 1 1;
 
 		.button { margin-top: 2rem; }
 	}
 
 	.center {
-		flex: 1;
+		flex: 3 1;
 		position: relative;
+		margin-right: 4rem;
 
 		img {
 			width: 100%;

@@ -101,7 +101,6 @@ sup {
 
 .large-container-left {
   margin: 0 auto;
-  padding-left: 3.5rem;
 }
 
 /*--------------------------------------------------------------
@@ -1454,16 +1453,17 @@ input[type=submit]:hover {
 }
 .home-works .left {
   background: rgba(222, 174, 153, 0.1);
-  width: calc(30% - 5rem);
-  padding: 5rem 2rem 5rem 8rem;
+  padding: 5rem;
   margin-right: 4rem;
+  flex: 1 1;
 }
 .home-works .left .button {
   margin-top: 2rem;
 }
 .home-works .center {
-  flex: 1;
+  flex: 3 1;
   position: relative;
+  margin-right: 4rem;
 }
 .home-works .center img {
   width: 100%;
