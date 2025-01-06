@@ -68,7 +68,6 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		align-items: center;
 		max-width: 25rem ;
 
 		img {
@@ -441,19 +440,13 @@
 }
 
 .home-clients .slider-clients .slide .logo {
-	// border-top-right-radius: 15rem;
-	// border-bottom-right-radius: 15rem;
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	// border: 1px solid rgba(#646464, .5);
-	// height: 25rem;
-	// width: 30rem;
 
 	img {
-		max-height: 5rem;
+		max-height: 10rem;
 		max-width: 18rem;
-		margin-left: 0rem;
 	}
 }
 
