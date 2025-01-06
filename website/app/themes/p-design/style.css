@@ -1218,7 +1218,6 @@ input[type=submit]:hover {
   display: flex;
   align-items: center;
   justify-content: center;
-  align-items: center;
   max-width: 25rem;
 }
 .page-home .home-video .slide-content .sections-col-3 .content img {
@@ -1581,9 +1580,8 @@ input[type=submit]:hover {
   justify-content: center;
 }
 .home-clients .slider-clients .slide .logo img {
-  max-height: 5rem;
+  max-height: 10rem;
   max-width: 18rem;
-  margin-left: 0rem;
 }
 
 .home-socials .socials {
