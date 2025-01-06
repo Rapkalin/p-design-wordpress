@@ -35,13 +35,15 @@ if (in_array('pedrali', $argv) ) {
     try {
         $website = new Pedrali();
         $productUrls = $scrappingUtils->getUrlsFromDb($website->getWebsiteName());
-        if ($productUrls) {
+        if ($productUrls && is_array($productUrls)) {
             $website->scrapProductUrls($productUrls);
             $urlsToUpdate = array_map(function ($url) use (&$urlsString, &$urlsToUpdate) {
                 return $url['url'];
             }, $productUrls);
             $scrappingUtils->updateDbUrls($website->getWebsiteName(), $urlsToUpdate);
             $website->closeBrowser();
+        } elseif ($productUrls && is_numeric($productUrls)) {
+            echo "Scrapping for {$website->getWebsiteName()} already done \n";
         } else {
             $scrappingUtils->getUrlsFromScrapping($website);
             echo "get Urls From Scrapping Done \n";
@@ -56,13 +58,15 @@ if (in_array('fermob', $argv) ) {
     try {
         $website = new Fermob();
         $productUrls = $scrappingUtils->getUrlsFromDb($website->getWebsiteName());
-        if ($productUrls) {
+        if ($productUrls && is_array($productUrls)) {
             $website->scrapProductUrls($productUrls);
             $urlsToUpdate = array_map(function ($url) use (&$urlsString, &$urlsToUpdate) {
                 return $url['url'];
             }, $productUrls);
             $scrappingUtils->updateDbUrls($website->getWebsiteName(), $urlsToUpdate);
             $website->closeBrowser();
+        } elseif ($productUrls && is_numeric($productUrls)) {
+            echo "Scrapping for {$website->getWebsiteName()} already done \n";
         } else {
             $scrappingUtils->getUrlsFromScrapping($website);
             echo "get Urls From Scrapping Done \n";
@@ -72,6 +76,7 @@ if (in_array('fermob', $argv) ) {
     }
 }
 
-echo "\n" . '****** Scrapping is done ******' . "\n";
+echo "\n ****** END OF SCRAPPING ****** \n";
+die();
 
 

@@ -78,13 +78,21 @@ class ScrappingBase
 
     private array $categories;
 
+    /**
+     * Mapping between category name in code and contributed category name
+     *
+     * @var array|string[] 
+     */
     private array $pDesingCategories = [
         'accessories' => 'Accessoires',
-        'chairs' => 'Chaises et Fauteuils',
-        'stools' => 'Tabourets et poufs',
-        'sofas' => 'Canapés et banquettes',
+        'chairs' => 'Chaises & fauteuils',
+        'chairs-lounge' => 'Banquettes & canapés',
+        'stools' => 'Tabourets & poufs',
+        'sofas' => 'Banquettes & canapés',
         'tables' => 'Tables',
-        'table-legs' => 'Pieds de table',
+        'tables-small' => 'Tables',
+        'tables-bottom' => 'Tables',
+        'table-legs' => 'Piétements de tables',
         'tops' => 'Plateaux de table',
     ];
 
@@ -211,128 +219,14 @@ class ScrappingBase
     }
 
     /**
-     * Handle the cookie banner
-     *
-     * @param array $cookieBannerDetails
-     * @param $driver
-     * @return void
-     */
-    private function handleCookieBanner(
-        array $cookieBannerDetails,
-        $driver
-    ): void {
-        // Get the cookie Banner and if it exists refuses the cookies by clicking on the refuse button
-        $cookieBanner = $driver->findElement(WebDriverBy::id($cookieBannerDetails['id']));
-
-        if ($cookieBanner) {
-            $driver->findElement(WebDriverBy::id($cookieBannerDetails['rejectButtonId']))->click();
-        }
-
-        // Wait for the cookie Banner to close
-        // @todo: check if button exist if not we continue
-        sleep(2);
-    }
-
-    /**
-     * Handle the website scrapping
-     *
-     * @return true
-     * @throws Exception
-     */
-    public function scrapWebsite(): bool {
-        $categories = $this->websiteConfig['categories'];
-
-        foreach ($categories as $categoryName => $category) {
-            foreach ($category['type'] as $categoryUrl) {
-                $categoryProducts = $this->getCategoryItemsDetails($category, $categoryUrl, $categoryName);
-            }
-
-            echo "Saving products for category $categoryName\n";
-            $this->saveProducts($categoryProducts);
-        }
-
-        try {
-            echo "Trying to quit browser... \n";
-            // Close the browser
-            $this->webDriver->quit();
-            echo "Browser quit successfully... \n";
-            return true;
-        } catch (Exception $e) {
-            echo "Error while trying to quit webdriver \n";
-            throw new Exception("Quitting browser error: " . $e->getMessage());
-        }
-    }
-
-    /**
      * @throws Exception
      */
     public function ScrapProductUrls(array $productUrls): void {
         foreach ($productUrls as $productUrl) {
             $productDetails = $this->getProductDetails($productUrl['url'], $productUrl['category_name']);
-            echo "Saving products for product: " . $productDetails['title'] . PHP_EOL;
             $this->saveProduct($productDetails);
-            // die('product saved'); // @todo: to be removed
         }
     }
-
-    /**
-     * Return all category items
-     *
-     * @Return array
-     * @throws Exception
-     */
-    private function getCategoryItemsDetails(
-        array $category,
-        string $categoryUrl,
-        string $categoryName
-    ): array {
-        $this->getBrowserTab($categoryUrl);
-
-        /*
-         * Handling cookie banner
-         */
-        /*if (isset($this->websiteConfig['cookie-banner'])) {
-            $this->handleCookieBanner($this->websiteConfig['cookie-banner'], $this->webDriver);
-        }*/
-
-        if (isset($this->websiteConfig['scroll-down'])) {
-            // Loading all items
-            $this->scrappingUtils->scrollDown($this->webDriver, $this->websiteConfig['scroll-down']);
-            // End of loading all items
-        }
-
-        // Get the category's children
-        $categoryItems = $this->webDriver->findElements(WebDriverBy::className($category['id']));
-
-        echo "\n";
-        echo '***********************************' . "\n";
-        echo '*                                 *' . "\n";
-        echo '*  Category: ' . $categoryName . "\n";
-        echo '*  '. count($categoryItems) . ' items found' . "\n";
-        echo '*                                 *' . "\n";
-        echo '***********************************' . "\n";
-        echo "\n";
-
-        // @todo: Add percentage for number of products done
-        $itemUrls = $categoryProductsDetails = [];
-        if ($categoryItems && count($categoryItems) > 0) {
-            foreach ($categoryItems as $categoryItem) {
-                $itemUrls[] = $categoryItem->getAttribute($category['item-href-element']);
-            }
-
-            foreach ($itemUrls as $i => $itemUrl) {
-                if ($i > 1) {
-                    break;
-                }
-
-                $itemDetails = $this->getProductDetails($itemUrl, $categoryName);
-                $categoryProductsDetails[] = $itemDetails;
-            }
-        }
-
-        return $categoryProductsDetails;
-    }
-
 
     /**
      * Scrap & save all the products urls from a category
@@ -494,93 +388,84 @@ class ScrappingBase
             }
         }
 
-        dump('$itemDetails', $itemDetails);
-
-        $itemDetails['categories'] = $this->getItemCategories($categoryName, $itemDetails['type']);
+        $itemDetails['title'] = $this->getItemTitle($itemDetails);
+        $itemDetails['categories'] = $this->getItemCategories($categoryName, explode("\n", $itemDetails['type']));
         return $itemDetails;
+    }
+
+    private function getItemTitle(array $itemDetails): string
+    {
+        // return preg_match('/([^\/]+)$/', $itemUrl, $matches) ? $matches[1] : $defaultTitle;
+        return "{$itemDetails['title']} {$itemDetails['reference']}";
     }
 
     /**
      * Get all categories ids for a given item
      *
      * @param string $categoryName
-     * @param string $type // indoor / outdoor / both
+     * @param array $type // indoor / outdoor / both / Accessories
      * @return array
      */
     private function getItemCategories (
         string $categoryName,
-        string $type
+        array $type
     ): array
     {
-        $parentCat = $type === 'outdoor' ?
-            get_term_by('slug', 'mobilier-exterieur', 'product_categories') :
-            (
-                $type === 'indoor' ?
-                    get_term_by('slug', 'mobilier-interieur', 'product_categories') : 0
-            )
-        ;
+        $categories = [];
+
+        $parentCat = $this->getParentCategory($categoryName, $type);
+        $categories[] = $parentCat ? $parentCat->term_id : (get_term_by('slug', 'a-trier', 'product_categories'))->term_id;
 
         foreach ($this->categories as $category) {
             if (
                 $parentCat &&
                 $parentCat->term_id === $category->parent &&
-                $this->pDesingCategories[$categoryName] === $category->name
+                $this->pDesingCategories[$categoryName] === htmlspecialchars_decode($category->name)
             ) {
                 $categories[] = $category->term_id;
             }
         }
 
-        $defaultCat = get_term_by('slug', 'a-trier', 'product_categories');
-        $categories[] = $parentCat ? $parentCat->term_id : $defaultCat->term_id;
         return $categories;
     }
 
     /**
-     * Save the products in the database
+     * @param string $categoryName
+     * @param array $type
+     * @return array|false|int|\WP_Error|\WP_Term|null
      *
-     * @param array $categoryItems
-     * @return void
-     * @throws Exception
+     * It will return an integer
+     * if no parent category => 0
+     * if parent category => the id
      */
-    private function saveProducts(array $categoryItems): bool {
-        // Save the products
-        foreach ($categoryItems as $item) {
-            echo "Saving " . $item['title'] . "\n";
-
-            $postId = $this->savePost($item);
-
-            if ($postId) {
-                $this->saveAcfFields($item, $postId);
-            } else {
-                echo'Error while saving product: ' . $item['title'] . "\n";
-                return false;
-            }
-
-            // die('product saved in saveproducts'); // @todo: to be removed
+    private function getParentCategory (string $categoryName, array $type): \WP_Term|\WP_Error|bool|array|int|null
+    {
+        if ($categoryName === 'accessories') {
+            // Accessories is the only other parent category with outdoor and indoor
+            return get_term_by('slug', 'accessoires', 'product_categories');
+        } elseif (in_array('outdoor', $type)) {
+            return get_term_by('slug', 'mobilier-exterieur', 'product_categories');
+        } else {
+            return get_term_by('slug', 'mobilier-interieur', 'product_categories');
         }
-
-        echo 'Products successfully saved in database' . "\n";
-        return true;
     }
 
     /**
-     * Save the products in the database
+     * Save the product and the corresponding acf fields in the database
      *
      * @param array $productDetails
      * @return bool
      */
     private function saveProduct(array $productDetails): bool {
-        // Save the product
-        echo "Saving " . $productDetails['title'] . "\n";
-
+        echo "Saving product: " . $productDetails['title'] . PHP_EOL;
         $postId = $this->savePost($productDetails);
 
         if ($postId) {
             $this->saveAcfFields($productDetails, $postId);
-            echo 'Product successfully saved in database at id: ' . $postId . "\n";
+            echo 'Product successfully saved in database at id: ' . $postId . PHP_EOL . PHP_EOL;
             return true;
         } else {
-            echo'Error while saving product: ' . $productDetails['title'] . "\n";
+            echo "Error while saving ACF fields for product: {$productDetails['title']} at id $postId \n";
             return false;
         }
     }
@@ -752,7 +637,7 @@ class ScrappingBase
             'post_title' => $itemDetails['title'],
             'post_name' => acf_slugify($itemDetails['title']),
             'post_type' => 'produits',
-            'post_status' => 'draft',
+            'post_status' => 'publish',
             'comment_status' => 'closed',
             'post_author' => 1,
         ];

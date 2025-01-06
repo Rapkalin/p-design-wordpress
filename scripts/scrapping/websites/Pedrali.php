@@ -33,6 +33,13 @@ class Pedrali extends ScrappingBase implements ScrappingInterface
                         'all' => 'https://www.pedrali.com/fr-fr/produits/chaises-design',
                     ],
                 ],
+                'chairs-lounge' => [
+                    'id' => 'categoria--item',
+                    'item-href-element' => 'href',
+                    'type' => [ // indoor && outdoor || all
+                        'all' => 'https://www.pedrali.com/fr-fr/produits/chaises-lounge',
+                    ],
+                ],
                 'stools' => [
                     'id' => 'categoria--item',
                     'item-href-element' => 'href',
@@ -52,6 +59,20 @@ class Pedrali extends ScrappingBase implements ScrappingInterface
                     'item-href-element' => 'href',
                     'type' => [ // indoor && outdoor || all
                         'all' => 'https://www.pedrali.com/fr-fr/produits/tables-design',
+                    ],
+                ],
+                'tables-small' => [
+                    'id' => 'categoria--item',
+                    'item-href-element' => 'href',
+                    'type' => [ // indoor && outdoor || all
+                        'all' => 'https://www.pedrali.com/fr-fr/produits/tables-base-centrale',
+                    ],
+                ],
+                'tables-bottom' => [
+                    'id' => 'categoria--item',
+                    'item-href-element' => 'href',
+                    'type' => [ // indoor && outdoor || all
+                        'all' => 'https://www.pedrali.com/fr-fr/produits/tables-basses-design',
                     ],
                 ],
                 'table-legs' => [
