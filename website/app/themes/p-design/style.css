@@ -2924,9 +2924,6 @@ input[type=submit]:hover {
   .large-container {
     padding: 0 2.5rem;
   }
-  .large-container-left {
-    padding-left: 2.5rem;
-  }
   .page-default .page-overlay-intro.with-right-block .large-container-left {
     display: block;
   }
@@ -2981,6 +2978,16 @@ input[type=submit]:hover {
   }
   .footer .footer-content .main .content {
     flex-wrap: wrap;
+    flex-direction: column;
+  }
+  .footer .footer-content .main .content .item:first-child {
+    width: unset;
+  }
+  .footer .footer-content .main .content .item:nth-child(2) {
+    width: unset;
+  }
+  .footer .footer-content .main .content .item:nth-child(3) {
+    width: unset;
   }
   .footer .footer-content .main .content .item {
     width: 50%;

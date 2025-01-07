@@ -113,7 +113,6 @@
 	.realisations-categories .category-title { width: 100%; padding-right: 0; margin-bottom: 3rem; }
 
 	.large-container { padding: 0 2.5rem; }
-	.large-container-left { padding-left: 2.5rem; }
 
 	.page-default .page-overlay-intro.with-right-block .large-container-left { display: block; }
 	.page-default .page-overlay-intro .content-with-menus { padding: .6rem 2.5rem 0; }
@@ -139,7 +138,13 @@
 
 	.home-showroom .banner .content { margin-left: 2.5rem; padding: 4rem 8rem 4rem 4rem; }
 
-	.footer .footer-content .main .content { flex-wrap: wrap; }
+	.footer .footer-content .main .content {
+		flex-wrap: wrap;
+		flex-direction: column;
+		.item:first-child { width: unset;}
+		.item:nth-child(2) { width: unset;}
+		.item:nth-child(3) { width: unset;}
+	}
 	.footer .footer-content .main .content .item { width: 50%; margin-bottom: 2rem; }
 
 	.page-default .page-title .page-title-slider .title h1, .page-default .page-title .page-title-slider .title h2 { font-size: 6rem; }
