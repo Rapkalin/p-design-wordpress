@@ -62,3 +62,70 @@ require 'inc/realisations.php';
 if (function_exists('acf_add_options_page')) {
 	acf_add_options_page();
 }
+
+// Remplacez 'produits' par le slug de votre custom post type.
+add_filter('manage_edit-produits_columns', 'add_product_columns');
+function add_product_columns($columns) {
+    $columns['product_categories'] = __('Catégories'); // Titre de la colonne
+    return $columns;
+}
+
+add_action('manage_produits_posts_custom_column', 'display_product_categories_column', 10, 2);
+function display_product_categories_column($column, $post_id) {
+    if ($column == 'product_categories') {
+        $terms = get_the_terms($post_id, 'product_categories');
+        if ($terms && !is_wp_error($terms)) {
+            $terms_list = [];
+            foreach ($terms as $term) {
+                $terms_list[] = $term->name; // Vous pouvez également utiliser $term->term_id ou d'autres propriétés si nécessaire
+            }
+            echo implode(', ', $terms_list);
+        } else {
+            echo 'Aucune catégorie';
+        }
+    }
+}
+
+add_action('restrict_manage_posts', 'filter_products_by_categories');
+function filter_products_by_categories() {
+    global $typenow; // Type de post actuel
+    if ($typenow == 'produits') { // Remplacez 'produits' par le slug de votre custom post type
+        $terms = get_terms([
+            'taxonomy' => 'product_categories', // Taxonomie à filtrer
+            'hide_empty' => false, // Affiche toutes les catégories
+        ]);
+
+        if ($terms) {
+            echo '<select name="product_categories_filter">';
+            echo '<option value="">' . __('Toutes les catégories') . '</option>';
+            foreach ($terms as $term) {
+                $selected = (isset($_GET['product_categories_filter']) && $_GET['product_categories_filter'] == $term->term_id) ? ' selected="selected"' : '';
+                echo '<option value="' . $term->term_id . '"' . $selected . '>' . $term->name . '</option>';
+            }
+            echo '</select>';
+        }
+    }
+}
+
+add_filter('pre_get_posts', 'filter_products_by_selected_category');
+function filter_products_by_selected_category($query) {
+    global $pagenow;
+    $typenow = 'produits'; // Remplacez 'produits' par le slug de votre custom post type
+
+    if ($pagenow == 'edit.php' && $query->is_admin && $query->get('post_type') === $typenow) {
+        if (isset($_GET['product_categories_filter']) && $_GET['product_categories_filter'] != '') {
+            // Vérifiez si tax_query est déjà défini
+            $tax_query = (array) $query->get('tax_query');
+
+            // Ajoutez la nouvelle requête de taxonomie
+            $tax_query[] = [
+                'taxonomy' => 'product_categories',
+                'field' => 'id',
+                'terms' => intval($_GET['product_categories_filter']),
+            ];
+
+            // Mettez à jour tax_query avec les nouvelles conditions
+            $query->set('tax_query', $tax_query);
+        }
+    }
+}
