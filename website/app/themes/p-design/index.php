@@ -149,7 +149,7 @@ $realisationsPageId = 21
 								$realisations_query = new WP_Query(['post_type' => 'realisations', 'posts_per_page' => 1]);
 								if ($last_realisation && $last_realisation[0]) : ?>
 									<?php $realisation_url = get_field('realisation_banner', $last_realisation[0]['ID'])['url'] ?>
-									<div class="center home-realisation-cover" style="background-image: url('<?= $realisation_url; ?>')">
+									<div class="center home-realisation-cover">
 										<img src="<?= $realisation_url; ?>" />
 									</div>
 								<?php endif; ?>
@@ -163,7 +163,7 @@ $realisationsPageId = 21
 				<div class="large-container">
 					<div class="slider-testimonials" id="slider-testimonials">
 						<?php if (have_rows('home_testimonials')) : while (have_rows('home_testimonials')) : the_row(); ?>
-								<div class="slide" style="background-image: url(<?= get_sub_field('image')['url']; ?>);">
+								<div class="slide quote-overlay" style="background-image: url(<?= get_sub_field('image')['url']; ?>);">
 									<div class="content">
 										<div class="quote">
 											<p><?php the_sub_field('quote'); ?></p>

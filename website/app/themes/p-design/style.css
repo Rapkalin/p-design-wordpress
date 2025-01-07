@@ -1510,6 +1510,9 @@ input[type=submit]:hover {
 .home-testimonials .slider-testimonials {
   position: relative;
 }
+.home-testimonials .slider-testimonials .quote-overlay {
+  box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, 0.2);
+}
 
 .home-testimonials .slider-testimonials .slide {
   align-items: center;
