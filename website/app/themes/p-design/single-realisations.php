@@ -21,7 +21,7 @@ $categories = get_field('realisation_categories', $realisationPageId);
                 </div>
                 <div class="right-block">
                     <p>Pour tout projet similaire<br>merci de nous contacter :</p>
-                    <p><a href="tel:+33158910526"><img src="<?= asset('phone-dark.svg'); ?>" alt="Téléphone"> 01 48 47 48 49</a></p>
+                    <p><a href="tel:+331589105266"><img src="<?= asset('phone-dark.svg'); ?>" alt="Téléphone"> 01 58 91 05 26</a></p>
                     <p><a href="mailto:contact@p-design.fr"><img src="<?= asset('email.svg'); ?>" alt="Email"> Par email</a></p>
                 </div>
             </div>
