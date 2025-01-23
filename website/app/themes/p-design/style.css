@@ -2829,6 +2829,7 @@ input[type=submit]:hover {
   }
   .archive-products .archive-products-list .products {
     padding: 0;
+    align-items: flex-start;
   }
   .archive-products .archive-products-list .products .product {
     width: 33.3333333333%;
@@ -3156,6 +3157,7 @@ input[type=submit]:hover {
   }
   .archive-products .archive-products-list .products .product {
     width: 50%;
+    display: unset;
   }
   .single-products .product-breadcrumbs {
     padding-left: 0;
@@ -3274,7 +3276,7 @@ input[type=submit]:hover {
     padding-top: 11rem;
   }
   .archive-products .archive-products-list .products .product {
-    width: 100%;
+    width: 50%;
   }
 }
 @media screen and (max-width: 350px) {
