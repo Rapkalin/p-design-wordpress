@@ -144,15 +144,9 @@ $realisationsPageId = 21
 										<a href="<?= get_sub_field('link')['url']; ?>" class="button button-white button-image"><img src="<?= asset('plus.svg'); ?>" class="svg"></a>
 									<?php endif; ?>
 								</div>
-								<?php
-								$last_realisation = wp_get_recent_posts(['post_type' => 'realisations', 'posts_per_page' => 1]);
-								$realisations_query = new WP_Query(['post_type' => 'realisations', 'posts_per_page' => 1]);
-								if ($last_realisation && $last_realisation[0]) : ?>
-									<?php $realisation_url = get_field('realisation_banner', $last_realisation[0]['ID'])['url'] ?>
-									<div class="center home-realisation-cover">
-										<img src="<?= $realisation_url; ?>" />
-									</div>
-								<?php endif; ?>
+                                <div class="center home-realisation-cover">
+                                    <img src="<?= get_sub_field('image')['url']; ?>" />
+                                </div>
 							</div>
 						</div>
 					</section>
