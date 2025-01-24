@@ -28,11 +28,15 @@ get_header();
             <div class="page-title">
                 <div class="large-container-left">
                     <div class="page-title-slider">
-                        <?php if (have_rows('realisations_covers')) : while (have_rows('realisations_covers')) : the_row(); ?>
-                            <div class="slide" style="background-image: url(<?= get_sub_field('realisation_cover'); ?>)">
-                                <div class="title">
-                                    <h1><?= get_sub_field('realisation_title'); ?></h1>
-                                </div>
+                        <?php if (have_rows('realisations_covers')) : while (have_rows('realisations_covers')) : the_row();
+                            $title = get_sub_field('realisation_title');
+                        ?>
+                            <div class="slide <?= $title ? "" : "unset-after" ?>" style="background-image: url(<?= get_sub_field('realisation_cover'); ?>)">
+                                <?php if ($title): ?>
+                                    <div class="title">
+                                        <h1><?= $title ?></h1>
+                                    </div>
+                                <?php endif; ?>
                             </div>
                         <?php endwhile;
                         endif; ?>

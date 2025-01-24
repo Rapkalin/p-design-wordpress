@@ -970,9 +970,12 @@ input[type=submit]:hover {
   background: rgba(0, 0, 0, 0.5);
   position: absolute;
   top: 0;
-  left: 17%;
+  left: 0;
   bottom: 0;
   right: 0;
+}
+.page-default .page-title .page-title-slider .unset-after:after {
+  content: none;
 }
 .page-default .page-title .page-title-slider .slick-dots {
   bottom: 5rem;
