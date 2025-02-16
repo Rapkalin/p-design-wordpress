@@ -62,11 +62,10 @@ class Fameg extends ScrappingBase implements ScrappingInterface
                     'is_new' => false,
                 ],
                 'images' => [
-                    'product' => 'swiper-wrapper-new', // Product image
                     'alternatives' => [ // Alternative views
                         'multiple' => true,
                         'gallery' => 'carousel-thumbs-product',
-                        "xpath" => ".//div[@class='swiper-slide']/a",
+                        "xpath" => ".//div[@class='swiper-wrapper']/a",
                         'single-img' => 'swiper-slide',
                     ],
                 ],
@@ -147,27 +146,36 @@ class Fameg extends ScrappingBase implements ScrappingInterface
         $itemDetails = [];
         $itemDetails['product-url'] = $itemUrl;
 
-        dump('$itemDetails before', $itemDetails);
-
         foreach ($productWebsiteConfig as $configKey => $configArray) {
             switch ($configKey) {
                 case 'images':
-                    // Get the image for the product
-                    if ($productWebsiteConfig['images']['product']) {
-                        $imageBox = $this->webDriver->findElements(WebDriverBy::className($productWebsiteConfig['images']['product']));
-                        dump('$imageBox', $imageBox);
-                        die();
-                        $itemDetails['image-product'] = $imageBox[0]->findElement(WebDriverBy::tagName('span'))->getAttribute('data-img');
-                    }
+                    // Get all available images for the product
+                    $imageBox = $this->webDriver->findElements(WebDriverBy::xpath($configArray['alternatives']['xpath']));
+
+                    // We take the first image from imageBox as main image and cover image
+                    $itemDetails['image-product'] = $this->getImageUrl($imageBox[0]);
+
+                    // We take the images left for alternatives
+                    $this->getAlternativeImages($itemDetails, $imageBox);
                     break;
                 case 'scroll-down':
                 case 'cookie-banner':
                     break;
                 case 'technical-data':
-                    $descriptionTab = $this->webDriver->findElements(WebDriverBy::className($productWebsiteConfig['images']['product']));
-                    dump('$descriptionTab', $descriptionTab);
-                    die();
-                    $descriptionTab->click();
+                    // We need to get rid of the cookie banner before clicking elsewhere
+                    $cookieBanner = $this->webDriver->findElements(WebDriverBy::xpath(".//span[@id='cn-notice-buttons']/a"));
+                    $cookieBanner[0]->click();
+
+                    sleep(2);
+
+                    // Click on the button with the data-tab-link attribute: wymiary
+                    // The dimensions table will have the open class
+                    $descriptionTab = $this->webDriver->findElements(WebDriverBy::xpath(".//section[@class='sec-product-desc']//li[last()]/button"));
+                    $descriptionTab[0]->click();
+
+                    die('stop');
+
+                    // TO DO get the datas
                     $datas = $this->webDriver->findElements(WebDriverBy::className($productWebsiteConfig['images']['product']));
 
                     foreach ($configArray as $key => $value) {
@@ -201,6 +209,19 @@ class Fameg extends ScrappingBase implements ScrappingInterface
 
         dump('$itemDetails', $itemDetails);
         return $itemDetails;
+    }
+
+    private function getAlternativeImages(array &$itemDetails, array $imageBox): void {
+        // Get alternative images
+        foreach ($imageBox as $key => $imageElement) {
+            if ($key) { // We ignore the first image of the array that is use as cover & main image
+                $itemDetails['images-cover'][] = $this->getImageUrl($imageElement);
+            }
+        }
+    }
+
+    private function getImageUrl($imageElement): string {
+        return $imageElement->findElement(WebDriverBy::tagName('img'))->getAttribute('data-src');
     }
 
     private function getGlobalInfos(array &$itemDetails, array $configArray)
