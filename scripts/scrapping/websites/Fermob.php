@@ -2,13 +2,15 @@
 
 namespace Scrapping\websites;
 
+use Exception;
+use Facebook\WebDriver\WebDriverBy;
 use Scrapping\ScrappingBase;
 use Scrapping\ScrappingInterface;
 
 class Fermob extends ScrappingBase implements ScrappingInterface
 {
     public function __construct() {
-        parent::__construct($this->getWebsiteName(), $this->getWebsiteConfig());
+        parent::__construct($this->getName(), $this->getConfig());
     }
 
     /**
@@ -16,7 +18,7 @@ class Fermob extends ScrappingBase implements ScrappingInterface
      *
      * @return array
      */
-    public function getWebsiteConfig(): array {
+    public function getConfig(): array {
         return [
             'categories' => [
                 'chairs' => [
@@ -91,7 +93,56 @@ class Fermob extends ScrappingBase implements ScrappingInterface
     /**
      * @return string
      */
-    public function getWebsiteName(): string {
+    public function getName(): string {
         return 'fermob';
+    }
+
+    /**
+     * Scrap all the products urls from a category
+     *
+     * @Return array
+     * @throws Exception
+     */
+    protected function getCategoryUrls(
+        array $category,
+        string $categoryUrl,
+        string $categoryName,
+        int $try = 0
+    ): array {
+        $this->getBrowserTab($categoryUrl);
+
+        // Get the category's children
+        $categoryItems = $this->webDriver->findElements(WebDriverBy::className($category['id']));
+
+        if (
+            !count($categoryItems) &&
+            $try > 5
+        ) {
+            $try++;
+            echo "Retrying to get category urls for $categoryName. Try N° $try" . PHP_EOL;
+            $this->getCategoryUrls($category, $categoryUrl, $categoryName, $try);
+        }
+
+        $itemUrls = [];
+        $this->scrappingUtils->getItemURls($categoryName,
+            $categoryItems,
+            $itemUrls,
+            $category['item-href-element']
+        );
+
+        $this->scrappingUtils->turnPage(
+            $this->webDriver,
+            $this->getConfig()['turn-pages'],
+            $category['id'],
+            $categoryName,
+            $itemUrls,
+            $category['item-href-element']
+        );
+
+
+        dump('$itemUrls', $itemUrls);
+        die();
+
+        return $itemUrls;
     }
 }
