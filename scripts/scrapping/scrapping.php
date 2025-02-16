@@ -3,6 +3,7 @@
 namespace Scrapping;
 
 use Exception;
+use Scrapping\websites\Fameg;
 use Scrapping\websites\Fermob;
 use Scrapping\websites\Pedrali;
 
@@ -34,16 +35,16 @@ echo "\n" . '****** Starting scrapping ******' . "\n";
 if (in_array('pedrali', $argv) ) {
     try {
         $website = new Pedrali();
-        $productUrls = $scrappingUtils->getUrlsFromDb($website->getWebsiteName());
+        $productUrls = $scrappingUtils->getUrlsFromDb($website->getName());
         if ($productUrls && is_array($productUrls)) {
             $website->scrapProductUrls($productUrls);
             $urlsToUpdate = array_map(function ($url) use (&$urlsString, &$urlsToUpdate) {
                 return $url['url'];
             }, $productUrls);
-            $scrappingUtils->updateDbUrls($website->getWebsiteName(), $urlsToUpdate);
+            $scrappingUtils->updateDbUrls($website->getName(), $urlsToUpdate);
             $website->closeBrowser();
         } elseif ($productUrls && is_numeric($productUrls)) {
-            echo "Scrapping for {$website->getWebsiteName()} already done \n";
+            echo "Scrapping for {$website->getName()} already done \n";
         } else {
             $scrappingUtils->getUrlsFromScrapping($website);
             echo "get Urls From Scrapping Done \n";
@@ -54,19 +55,19 @@ if (in_array('pedrali', $argv) ) {
 }
 
 // Todo : add for each on all argv
-if (in_array('fermob', $argv) ) {
+if (in_array('fameg', $argv) ) {
     try {
-        $website = new Fermob();
-        $productUrls = $scrappingUtils->getUrlsFromDb($website->getWebsiteName());
+        $website = new Fameg();
+        $productUrls = $scrappingUtils->getUrlsFromDb($website->getName());
         if ($productUrls && is_array($productUrls)) {
             $website->scrapProductUrls($productUrls);
             $urlsToUpdate = array_map(function ($url) use (&$urlsString, &$urlsToUpdate) {
                 return $url['url'];
             }, $productUrls);
-            $scrappingUtils->updateDbUrls($website->getWebsiteName(), $urlsToUpdate);
+            $scrappingUtils->updateDbUrls($website->getName(), $urlsToUpdate);
             $website->closeBrowser();
         } elseif ($productUrls && is_numeric($productUrls)) {
-            echo "Scrapping for {$website->getWebsiteName()} already done \n";
+            echo "Scrapping for {$website->getName()} already done \n";
         } else {
             $scrappingUtils->getUrlsFromScrapping($website);
             echo "get Urls From Scrapping Done \n";

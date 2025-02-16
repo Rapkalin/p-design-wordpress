@@ -4,6 +4,6 @@ namespace Scrapping;
 
 interface ScrappingInterface
 {
-    function getWebsiteConfig();
-    function getWebsiteName();
+    function getConfig();
+    function getName();
 }
