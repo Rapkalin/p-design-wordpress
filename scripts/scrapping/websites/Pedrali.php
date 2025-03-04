@@ -186,9 +186,6 @@ class Pedrali extends ScrappingBase implements ScrappingInterface
             );
         }
 
-        dump('$itemUrls', $itemUrls);
-        die();
-
         return $itemUrls;
     }
 

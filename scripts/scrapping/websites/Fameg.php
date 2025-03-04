@@ -3,6 +3,7 @@
 namespace Scrapping\websites;
 
 use Exception;
+use Facebook\WebDriver\Remote\RemoteWebElement;
 use Facebook\WebDriver\WebDriverBy;
 use Scrapping\ScrappingBase;
 use Scrapping\ScrappingInterface;
@@ -163,23 +164,17 @@ class Fameg extends ScrappingBase implements ScrappingInterface
                     break;
                 case 'technical-data':
                     // We need to get rid of the cookie banner before clicking elsewhere
-                    $cookieBanner = $this->webDriver->findElements(WebDriverBy::xpath(".//span[@id='cn-notice-buttons']/a"));
-                    $cookieBanner[0]->click();
+                    $this->closeCookieBanner();
 
-                    sleep(2);
-
-                    // Click on the button with the data-tab-link attribute: wymiary
+                    // Click on the button with the data-tab-link attribute: wymiary .ie the last li
                     // The dimensions table will have the open class
                     $descriptionTab = $this->webDriver->findElements(WebDriverBy::xpath(".//section[@class='sec-product-desc']//li[last()]/button"));
                     $descriptionTab[0]->click();
 
-                    die('stop');
-
-                    // TO DO get the datas
-                    $datas = $this->webDriver->findElements(WebDriverBy::className($productWebsiteConfig['images']['product']));
-
-                    foreach ($configArray as $key => $value) {
-                        $itemDetails[$key] = $value;
+                    $datas = $this->webDriver->findElements(WebDriverBy::xpath(".//div[@data-tab-name='wymiary']//tbody//tr"));
+                    foreach ($datas as $data) {
+                        $children = $data->findElements(WebDriverBy::xpath(".//td"));
+                        $itemDetails['technical-data'][$children[0]->getText()] = $children[1]->getText();
                     }
                     break;
                 case 'reference_prefix':
@@ -197,17 +192,12 @@ class Fameg extends ScrappingBase implements ScrappingInterface
                             $itemDetails[$key] = $value;
                         }
                     }
-
-                    dump('$itemDetails default', $itemDetails);
-                    die();
                     break;
             }
         }
 
         $itemDetails['title'] = $this->getItemTitle($itemDetails);
         $itemDetails['categories'] = $this->getItemCategories($categoryName, explode("\n", $itemDetails['type']));
-
-        dump('$itemDetails', $itemDetails);
         return $itemDetails;
     }
 
@@ -304,4 +294,30 @@ class Fameg extends ScrappingBase implements ScrappingInterface
         }
     }
 
+    private function closeCookieBanner (): void
+    {
+        $cookieBanner = $this->getCookieBanner();
+        if ($cookieBanner) {
+            $cookieBanner->click();
+        }
+
+        if ($this->getCookieBanner()) {
+            // We wait until the banner is gone
+            sleep(2);
+        }
+    }
+
+    private function getCookieBanner (): bool|RemoteWebElement
+    {
+        $cookieBanner = $this->webDriver->findElements(WebDriverBy::xpath(".//div[@id='cookie-notice']"));
+        $attributes = $cookieBanner[0]->getAttribute('class');
+
+        // if cookie banner is already hidden we do nothing
+        if (str_starts_with($attributes, 'cookie-notice-hidden')) {
+            return false;
+        }
+
+        $cookieButton = $this->webDriver->findElements(WebDriverBy::xpath(".//span[@id='cn-notice-buttons']/a"));
+        return $cookieButton[0];
+    }
 }

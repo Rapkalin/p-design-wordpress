@@ -5,7 +5,6 @@ namespace Scrapping;
 use Exception;
 use Facebook\WebDriver\Remote\DesiredCapabilities;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
-use Facebook\WebDriver\WebDriverBy;
 
 /*
  * Load the WordPress environment
@@ -279,6 +278,7 @@ class ScrappingBase
             echo "Error while saving ACF fields for product: {$productDetails['title']} at id $postId \n";
             return false;
         }
+
     }
 
     /**
@@ -389,9 +389,19 @@ class ScrappingBase
                         'in-stock' => 'En stock'
                     ];
 
-                    foreach ($productDetails as $keyDetail => $trad) {
-                        if (isset($itemDetails[$keyDetail]) && $itemDetails[$keyDetail]) {
-                            $this->addAcfRepeaterRow($itemDetails[$keyDetail], $key, $postId, $trad);
+                    if (isset($itemDetails['technical-data'])) {
+                        foreach ($itemDetails['technical-data'] as $label => $value) {
+                         $this->addAcfRepeaterRow($value, $key, $postId, $label);
+                        }
+                    } else {
+                        $i = 0;
+                        foreach ($productDetails as $keyDetail => $trad) {
+                            if (isset($itemDetails[$keyDetail]) && $itemDetails[$keyDetail]) {
+                                $this->addAcfRepeaterRow($itemDetails[$keyDetail], $key, $postId, $trad);
+                            } else {
+                                $this->addAcfRepeaterRow($itemDetails[$i], $key, $postId, $itemDetails[$i]);
+                                $i++;
+                            }
                         }
                     }
                     break;
@@ -426,7 +436,7 @@ class ScrappingBase
      * @return void
      */
     private function addAcfRepeaterRow (
-        $rowDetails,
+        $value,
         array $key,
         int $postId,
         string $trad
@@ -434,7 +444,7 @@ class ScrappingBase
         // For update_sub_field $postId needs to be in an array
         $row = [
             $key['subkeys']['key'] => $trad,
-            $key['subkeys']['value'] => $rowDetails
+            $key['subkeys']['value'] => $value
         ];
         add_row($key['key'], $row, $postId);
     }

@@ -139,10 +139,6 @@ class Fermob extends ScrappingBase implements ScrappingInterface
             $category['item-href-element']
         );
 
-
-        dump('$itemUrls', $itemUrls);
-        die();
-
         return $itemUrls;
     }
 }
