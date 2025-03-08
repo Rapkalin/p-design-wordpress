@@ -7,6 +7,8 @@ use Facebook\WebDriver\Remote\RemoteWebElement;
 use Facebook\WebDriver\WebDriverBy;
 use Scrapping\ScrappingBase;
 use Scrapping\ScrappingInterface;
+use WP_Error;
+use WP_Term;
 
 class Fameg extends ScrappingBase implements ScrappingInterface
 {
@@ -55,11 +57,11 @@ class Fameg extends ScrappingBase implements ScrappingInterface
                 'reference_prefix' => 'FAM',
                 'global-infos' => [
                     // for xpath documentation: https://www.w3schools.com/xml/xpath_syntax.asp
-                    'title' => ".//div[@class='prod-name']/a", // the /a get the a child element
+                    'title' => ".//div[@class='prod-name']/a", // the /a get the child element
                     'description' => 'desc',
                     'reference' => ".//div[@class='prod-name']/div[2]", // constructor reference
                     'price' => false,
-                    'type' => false, // indoor / outdoor / both
+                    'type' => [], // indoor / outdoor / both
                     'is_new' => false,
                 ],
                 'images' => [
@@ -152,12 +154,15 @@ class Fameg extends ScrappingBase implements ScrappingInterface
                 case 'images':
                     // Get all available images for the product
                     $imageBox = $this->webDriver->findElements(WebDriverBy::xpath($configArray['alternatives']['xpath']));
+                    $itemDetails['image-product'] = [];
 
-                    // We take the first image from imageBox as main image and cover image
-                    $itemDetails['image-product'] = $this->getImageUrl($imageBox[0]);
+                    if ($imageBox) {
+                        // We take the first image from imageBox as main image and cover image
+                        $itemDetails['image-product'] = $this->getImageUrl($imageBox[0]);
 
-                    // We take the images left for alternatives
-                    $this->getAlternativeImages($itemDetails, $imageBox);
+                        // We take the images left for alternatives
+                        $this->getAlternativeImages($itemDetails, $imageBox);
+                    }
                     break;
                 case 'scroll-down':
                 case 'cookie-banner':
@@ -184,6 +189,7 @@ class Fameg extends ScrappingBase implements ScrappingInterface
                     $this->getGlobalInfos($itemDetails, $configArray);
                     break;
                 default:
+                    dump('$configArray', $configArray);
                     foreach ($configArray as $key => $value) {
                         if ($value) {
                             $productInfo = $this->webDriver->findElements(WebDriverBy::className($productWebsiteConfig[$configKey][$key]));
@@ -198,6 +204,7 @@ class Fameg extends ScrappingBase implements ScrappingInterface
 
         $itemDetails['title'] = $this->getItemTitle($itemDetails);
         $itemDetails['categories'] = $this->getItemCategories($categoryName, explode("\n", $itemDetails['type']));
+        dump('$itemDetails', $itemDetails);
         return $itemDetails;
     }
 
@@ -214,8 +221,7 @@ class Fameg extends ScrappingBase implements ScrappingInterface
         return $imageElement->findElement(WebDriverBy::tagName('img'))->getAttribute('data-src');
     }
 
-    private function getGlobalInfos(array &$itemDetails, array $configArray)
-    {
+    private function getGlobalInfos(array &$itemDetails, array $configArray): void {
         foreach ($configArray as $key => $value) {
             switch ($key) {
                 case 'title':
@@ -231,14 +237,12 @@ class Fameg extends ScrappingBase implements ScrappingInterface
         }
     }
 
-    private function getElementText($textElement) : string
-    {
+    private function getElementText($textElement) : string {
         $text = $textElement[0]->getText();
         return str_replace("Product code: ", "", $text);
     }
 
-    private function getItemTitle(array $itemDetails): string
-    {
+    private function getItemTitle(array $itemDetails): string {
         // return preg_match('/([^\/]+)$/', $itemUrl, $matches) ? $matches[1] : $defaultTitle;
         return "{$itemDetails['title']} {$itemDetails['reference']}";
     }
@@ -253,8 +257,7 @@ class Fameg extends ScrappingBase implements ScrappingInterface
     private function getItemCategories (
         string $categoryName,
         array $type
-    ): array
-    {
+    ): array {
         $categories = [];
 
         $parentCat = $this->getParentCategory($categoryName, $type);
@@ -276,14 +279,13 @@ class Fameg extends ScrappingBase implements ScrappingInterface
     /**
      * @param string $categoryName
      * @param array $type
-     * @return array|false|int|\WP_Error|\WP_Term|null
+     * @return array|false|int|WP_Error|WP_Term|null
      *
      * It will return an integer
      * if no parent category => 0
      * if parent category => the id
      */
-    private function getParentCategory (string $categoryName, array $type): \WP_Term|\WP_Error|bool|array|int|null
-    {
+    private function getParentCategory (string $categoryName, array $type): WP_Term|WP_Error|bool|array|int|null {
         if ($categoryName === 'accessories') {
             // Accessories is the only other parent category with outdoor and indoor
             return get_term_by('slug', 'accessoires', 'product_categories');
@@ -294,8 +296,7 @@ class Fameg extends ScrappingBase implements ScrappingInterface
         }
     }
 
-    private function closeCookieBanner (): void
-    {
+    private function closeCookieBanner (): void {
         $cookieBanner = $this->getCookieBanner();
         if ($cookieBanner) {
             $cookieBanner->click();
@@ -307,8 +308,7 @@ class Fameg extends ScrappingBase implements ScrappingInterface
         }
     }
 
-    private function getCookieBanner (): bool|RemoteWebElement
-    {
+    private function getCookieBanner (): bool|RemoteWebElement {
         $cookieBanner = $this->webDriver->findElements(WebDriverBy::xpath(".//div[@id='cookie-notice']"));
         $attributes = $cookieBanner[0]->getAttribute('class');
 
