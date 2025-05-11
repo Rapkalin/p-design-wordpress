@@ -189,7 +189,6 @@ class Fameg extends ScrappingBase implements ScrappingInterface
                     $this->getGlobalInfos($itemDetails, $configArray);
                     break;
                 default:
-                    dump('$configArray', $configArray);
                     foreach ($configArray as $key => $value) {
                         if ($value) {
                             $productInfo = $this->webDriver->findElements(WebDriverBy::className($productWebsiteConfig[$configKey][$key]));
@@ -203,9 +202,19 @@ class Fameg extends ScrappingBase implements ScrappingInterface
         }
 
         $itemDetails['title'] = $this->getItemTitle($itemDetails);
-        $itemDetails['categories'] = $this->getItemCategories($categoryName, explode("\n", $itemDetails['type']));
-        dump('$itemDetails', $itemDetails);
+        $type = $this->getType($itemDetails['type']);
+        $itemDetails['categories'] = $this->getItemCategories($categoryName, $type);
         return $itemDetails;
+    }
+
+    private function getType(array|string $type) : array
+    {
+        $formattedType = $type;
+        if (is_string($type)) {
+            $formattedType = explode("\n", $type);
+        }
+
+        return $formattedType;
     }
 
     private function getAlternativeImages(array &$itemDetails, array $imageBox): void {
@@ -232,6 +241,14 @@ class Fameg extends ScrappingBase implements ScrappingInterface
                 case 'description':
                     $textElement = $this->webDriver->findElements(WebDriverBy::className($value));
                     $itemDetails[$key] = $this->getElementText($textElement);
+                    break;
+                default:
+                    if ($value) {
+                        $productInfo = $this->webDriver->findElements(WebDriverBy::className($productWebsiteConfig[$configKey][$key]));
+                        $itemDetails[$key] = $productInfo[0]->getText();
+                    } else {
+                        $itemDetails[$key] = $value;
+                    }
                     break;
             }
         }
@@ -279,20 +296,25 @@ class Fameg extends ScrappingBase implements ScrappingInterface
     /**
      * @param string $categoryName
      * @param array $type
-     * @return array|false|int|WP_Error|WP_Term|null
+     * It will return an integer
      *
      * It will return an integer
      * if no parent category => 0
      * if parent category => the id
      */
-    private function getParentCategory (string $categoryName, array $type): WP_Term|WP_Error|bool|array|int|null {
-        if ($categoryName === 'accessories') {
-            // Accessories is the only other parent category with outdoor and indoor
-            return get_term_by('slug', 'accessoires', 'product_categories');
-        } elseif (in_array('outdoor', $type)) {
-            return get_term_by('slug', 'mobilier-exterieur', 'product_categories');
-        } else {
-            return get_term_by('slug', 'mobilier-interieur', 'product_categories');
+    private function getParentCategory (string $categoryName, array $type) {
+        try {
+            if ($categoryName === 'accessories') {
+                // Accessories is the only other parent category with outdoor and indoor
+                return get_term_by('slug', 'accessoires', 'product_categories');
+            } elseif (in_array('outdoor', $type)) {
+                return get_term_by('slug', 'mobilier-exterieur', 'product_categories');
+            } else {
+                return get_term_by('slug', 'mobilier-interieur', 'product_categories');
+            }
+        } catch (\Exception $e) {
+            echo "Error while getting Parent Category: " . $e . PHP_EOL;
+            return false;
         }
     }
 
