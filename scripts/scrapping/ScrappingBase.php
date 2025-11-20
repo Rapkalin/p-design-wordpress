@@ -5,7 +5,6 @@ namespace Scrapping;
 use Exception;
 use Facebook\WebDriver\Remote\DesiredCapabilities;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
-use Facebook\WebDriver\WebDriverBy;
 
 /*
  * Load the WordPress environment
@@ -28,7 +27,7 @@ class ScrappingBase
      *
      * @var RemoteWebDriver
      */
-    private RemoteWebDriver $webDriver;
+    protected RemoteWebDriver $webDriver;
 
     /**
      * The webDriver host (Selenium server host)
@@ -56,7 +55,7 @@ class ScrappingBase
      *
      * @var scrappingUtils
      */
-    private scrappingUtils $scrappingUtils;
+    protected scrappingUtils $scrappingUtils;
 
     /**
      * Array of field keys
@@ -76,14 +75,14 @@ class ScrappingBase
         'product_on_order',
     ];
 
-    private array $categories;
+    protected array $categories;
 
     /**
      * Mapping between category name in code and contributed category name
      *
      * @var array|string[] 
      */
-    private array $pDesingCategories = [
+    protected array $pDesingCategories = [
         'accessories' => 'Accessoires',
         'chairs' => 'Chaises & fauteuils',
         'chairs-lounge' => 'Banquettes & canapés',
@@ -123,7 +122,7 @@ class ScrappingBase
      *
      * @return array
      */
-    public function getWebsiteConfig(): array {
+    public function getConfig(): array {
         return [
             'categories' => [
                 'categoryName' => [
@@ -206,7 +205,7 @@ class ScrappingBase
      * @param string $url
      * @return void
      */
-    private function getBrowserTab(string $url): void {
+    protected function getBrowserTab(string $url): void {
         // Go to the URL and retrieve it
         $this->webDriver->switchTo()->newWindow();
         $this->webDriver->get($url);
@@ -238,14 +237,22 @@ class ScrappingBase
         $categories = $this->websiteConfig['categories'];
 
         foreach ($categories as $categoryName => $category) {
+            $categoryUrls = [];
             foreach ($category['type'] as $categoryUrl) {
-                echo "Getting category urls for $categoryName\n";
-                $categoryUrls = $this->getCategoryUrls($category, $categoryUrl, $categoryName);
+                $urls = is_array($categoryUrl) ? $categoryUrl : [$categoryUrl];
+                foreach ($urls as $singleUrl) {
+                    echo "Getting category urls for $categoryName\n";
+                    $itemUrls = $this->getCategoryUrls($category, $singleUrl, $categoryName);
+                    $categoryUrls = array_merge($categoryUrls, $itemUrls);
+                }
             }
 
-            dump('$categoryUrls', $categoryUrls);
-            die();
+            if (!$categoryUrls) {
+                echo "No urls found for $categoryName\n";
+                continue;
+            }
 
+            $categoryUrls = array_values(array_unique($categoryUrls));
             echo 'Saving category urls...' . "\n";
             $this->scrappingUtils->saveCategoryUrls($categoryUrls, $categoryName, $this->websiteName);
         }
@@ -260,193 +267,6 @@ class ScrappingBase
         } catch (Exception $e) {
             echo "Error while trying to quit webdriver \n";
             throw new Exception("Quitting browser error: " . $e->getMessage());
-        }
-    }
-
-    /**
-     * Scrap all the products urls from a category
-     *
-     * @Return array
-     * @throws Exception
-     */
-    private function getCategoryUrls(
-        array $category,
-        string $categoryUrl,
-        string $categoryName,
-        int $try = 0
-    ): array {
-        $this->getBrowserTab($categoryUrl);
-
-        if (isset($this->websiteConfig['scroll-down']) && $this->websiteConfig['scroll-down']) {
-            // Loading all items
-            $this->scrappingUtils->scrollDown($this->webDriver, $this->websiteConfig['scroll-down']);
-            // End of loading all items
-        }
-
-        // Get the category's children
-        $categoryItems = $this->webDriver->findElements(WebDriverBy::className($category['id']));
-
-        if (
-            !count($categoryItems) &&
-            $try > 5
-        ) {
-            $try++;
-            echo "Retrying to get category urls for $categoryName. Try N° $try" . PHP_EOL;
-            $this->getCategoryUrls($category, $categoryUrl, $categoryName, $try);
-        }
-
-        $itemUrls = [];
-        $this->scrappingUtils->getItemURls($categoryName,
-            $categoryItems,
-            $itemUrls,
-            $category['item-href-element']
-        );
-
-        if(isset($this->websiteConfig['turn-pages']) && $this->websiteConfig['turn-pages']) {
-            $this->scrappingUtils->turnPage(
-                $this->webDriver,
-                $this->websiteConfig['turn-pages'],
-                $category['id'],
-                $categoryName,
-                $itemUrls,
-                $category['item-href-element']
-            );
-        }
-
-        dump('$itemUrls', $itemUrls);
-        die();
-
-        return $itemUrls;
-    }
-
-    /**
-     * Return all the infos of a product from its url
-     *
-     * @param string $itemUrl
-     * @param string $categoryName
-     * @return array
-     */
-    private function getProductDetails(string $itemUrl, string $categoryName): array {
-        $this->getBrowserTab($itemUrl);
-        $productWebsiteConfig = $this->websiteConfig['product'];
-        $itemDetails = [];
-        $itemDetails['product-url'] = $itemUrl;
-
-        foreach ($productWebsiteConfig as $configKey => $configArray) {
-            switch ($configKey) {
-                case 'images':
-                    // Get the image for the product
-                    if ($productWebsiteConfig['images']['product']) {
-                        $imageBox = $this->webDriver->findElements(WebDriverBy::className($productWebsiteConfig['images']['product']));
-                        $itemDetails['image-product'] = $imageBox[0]->findElement(WebDriverBy::tagName('span'))->getAttribute('data-img');
-                    }
-
-                    // Get the images for the cover
-                    if ($productWebsiteConfig['images']['cover']) {
-                        $itemDetails['images-cover'] = [];
-                        if (
-                            isset($productWebsiteConfig['images']['cover']['single'])
-                            && $productWebsiteConfig['images']['cover']['single']
-                        ) {
-                            $imageBox = $this->webDriver->findElements(WebDriverBy::className($productWebsiteConfig['images']['cover']));
-                            $itemDetails['images-cover'][] = $imageBox[0]->findElement(WebDriverBy::tagName('span'))->getAttribute('data-img');
-                        } elseif ($productWebsiteConfig['images']['cover']['multiple']) {
-
-                            if ($productWebsiteConfig['images']['cover']['xpath']) {
-                                $imageBox = $this->webDriver->findElements(WebDriverBy::xpath($productWebsiteConfig['images']['cover']['xpath']));
-                            } else {
-                                $imageBox = $this->webDriver->findElements(WebDriverBy::className($productWebsiteConfig['images']['cover']['gallery']));
-                            }
-
-                            foreach ($imageBox as $image) {
-                                $itemDetails['images-cover'][] = $image->findElement(WebDriverBy::tagName('span'))->getAttribute('data-img');
-                            }
-                        }
-                    }
-                    break;
-                case 'scroll-down':
-                case 'cookie-banner':
-                    break;
-                case 'technical-data':
-                    foreach ($configArray as $key => $value) {
-                        $itemDetails[$key] = $value;
-                    }
-                    break;
-                case 'reference_prefix':
-                    $itemDetails[$configKey] = $configArray;
-                    break;
-                default:
-                    foreach ($configArray as $key => $value) {
-                        if ($value) {
-                            $productInfo = $this->webDriver->findElements(WebDriverBy::className($productWebsiteConfig[$configKey][$key]));
-                            $itemDetails[$key] = $productInfo[0]->getText();
-                        } else {
-                            $itemDetails[$key] = $value;
-                        }
-                    }
-                    break;
-            }
-        }
-
-        $itemDetails['title'] = $this->getItemTitle($itemDetails);
-        $itemDetails['categories'] = $this->getItemCategories($categoryName, explode("\n", $itemDetails['type']));
-        return $itemDetails;
-    }
-
-    private function getItemTitle(array $itemDetails): string
-    {
-        // return preg_match('/([^\/]+)$/', $itemUrl, $matches) ? $matches[1] : $defaultTitle;
-        return "{$itemDetails['title']} {$itemDetails['reference']}";
-    }
-
-    /**
-     * Get all categories ids for a given item
-     *
-     * @param string $categoryName
-     * @param array $type // indoor / outdoor / both / Accessories
-     * @return array
-     */
-    private function getItemCategories (
-        string $categoryName,
-        array $type
-    ): array
-    {
-        $categories = [];
-
-        $parentCat = $this->getParentCategory($categoryName, $type);
-        $categories[] = $parentCat ? $parentCat->term_id : (get_term_by('slug', 'a-trier', 'product_categories'))->term_id;
-
-        foreach ($this->categories as $category) {
-            if (
-                $parentCat &&
-                $parentCat->term_id === $category->parent &&
-                $this->pDesingCategories[$categoryName] === htmlspecialchars_decode($category->name)
-            ) {
-                $categories[] = $category->term_id;
-            }
-        }
-
-        return $categories;
-    }
-
-    /**
-     * @param string $categoryName
-     * @param array $type
-     * @return array|false|int|\WP_Error|\WP_Term|null
-     *
-     * It will return an integer
-     * if no parent category => 0
-     * if parent category => the id
-     */
-    private function getParentCategory (string $categoryName, array $type): \WP_Term|\WP_Error|bool|array|int|null
-    {
-        if ($categoryName === 'accessories') {
-            // Accessories is the only other parent category with outdoor and indoor
-            return get_term_by('slug', 'accessoires', 'product_categories');
-        } elseif (in_array('outdoor', $type)) {
-            return get_term_by('slug', 'mobilier-exterieur', 'product_categories');
-        } else {
-            return get_term_by('slug', 'mobilier-interieur', 'product_categories');
         }
     }
 
@@ -468,6 +288,7 @@ class ScrappingBase
             echo "Error while saving ACF fields for product: {$productDetails['title']} at id $postId \n";
             return false;
         }
+
     }
 
     /**
@@ -578,9 +399,19 @@ class ScrappingBase
                         'in-stock' => 'En stock'
                     ];
 
-                    foreach ($productDetails as $keyDetail => $trad) {
-                        if (isset($itemDetails[$keyDetail]) && $itemDetails[$keyDetail]) {
-                            $this->addAcfRepeaterRow($itemDetails[$keyDetail], $key, $postId, $trad);
+                    if (isset($itemDetails['technical-data'])) {
+                        foreach ($itemDetails['technical-data'] as $label => $value) {
+                         $this->addAcfRepeaterRow($value, $key, $postId, $label);
+                        }
+                    } else {
+                        $i = 0;
+                        foreach ($productDetails as $keyDetail => $trad) {
+                            if (isset($itemDetails[$keyDetail]) && $itemDetails[$keyDetail]) {
+                                $this->addAcfRepeaterRow($itemDetails[$keyDetail], $key, $postId, $trad);
+                            } else {
+                                $this->addAcfRepeaterRow($itemDetails[$i], $key, $postId, $itemDetails[$i]);
+                                $i++;
+                            }
                         }
                     }
                     break;
@@ -615,7 +446,7 @@ class ScrappingBase
      * @return void
      */
     private function addAcfRepeaterRow (
-        $rowDetails,
+        $value,
         array $key,
         int $postId,
         string $trad
@@ -623,7 +454,7 @@ class ScrappingBase
         // For update_sub_field $postId needs to be in an array
         $row = [
             $key['subkeys']['key'] => $trad,
-            $key['subkeys']['value'] => $rowDetails
+            $key['subkeys']['value'] => $value
         ];
         add_row($key['key'], $row, $postId);
     }

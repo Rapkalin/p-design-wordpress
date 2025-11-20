@@ -163,8 +163,8 @@
 	.archive-products .archive-products-content .large-container { display: block; }
 	.archive-products .archive-products-content .archive-filters { margin-bottom: 5rem; }
 
-	.single-products .single-product-content .product-primary .image { width: 100%; }
-	.single-products .single-product-content .product-primary .image img { max-width: 30rem; }
+	.single-products .single-product-content .product-primary #image { width: 100%; }
+	.single-products .single-product-content .product-primary #image img { max-width: 30rem; }
 	.single-products .single-product-content .product-primary .infos { width: 100%; }
 	.single-products .single-product-content .product-secondary { display: block; }
 	.single-products .single-product-content .product-secondary .notice { width: 100%; padding: 0; margin-bottom: 3rem; }
