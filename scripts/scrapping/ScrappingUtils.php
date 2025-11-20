@@ -163,6 +163,7 @@ final class ScrappingUtils
            'pedrali',
            'iconchairs',
            'flexmob',
+           'woodlab',
            'woodlabpoland',
            'misterwils',
            'nardioutdoor',

@@ -237,12 +237,22 @@ class ScrappingBase
         $categories = $this->websiteConfig['categories'];
 
         foreach ($categories as $categoryName => $category) {
+            $categoryUrls = [];
             foreach ($category['type'] as $categoryUrl) {
-                echo "Getting category urls for $categoryName\n";
-                $categoryUrls = $this->getCategoryUrls($category, $categoryUrl, $categoryName);
+                $urls = is_array($categoryUrl) ? $categoryUrl : [$categoryUrl];
+                foreach ($urls as $singleUrl) {
+                    echo "Getting category urls for $categoryName\n";
+                    $itemUrls = $this->getCategoryUrls($category, $singleUrl, $categoryName);
+                    $categoryUrls = array_merge($categoryUrls, $itemUrls);
+                }
             }
 
+            if (!$categoryUrls) {
+                echo "No urls found for $categoryName\n";
+                continue;
+            }
 
+            $categoryUrls = array_values(array_unique($categoryUrls));
             echo 'Saving category urls...' . "\n";
             $this->scrappingUtils->saveCategoryUrls($categoryUrls, $categoryName, $this->websiteName);
         }
