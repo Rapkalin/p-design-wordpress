@@ -17,4 +17,5 @@ $(function () {
 	require("./modules/history")
 	require("./modules/rgpd")
 	require("./modules/gmap")
+	require("./modules/alt-products")
 })

@@ -6,6 +6,7 @@ use Exception;
 use Scrapping\websites\Fameg;
 use Scrapping\websites\Fermob;
 use Scrapping\websites\Pedrali;
+use Scrapping\websites\Woodlab;
 
 require __DIR__ . "/../../website/vendor/autoload.php";
 
@@ -77,7 +78,31 @@ if (in_array('fameg', $argv) ) {
     }
 }
 
+$woodlabArguments = array_intersect(['woodlab', 'woodlabpoland'], $argv);
+if ($woodlabArguments) {
+    try {
+        $website = new Woodlab();
+        $productUrls = $scrappingUtils->getUrlsFromDb($website->getName());
+        if ($productUrls && is_array($productUrls)) {
+            $website->scrapProductUrls($productUrls);
+            $urlsToUpdate = array_map(function ($url) use (&$urlsString, &$urlsToUpdate) {
+                return $url['url'];
+            }, $productUrls);
+            $scrappingUtils->updateDbUrls($website->getName(), $urlsToUpdate);
+            $website->closeBrowser();
+        } elseif ($productUrls && is_numeric($productUrls)) {
+            echo "Scrapping for {$website->getName()} already done \n";
+        } else {
+            $scrappingUtils->getUrlsFromScrapping($website);
+            echo "get Urls From Scrapping Done \n";
+        }
+    } catch (Exception $e) {
+        echo 'Error: ' . $e->getMessage() . "\n";
+    }
+}
+
 echo "\n ****** END OF SCRAPPING ****** \n";
 die();
+
 
 
