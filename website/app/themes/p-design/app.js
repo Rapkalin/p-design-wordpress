@@ -10976,6 +10976,7 @@ $(function () {
   __webpack_require__(/*! ./modules/history */ "./resources/js/modules/history.js");
   __webpack_require__(/*! ./modules/rgpd */ "./resources/js/modules/rgpd.js");
   __webpack_require__(/*! ./modules/gmap */ "./resources/js/modules/gmap.js");
+  __webpack_require__(/*! ./modules/alt-products */ "./resources/js/modules/alt-products.js");
 });
 
 /***/ }),
@@ -11898,6 +11899,32 @@ jQuery('img.svg').each(function () {
 
 /***/ }),
 
+/***/ "./resources/js/modules/alt-products.js":
+/*!**********************************************!*\
+  !*** ./resources/js/modules/alt-products.js ***!
+  \**********************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+$('.alt-product').on('click', function (e) {
+  e.preventDefault();
+  var mainProduct = document.getElementById('image');
+  var img = mainProduct.getElementsByTagName('img')[0];
+
+  // We reset all items status
+  var currentItems = document.querySelectorAll('.alt-product');
+  currentItems.forEach(function (item) {
+    item.classList.remove('alt-active');
+  });
+
+  // We update the image of the main with the current selected target
+  var currentItem = e.currentTarget;
+  currentItem.classList.add('alt-active');
+  img.src = currentItem.src;
+});
+
+/***/ }),
+
 /***/ "./resources/js/modules/animations.js":
 /*!********************************************!*\
   !*** ./resources/js/modules/animations.js ***!
@@ -12380,10 +12407,10 @@ $('#history-arrow-up').click(function () {
 --------------------------------------------------------------*/
 
 $('.popup-link').on('click', function (e) {
-  $popup = $(this).attr('data-popup');
+  var $popup = $(this).attr('data-popup');
   e.preventDefault();
   $('#' + $popup).fadeIn();
-  if ($popup == 'popup-search') {
+  if ($popup === 'popup-search') {
     $('.popup input').focus();
   }
 });

@@ -41,7 +41,7 @@ $parent_taxonomy = get_term($parent_term_id);
 				<div class="large-container">
 					<div class="product-main">
 						<div class="product-primary">
-							<div class="image">
+							<div id="image">
                                 <?php
                                     $url = get_field('product_featured_image')['url'] ?? '#';
                                     $alt = get_field('product_featured_image')['alt'] ?? 'p-design-alt';
@@ -50,9 +50,19 @@ $parent_taxonomy = get_term($parent_term_id);
 							</div>
 							<div class="infos">
 								<h1><?php the_title(); ?></h1>
+
+                                <?php if (get_field('product_images')) : ?>
+                                    <div class="images">
+                                        <?php foreach (get_field('product_images') as $i => $photo) : ?>
+                                            <img class="alt-product" src="<?= $photo['url']; ?>" alt="<?= $photo['alt']; ?>">
+                                        <?php endforeach; ?>
+                                    </div>
+                                <?php endif; ?>
+
 								<?php the_field('product_description'); ?>
+
 								<?php if (get_field('product_price')) : ?>
-									<div class="price"><?= get_field('product_price'); ?> € HT</div>
+									<div class="price"><?= get_field('product_price'); ?>€ HT</div>
 								<?php endif; ?>
 
 								<?php if (get_field('product_colors')) : ?>
@@ -63,14 +73,6 @@ $parent_taxonomy = get_term($parent_term_id);
 												<span class="<?= $color; ?>"></span>
 											<?php endforeach; ?>
 										</div>
-									</div>
-								<?php endif; ?>
-
-								<?php if (get_field('product_images')) : ?>
-									<div class="images">
-										<?php foreach (get_field('product_images') as $photo) : ?>
-											<img src="<?= $photo['url']; ?>" alt="<?= $photo['alt']; ?>">
-										<?php endforeach; ?>
 									</div>
 								<?php endif; ?>
 

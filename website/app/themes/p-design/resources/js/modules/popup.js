@@ -3,13 +3,13 @@
 --------------------------------------------------------------*/
 
 $('.popup-link').on('click', function (e) {
-	$popup = $(this).attr('data-popup');
+	let $popup = $(this).attr('data-popup');
 
 	e.preventDefault();
 
 	$('#' + $popup).fadeIn();
 
-	if ($popup == 'popup-search') {
+	if ($popup === 'popup-search') {
 		$('.popup input').focus();
 	}
 });

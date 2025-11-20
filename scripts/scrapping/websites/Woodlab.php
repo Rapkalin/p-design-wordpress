@@ -136,9 +136,6 @@ class Woodlab extends ScrappingBase implements ScrappingInterface
             $category['item-href-element']
         );
 
-        dump('$itemUrls', $itemUrls);
-        die();
-
         return $itemUrls;
     }
 
@@ -170,16 +167,11 @@ class Woodlab extends ScrappingBase implements ScrappingInterface
                             if ($mainImage) {
                                 $itemDetails['image-product'] = $mainImage;
                                 $itemDetails['images-cover'][] = $mainImage;
-
-                                dd('$itemDetails $mainImage', $itemDetails);
                             }
 
                             // We take the images left for alternatives
                             $this->getAlternativeImages($itemDetails, $imageBox);
                         }
-                        break;
-                    case 'scroll-down':
-                    case 'cookie-banner':
                         break;
                     case 'technical-data':
                         // No cookies banner to close
@@ -207,41 +199,20 @@ class Woodlab extends ScrappingBase implements ScrappingInterface
                     case 'global-infos':
                         $this->getGlobalInfos($itemDetails, $configArray);
                         break;
+                    case 'scroll-down':
+                    case 'cookie-banner':
                     default:
-                        dump('$configArray', $configArray);
-                        dd('$configKey', $configKey);
-                        foreach ($configArray as $key => $value) {
-                            if ($value) {
-                                $productInfo = $this->webDriver->findElements(WebDriverBy::className($productWebsiteConfig[$configKey][$key]));
-                                $itemDetails[$key] = $productInfo[0]->getText();
-                            } else {
-                                $itemDetails[$key] = $value;
-                            }
-                        }
                         break;
                 }
             }
 
             $itemDetails['title'] = $this->getItemTitle($itemDetails);
-            $type = $this->getType($itemDetails['type']);
-            $itemDetails['categories'] = $this->getItemCategories($categoryName, $type);
+            $itemDetails['categories'] = $this->getItemCategories($categoryName, ['indoor']); // all Woodlab products are indoors (?)
         } catch (\Exception $e) {
             dd('Error while getting product details: ' . $itemUrl, $e->getMessage());
         }
 
-
-        dd('$itemDetails', $itemDetails);
         return $itemDetails;
-    }
-
-    private function getType(array|string $type) : array
-    {
-        $formattedType = $type;
-        if (is_string($type)) {
-            $formattedType = explode("\n", $type);
-        }
-
-        return $formattedType;
     }
 
     private function getAlternativeImages(array &$itemDetails, array $imageBox): void {
